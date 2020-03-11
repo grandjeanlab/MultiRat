@@ -1,3 +1,5 @@
+![rat art](rat_art.png)
+
 # A collaborative rat functional MRI multi-center study.
 A Rat fMRI multi-center study
 *updated 2020_03_10*
