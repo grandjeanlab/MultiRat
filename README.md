@@ -84,6 +84,12 @@ Kai-Hsiang Chuang | Brisbane | Australia
 Jason Lerch |  Oxford | UK
 Alessandro Gozzi | Italian Institute of Technology | Italy
 Diana Cash | King’s College London | UK
+Caitlin Fowler, Jamie Near, M. Mallar Chakravarty | McGill | Canada
+Marc Dhenain | cea |  France
+Shella Keilholz | Georgia Tech | USA
+Dijkhuizen, R.M. |  Utrecht University | Netherlands
+Marleen Verhoye, vanDer Linden Lab | U of Antwerp | Belgium
+
 
 ## 3 Study preregistration draft 
 as per OSF.io template
