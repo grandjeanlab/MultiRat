@@ -91,6 +91,8 @@ Marc Dhenain | cea |  France
 Shella Keilholz | Georgia Tech | USA
 Dijkhuizen, R.M. |  Utrecht University | Netherlands
 Marleen Verhoye, vanDer Linden Lab | U of Antwerp | Belgium
+Ileana Jelescu | EPFL | Switzerland
+Todd Constable | Yale | USA
 
 
 ## 3 Study preregistration draft 
