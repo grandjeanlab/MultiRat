@@ -92,7 +92,11 @@ Shella Keilholz | Georgia Tech | USA
 Dijkhuizen, R.M. |  Utrecht University | Netherlands
 Marleen Verhoye, vanDer Linden Lab | U of Antwerp | Belgium
 Ileana Jelescu | EPFL | Switzerland
-Todd Constable | Yale | USA
+Todd Constable, Eve Lake | Yale | USA
+Sarael Alcauter, Eduardo A. Garza-Villarreal | Universidad Nacional Autónoma de México | Mexico
+Nikoloz Sirmpilatze, Susann Boretius | German Primate Center | Germany
+Akira Sumiyoshi, Rie Ryoke, Ryuta Kawashima | Tohoku University | Japan
+
 
 
 ## 3 Study preregistration draft 
