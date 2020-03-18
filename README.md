@@ -96,6 +96,10 @@ Todd Constable, Eve Lake | Yale | USA
 Sarael Alcauter, Eduardo A. Garza-Villarreal | Universidad Nacional Autónoma de México | Mexico
 Nikoloz Sirmpilatze, Susann Boretius | German Primate Center | Germany
 Akira Sumiyoshi, Rie Ryoke, Ryuta Kawashima | Tohoku University | Japan
+Nick Todd | Harvard | USA
+Marcelo Febbo | University of Floria | USA
+Thomas Helbich | Medical University of Vienna | Austria
+Wolfgang Weber-Fahr | ZI Mannheim | Germany
 
 
 
