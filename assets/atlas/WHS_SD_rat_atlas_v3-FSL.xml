@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atlas version="3.0">
+	<header>
+		<name>Waxholm Space atlas of the Sprague Dawley rat brain</name>
+		<type>Label</type>
+		<imagefile>WHS_SD_rat_atlas_v3.nii.gz</imagefile>
+		<summaryimagefile>WHS_SD_rat_atlas_v3.nii.gz</summaryimagefile>
+	</header>
+	<data>
+		<label index="1" x="255" y="52" z="39">descending corticofugal pathways</label>
+		<label index="2" x="255" y="186" z="0">substantia nigra</label>
+		<label index="3" x="0" y="0" z="255">subthalamic nucleus</label>
+		<label index="4" x="255" y="255" z="0">molecular layer of the cerebellum</label>
+		<label index="5" x="0" y="255" z="255">granule cell level of the cerebellum</label>
+		<label index="6" x="255" y="0" z="255">alveus of the hippocampus</label>
+		<label index="7" x="52" y="255" z="13">inferior cerebellar peduncle</label>
+		<label index="10" x="29" y="104" z="235">cingulate cortex, area 2</label>
+		<label index="30" x="129" y="79" z="255">striatum</label>
+		<label index="31" x="255" y="145" z="186">globus pallidus</label>
+		<label index="32" x="26" y="231" z="255">entopeduncular nucleus</label>
+		<label index="33" x="2" y="44" z="255">ventricular system</label>
+		<label index="34" x="212" y="255" z="0">medial lemniscus</label>
+		<label index="35" x="255" y="25" z="240">facial nerve</label>
+		<label index="36" x="124" y="252" z="0">anterior commissure, anterior part</label>
+		<label index="37" x="255" y="186" z="0">anterior commissure, posterior part</label>
+		<label index="38" x="174" y="0" z="232">ventral hippocampal commissure</label>
+		<label index="39" x="0" y="100" z="0">thalamus</label>
+		<label index="40" x="255" y="8" z="0">septal region</label>
+		<label index="41" x="48" y="218" z="0">optic nerve</label>
+		<label index="42" x="38" y="126" z="255">optic tract and optic chiasm</label>
+		<label index="43" x="218" y="170" z="62">pineal gland</label>
+		<label index="45" x="134" y="255" z="90">spinal cord</label>
+		<label index="46" x="33" y="230" z="255">commissure of the superior colliculus</label>
+		<label index="47" x="153" y="83" z="255">brainstem</label>
+		<label index="48" x="226" y="120" z="161">hypothalamic region</label>
+		<label index="50" x="86" y="0" z="221">superficial gray layer of the superior colliculus</label>
+		<label index="51" x="7" y="255" z="89">periaqueductal gray</label>
+		<label index="52" x="21" y="192" z="255">fornix</label>
+		<label index="53" x="238" y="186" z="0">mammillothalamic tract</label>
+		<label index="54" x="173" y="255" z="47">commissural stria terminalis</label>
+		<label index="55" x="225" y="151" z="15">deeper layers of the superior colliculus</label>
+		<label index="56" x="235" y="87" z="255">periventricular gray</label>
+		<label index="57" x="250" y="244" z="247">genu of the facial nerve</label>
+		<label index="58" x="0" y="215" z="11">pontine nuclei</label>
+		<label index="59" x="0" y="255" z="29">fimbria of the hippocampus</label>
+		<label index="60" x="244" y="67" z="69">fasciculus retroflexus</label>
+		<label index="61" x="0" y="255" z="0">stria medullaris of the thalamus</label>
+		<label index="62" x="238" y="117" z="51">stria terminalis</label>
+		<label index="63" x="255" y="0" z="218">posterior commissure</label>
+		<label index="64" x="15" y="109" z="230">glomerular layer of the accessory olfactory bulb</label>
+		<label index="65" x="255" y="227" z="0">glomerular layer of the olfactory bulb</label>
+		<label index="66" x="255" y="135" z="0">olfactory bulb</label>
+		<label index="67" x="255" y="110" z="0">corpus callosum and associated subcortical white matter</label>
+		<label index="68" x="188" y="32" z="173">brachium of the superior colliculus</label>
+		<label index="69" x="255" y="42" z="39">inferior colliculus, commissure</label>
+		<label index="70" x="39" y="244" z="253">central canal</label>
+		<label index="71" x="63" y="192" z="255">interpeduncular nucleus</label>
+		<label index="72" x="179" y="28" z="53">ascending fibers of the facial nerve</label>
+		<label index="73" x="255" y="79" z="206">anterior commissure</label>
+		<label index="74" x="0" y="246" z="14">inferior olive</label>
+		<label index="75" x="91" y="241" z="255">spinal trigeminal nucleus</label>
+		<label index="76" x="250" y="128" z="114">spinal trigeminal tract</label>
+		<label index="77" x="206" y="211" z="7">frontal association cortex</label>
+		<label index="78" x="134" y="204" z="76">middle cerebellar peduncle</label>
+		<label index="79" x="128" y="170" z="255">transverse fibers of the pons</label>
+		<label index="80" x="69" y="235" z="202">habenular commissure</label>
+		<label index="81" x="222" y="7" z="237">nucleus of the stria medullaris</label>
+		<label index="82" x="225" y="240" z="13">basal forebrain region</label>
+		<label index="83" x="250" y="170" z="64">supraoptic decussation</label>
+		<label index="84" x="65" y="150" z="255">medial lemniscus decussation</label>
+		<label index="85" x="114" y="9" z="212">pyramidal decussation</label>
+		<label index="92" x="3" y="193" z="45">neocortex</label>
+		<label index="93" x="0" y="8" z="182">bed nucleus of the stria terminalis</label>
+		<label index="94" x="255" y="87" z="30">pretectal region</label>
+		<label index="95" x="165" y="131" z="107">cornu ammonis 3</label>
+		<label index="96" x="91" y="45" z="10">dentate gyrus</label>
+		<label index="97" x="255" y="255" z="0">cornu ammonis 2</label>
+		<label index="98" x="217" y="104" z="13">cornu ammonis 1</label>
+		<label index="99" x="255" y="0" z="0">fasciola cinereum</label>
+		<label index="100" x="255" y="192" z="0">subiculum</label>
+		<label index="108" x="40" y="112" z="130">postrhinal cortex</label>
+		<label index="109" x="80" y="123" z="175">presubiculum</label>
+		<label index="110" x="23" y="54" z="96">parasubiculum</label>
+		<label index="112" x="205" y="51" z="255">perirhinal area 35</label>
+		<label index="113" x="112" y="48" z="160">perirhinal area 36</label>
+		<label index="114" x="122" y="187" z="51">entorhinal cortex</label>
+		<label index="115" x="90" y="111" z="47">lateral entorhinal cortex</label>
+		<label index="119" x="0" y="144" z="55">vestibular apparatus</label>
+		<label index="120" x="0" y="255" z="29">cochlea</label>
+		<label index="121" x="253" y="148" z="0">cochlear nerve</label>
+		<label index="122" x="253" y="50" z="0">vestibular nerve</label>
+		<label index="123" x="0" y="12" z="255">ventral cochlear nucleus, granule cell layer</label>
+		<label index="125" x="52" y="29" z="144">4th ventricle</label>
+		<label index="126" x="92" y="156" z="211">dorsal cochlear nucleus, molecular layer</label>
+		<label index="127" x="0" y="80" z="156">dorsal cochlear nucleus, fusiform and granule layer</label>
+		<label index="128" x="197" y="238" z="255">dorsal cochlear nucleus, deep core</label>
+		<label index="129" x="255" y="217" z="0">acoustic striae</label>
+		<label index="130" x="213" y="255" z="0">trapezoid body</label>
+		<label index="131" x="0" y="255" z="81">nucleus of the trapezoid body</label>
+		<label index="132" x="0" y="238" z="255">superior paraolivary nucleus</label>
+		<label index="133" x="219" y="239" z="61">medial superior olive</label>
+		<label index="134" x="35" y="76" z="190">lateral superior olive</label>
+		<label index="135" x="1" y="153" z="21">superior periolivary region</label>
+		<label index="136" x="0" y="174" z="255">ventral periolivary nuclei</label>
+		<label index="137" x="255" y="0" z="115">lateral lemniscus, ventral nucleus</label>
+		<label index="138" x="171" y="16" z="91">lateral lemniscus, intermediate nucleus</label>
+		<label index="139" x="108" y="18" z="91">lateral lemniscus, dorsal nucleus</label>
+		<label index="140" x="255" y="29" z="0">lateral lemniscus, commissure</label>
+		<label index="141" x="255" y="166" z="0">lateral lemniscus</label>
+		<label index="142" x="206" y="255" z="142">inferior colliculus, dorsal cortex</label>
+		<label index="143" x="0" y="238" z="255">inferior colliculus, central nucleus</label>
+		<label index="145" x="48" y="136" z="203">inferior colliculus, external cortex</label>
+		<label index="146" x="176" y="58" z="72">inferior colliculus, brachium</label>
+		<label index="147" x="10" y="244" z="217">medial geniculate body, medial division</label>
+		<label index="148" x="239" y="163" z="0">medial geniculate body, dorsal division</label>
+		<label index="149" x="131" y="58" z="31">medial geniculate body, ventral division</label>
+		<label index="150" x="255" y="47" z="242">medial geniculate body, marginal zone</label>
+		<label index="151" x="255" y="215" z="0">primary auditory cortex</label>
+		<label index="152" x="240" y="255" z="255">secondary auditory cortex, dorsal area</label>
+		<label index="153" x="216" y="191" z="216">secondary auditory cortex, ventral area</label>
+		<label index="157" x="244" y="156" z="255">auditory radiation</label>
+		<label index="158" x="34" y="152" z="255">ventral cochlear nucleus, anterior part</label>
+		<label index="159" x="0" y="230" z="207">ventral cochlear nucleus, posterior part</label>
+		<label index="160" x="0" y="255" z="106">ventral cochlear nucleus, cap area</label>
+		<label index="162" x="185" y="255" z="233">spiral ganglion</label>
+		<label index="163" x="99" y="205" z="0">nucleus sagulum</label>
+		<label index="164" x="110" y="0" z="255">reticular thalamic nucleus, auditory segment</label>
+	</data>
+</atlas>
