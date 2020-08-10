@@ -20,14 +20,14 @@ The code is executed in `bash` (fMRI preprocessing) and `R` (analysis and plots)
 
 See the [environement](#Environement) section for the required software libraries. The `R` libraries are organized using [renv](https://rstudio.github.io/renv/).
 
-To reproduce the code contained within this software, please follow these steps
-1. get the required dependencies for [bash](#Bash_environement) and [R](#R_environement)
-2. Update the variables `init_folder` and `analysis_folder` for both bash and R environments 
+To reproduce the code contained within this software, please follow these steps  
+1. get the required dependencies for [bash](#Bash_environement) and [R](#R_environement)  
+2. Update the variables `init_folder` and `analysis_folder` for both bash and R environments   
 
 # Environement
 The following was written in  
-- R Version: 3.5.1  
-- Rstudio Version: 1.3.959  
+- [R Version: 3.5.1](https://cran.r-project.org/)  
+- [rstudio Version: 1.3.959](https://rstudio.com/)  
 
 ## Bash environement
 - [RABIES Version: 0.1.3](https://github.com/CoBrALab/RABIES) (see dependencies and install procedures)  
@@ -128,7 +128,7 @@ These had to be corrected, and organized into [BIDS](https://bids.neuroimaging.i
 
 Two scripts used to convert datasets are provided as examples. [Convert raw Bruker data](assets/script/convert_bruker.sh) and [convert nifti data](assets/script/convert_nifti.sh). Raw Bruker data were converted using the [Bruker2NIfTI](https://github.com/neurolabusc/Bru2Nii) v1.0.20180303 package, written by Matthew Brett, Andrew Janke, Mikaël Naveau, Chris Rorden. Please note that this software is no longer supported. New users are invited to try [BrkRaw](https://github.com/BrkRaw/bruker) instead. 
 
-Below is an example of a corrected structural image. Note how the **S**uperior, **I**mferior, **A**nterior, **P**osterior axis labels are indicated in `fsleyes`. 
+Below is an example of a corrected structural image. Note how the **S**uperior, **I**nferior, **A**nterior, **P**osterior axis labels are indicated in `fsleyes`. 
 
 ![corrected structrual image](assets/img/orient_post.png)
 
@@ -141,8 +141,6 @@ This section is meant to try RABIES with rat data and this template. It will not
 
 ```{bash test RABIES, eval=FALSE}
 source bash_env.sh
-
-rabies $analysis_folder/bids_test $analysis_folder/preprocessing_test --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas --anatomical_resampling 0.1x0.1x0.1 --commonspace_resampling 0.3x0.3x0.3
 
 rabies $analysis_folder/data/ds01002 $analysis_folder/preprocess/ds01002_pbs_resample --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas --anatomical_resampling 0.1x0.1x0.1 --commonspace_resampling 0.3x0.3x0.3 -r light_SyN --template_reg_script light_SyN --cluster_type pbs
 

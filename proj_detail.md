@@ -7,7 +7,7 @@ The collaborative model is as follows:
 - Every contributing laboratory can nominate any reasonable number of junior and senior staff. Junior staff who have been involved in data collection. Senior staff who have been involved in project coordination and funding acquisition. 
 - Joanes Grandjean ([JG](https://grandjeanlab.github.io/pages/contact.html)) will put the collective dataset together and perform the primary analysis. 
 - Andy Hess (AH) will oversee and coordinate the project. 
-- Gabriel Desrosiers-Grégoire (GD) and M. Mallar Chakravarty (MMC) will provide the preprocessing software (RABIES)
+- Gabriel Desrosiers-Grégoire (GD) and M. Mallar Chakravarty (MMC) will provide the preprocessing software (RABIES)  
 - Every collaborator is invited to further contribute to the preregistration proposal, the analysis, and manuscript preparation and will be recognized in their contributions accordingly. 
 
 In the ensuing journal publication, author list will be as such: 
@@ -25,11 +25,11 @@ Finally, we seek laboratories that would like to participate in a standardized a
 Material transfer will be performed under tacit e-mail agreement, or if the data provider host institution requires it, a Material Transfer Agreement will be signed between the provider host institution and the Radboud University Medical Center, Nijmegen, The Netherlands (JG’s host institution). 
 
 ### Tentative timeline
-- December 2019: AH contacted potential collaborators
-- March 2020: Initial study proposal is submitted to collaborators, effort to recruit additional labs
-- April-September 2020: Data collection/transfer from collaborators
-- June 2020: Study preregistration on OSF.io
-- July-December 2020: Analysis as per preregistration specification
+- December 2019: AH contacted potential collaborators  
+- March 2020: Initial study proposal is submitted to collaborators, effort to recruit additional labs  
+- April-September 2020: Data collection/transfer from collaborators  
+- June 2020: Study preregistration on OSF.io  
+- July-December 2020: Analysis as per preregistration specification  
 - January-April 2021: Manuscript preparation. 
 
 ### Communication

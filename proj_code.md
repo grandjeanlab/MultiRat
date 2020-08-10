@@ -13,26 +13,28 @@ publication on BioArxiv. The raw fMRI dataset can be made available
 prior to publication upon request and review from the authors.
 
 If re-using some of the scripts, please follow citations guidelines for
-the software used. I’ve provided the links to the softwares whereever
+the software used. I’ve provided the links to the software wherever
 possible. See also the [license](LICENSE.md) for this software.
 
 The code is executed in `bash` (fMRI preprocessing) and `R` (analysis
 and plots).
 
 See the [environement](#Environement) section for the required software
-libaries. The `R` libraries are organized using
+libraries. The `R` libraries are organized using
 [renv](https://rstudio.github.io/renv/).
 
 To reproduce the code contained within this software, please follow
-these steps 1. get the required dependencies for
-[bash](#Bash_environement) and [R](#R_environement) 2. Update the
-variables `init_folder` and `analysis_folder` for both bash and R
-environements
+these steps  
+1\. get the required dependencies for [bash](#Bash_environement) and
+[R](#R_environement)  
+2\. Update the variables `init_folder` and `analysis_folder` for both
+bash and R environments
 
 # Environement
 
-The main environement consists of - R Version: 3.5.1  
-\- Rstudio Version: 1.1.456.
+The following was written in  
+\- [R Version: 3.5.1](https://cran.r-project.org/)  
+\- [rstudio Version: 1.3.959](https://rstudio.com/)
 
 ## Bash environement
 
@@ -40,19 +42,20 @@ The main environement consists of - R Version: 3.5.1
     dependencies and install procedures)  
   - FSL Version: 6.0.1  
   - AFNI Version: AFNI\_20.2.00  
-  - ANTs Version: 2.2.0.dev137-g27f8e  
+  - ANTs Version: 2.1.0.post370-ga466e  
   - Anaconda3 Version: 5.0.0  
   - Python Version: 3.6.2  
   - [Bruker2NIfTI
     Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)
 
-Other bash functions - curl  
+Other bash functions  
+\- curl  
 \- unzip  
 \- rm
 
 Rstudio does not transfer variables between `bash` chunks. Hence, each
-chunks needs to reload the environement. To achieve this seamlessly, I
-use a [bash\_env.sh](bash_env.sh) file to re-initialize the environement
+chunks needs to reload the environment. To achieve this seamlessly, I
+use a [bash\_env.sh](bash_env.sh) file to re-initialize the environment
 within each chunk. The content of it should be adapted by the user for
 re-use.
 
@@ -62,17 +65,15 @@ re-use.
 init_folder="/home/traaffneu/joagra/code/MultiRat"
 analysis_folder="/project/4180000.19/multiRat"
 
-
-
-# this section is for use to import softwares within my HPC environement. You may change it to load software into the Rstudio terminal environement
+# this section is for use to import software within my HPC environment. You may change it to load software into the Rstudio terminal environment
 echo 'module load ANTs/20150828' > bash_env.sh
 echo 'module load anaconda3' >> bash_env.sh
 echo 'source activate rabies' >> bash_env.sh
 
 
 # no need to update the lines below. 
-echo 'init_folder=$init_folder' >> bash_env.sh
-echo 'analysis_folder=$analysis_folder' >> bash_env.sh
+echo 'init_folder='$init_folder >> bash_env.sh
+echo 'analysis_folder='$analysis_folder >> bash_env.sh
 
 echo 'template=$analysis_folder"/template/WHS_SD_rat_T2star_v1.01.nii.gz"'  >> bash_env.sh
 echo 'template_mask=$analysis_folder"/template/WHS_SD_v2_brainmask_bin.nii.gz"' >> bash_env.sh
@@ -114,8 +115,8 @@ NeuroImage 97:374-386.
 [doi 10.1016/j.neuroimage.2014.04.001](https://doi.org/10.1016/j.neuroimage.2014.04.001)
 
 In this chunk, I download the template and atlas, and generate separate
-white (WM), grey (GM), and cerebrospinal fluid (CSF) binary maps. An
-additional xml file to make the atlas compatible with FSL was downlaoded
+white (WM), gray (GM), and cerebrospinal fluid (CSF) binary maps. An
+additional xml file to make the atlas compatible with FSL was downloaded
 from this [board](https://www.nitrc.org/forum/message.php?msg_id=29057),
 and made available in the
 [assets](assets/atlas/WHS_SD_rat_atlas_v3-FSL.xml)
@@ -147,7 +148,7 @@ dicom, nifti, minc). The first step consists of arranging all datasets
 within the same convention. I opted for true voxel size and
 **A**nterior-**P**osterior axis defined as the rostro-caudal axis. Some
 datasets were provided with x10 inflated voxeld and the
-**S**uperior-**I**nferior acsis defined as the rostro-caudal axsis
+**S**uperior-**I**nferior axis defined as the rostro-caudal axis
 instead, e.g.:
 
 ![raw structrual image](assets/img/orient_pre.png)
@@ -158,7 +159,7 @@ scripts using a combination of the following FSL and AFNI commands,
 `fslinfo`, `fslmerge`, `fslorient`, `fslchpixdim`, `fslswapdim`, and
 `3dresample`.
 
-Two scripts used to convert datasets are provided as exemples. [Convert
+Two scripts used to convert datasets are provided as examples. [Convert
 raw Bruker data](assets/script/convert_bruker.sh) and [convert nifti
 data](assets/script/convert_nifti.sh). Raw Bruker data were converted
 using the [Bruker2NIfTI](https://github.com/neurolabusc/Bru2Nii)
@@ -167,18 +168,18 @@ Naveau, Chris Rorden. Please note that this software is no longer
 supported. New users are invited to try
 [BrkRaw](https://github.com/BrkRaw/bruker) instead.
 
-Below is an exemple of a corrected structural image. Note how the
-**S**uperior, **I**mferior, **A**nterior, **P**osterior axis labels are
+Below is an example of a corrected structural image. Note how the
+**S**uperior, **I**nferior, **A**nterior, **P**osterior axis labels are
 indicated in `fsleyes`.
 
 ![corrected structrual image](assets/img/orient_post.png)
 
 ## Dataset preparation limiation
 
-Unfortunately, I cannot ensure teh **L**eft / **R**ight axis are
+Unfortunately, I cannot ensure the **L**eft / **R**ight axis are
 represented correctly across all datasets. While this is less of an
-issue for resting-state fRMI, this is a caevat in the stimulus-evoked
-fMRI arm of this study, and should be acknoledged as a limitation.
+issue for resting-state fMRI, this is a caveat in the stimulus-evoked
+fMRI arm of this study, and should be acknowledged as a limitation.
 Similarly, I cannot ensure the slicing acquisition order, hence,
 preprocessing is performed without slice timing correction.
 
@@ -190,7 +191,5 @@ will not be kept in later versions.
 ``` bash
 source bash_env.sh
 
-rabies $analysis_folder/bids_test $analysis_folder/preprocessing_test --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas --anatomical_resampling 0.1x0.1x0.1 --commonspace_resampling 0.3x0.3x0.3
-
-rabies /project/4180000.19/multiRat/data/ds01002 /project/4180000.19/multiRat/preprocess/ds01002_pbs --no_STC --anat_template /project/4180000.19/multiRat/template/WHS_SD_rat_T2star_100um.nii.gz --brain_mask /project/4180000.19/multiRat/template/WHS_SD_v2_brainmask_bi_100um.nii.gz --WM_mask /project/4180000.19/multiRat/template/WHS_SD_v2_WM_100um.nii.gz --CSF_mask /project/4180000.19/multiRat/template/WHS_SD_v2_CSF_100um.nii.gz --labels /project/4180000.19/multiRat/template/WHS_SD_rat_atlas_v3_100um.nii.gz -r light_SyN --template_reg_script light_SyN --cluster_type pbs
+rabies $analysis_folder/data/ds01002 $analysis_folder/preprocess/ds01002_pbs_resample --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas --anatomical_resampling 0.1x0.1x0.1 --commonspace_resampling 0.3x0.3x0.3 -r light_SyN --template_reg_script light_SyN --cluster_type pbs
 ```

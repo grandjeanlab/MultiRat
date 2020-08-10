@@ -10,12 +10,12 @@ In a desire to push further, we seek to obtain additional datasets pertaining to
 The end-goal is to make this as an available resource to researchers and to publish an extensive description of the collective dataset in a peer-reviewed journal.  
 
 ### Goal
-1. To provide a large rat fMRI collective dataset
+1. To provide a large rat fMRI collective dataset  
 2. To describe reference population parameters distributions (e.g. FC, motion, SNR) 
 3. To provide evidence-based recommendations for rat fMRI acquisition 
-4. To foster collaborations and discussion within the community
-5. Demonstrate test-retest reliability
-6. Investigate the human-factor variability during data acquisition using a standardized protocol. 
+4. To foster collaborations and discussion within the community  
+5. Demonstrate test-retest reliability  
+6. Investigate the human-factor variability during data acquisition using a standardized protocol.   
 7. Organize an international seminar on rodent data standardization at the Donders Institute (NWO Scientific Meetings and Consultations 8. Domain Science) 
 
 
@@ -28,11 +28,12 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Symposium on rodent fMRI standards held at the Donders Institute (if funding is available)
 
 ### Links
-[License and permissions](LICENSE.md)
-[Collaborative model and project details](proj_detail.md)
-Preregistration on osf.io (link pending)
-[Analysis code](proj_code.md)
+[License and permissions](LICENSE.md)  
+[Collaborative model and project details](proj_detail.md)  
+[Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b) 
+[Analysis code](proj_code.md)  
 
-[Lab webpage](https://grandjeanlab.github.io/)
-[Twitter](https://twitter.com/grandjeanlab)
+### Other
+[Lab webpage](https://grandjeanlab.github.io/)  
+[Twitter](https://twitter.com/grandjeanlab)  
 
