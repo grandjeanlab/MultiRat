@@ -30,7 +30,7 @@ The end-goal is to make this as an available resource to researchers and to publ
 ### Links
 [License and permissions](LICENSE.md)  
 [Collaborative model and project details](proj_detail.md)  
-[Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b) 
+[Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b)  
 [Analysis code](proj_code.md)  
 
 ### Other
