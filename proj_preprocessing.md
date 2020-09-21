@@ -38,17 +38,13 @@ The following was written in
 
 ## Bash environement
 
-  - [RABIES Version: 0.1.3](https://github.com/CoBrALab/RABIES) (see
-    dependencies and install procedures)  
-  - FSL Version: 6.0.1  
-  - AFNI Version: AFNI\_20.2.00  
-  - ANTs Version: 2.1.0.post370-ga466e  
-  - Anaconda3 Version: 5.0.0  
-  - Python Version: 3.6.2  
-  - [Bruker2NIfTI
-    Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)
+  - [RABIES Version: 0.1.3](https://github.com/CoBrALab/RABIES) build
+    from Dockerfile and converted into a Singulariy
 
-Other bash functions  
+Additional software include  
+\- FSL Version: 6.0.1  
+\- [Bruker2NIfTI
+Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)  
 \- curl  
 \- unzip  
 \- rm
@@ -65,14 +61,9 @@ re-use.
 init_folder="/home/traaffneu/joagra/code/MultiRat"
 analysis_folder="/project/4180000.19/multiRat"
 
-# this section is for use to import software within my HPC environment. You may change it to load software into the Rstudio terminal environment
-echo 'module load ANTs/20150828' > bash_env.sh
-echo 'module load anaconda3' >> bash_env.sh
-echo 'source activate rabies' >> bash_env.sh
-
 
 # no need to update the lines below. 
-echo 'init_folder='$init_folder >> bash_env.sh
+echo 'init_folder='$init_folder > bash_env.sh
 echo 'analysis_folder='$analysis_folder >> bash_env.sh
 
 echo 'template=$analysis_folder"/template/WHS_SD_rat_T2star_v1.01.nii.gz"'  >> bash_env.sh
@@ -81,26 +72,6 @@ echo 'template_WM=$analysis_folder"/template/WHS_SD_v2_WM.nii.gz"' >> bash_env.s
 echo 'template_GM=$analysis_folder"/template/WHS_SD_v2_GM.nii.gz"' >> bash_env.sh
 echo 'template_CSF=$analysis_folder"/template/WHS_SD_v2_CSF.nii.gz"' >> bash_env.sh
 echo 'atlas=$analysis_folder"/template/WHS_SD_rat_atlas_v3.nii.gz"'  >> bash_env.sh
-```
-
-## R environement
-
-  - ggplot2 Version: ggplot2\_3.3.2  
-  - dplyr Version: dplyr\_1.0.1  
-  - here Version: here\_0.1
-
-<!-- end list -->
-
-``` r
-# Update this section to indicate where the code is kept (init_folder) and where the analysis is performed/stored (analysis_folder). 
-init_folder<-"/home/traaffneu/joagra/code/MultiRat"  
-analysis_folder<-"/project/4180000.19/multiRat"  
-
-
-#load the R libraries 
-library('ggplot2')  
-library('dplyr')  
-library('here')  
 ```
 
 # Asset preparation
@@ -185,11 +156,60 @@ preprocessing is performed without slice timing correction.
 
 # Testing RABIES
 
-This section is meant to try RABIES with rat data and this template. It
-will not be kept in later versions.
+This is an example of a RABIES preprocessing call for dataset `ds01002`.
+Because this is called within a Singularity, the call might differ from
+platform to platform.
 
 ``` bash
-source bash_env.sh
+source /home/traaffneu/joagra/code/MultiRat/bash_env.sh
 
-rabies $analysis_folder/data/ds01002 $analysis_folder/preprocess/ds01002_pbs_resample --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas --anatomical_resampling 0.1x0.1x0.1 --commonspace_resampling 0.3x0.3x0.3 -r light_SyN --template_reg_script light_SyN --cluster_type pbs
+export FSLDIR=/opt/fsl/6.0.1
+export PATH=$PATH:$FSLDIR/bin
+
+
+export ANTSPATH=/home/rabies/ants-v2.3.1/bin 
+
+export RABIES_VERSION=0.1.3-dev
+export RABIES=/home/rabies/RABIES-0.1.3-dev
+export PYTHONPATH="${PYTHONPATH}:$RABIES"
+export PATH=$PATH:$RABIES/bin
+export PATH=$PATH:$RABIES/rabies/shell_scripts
+export PATH=$RABIES/twolevel_ants_dbm:$PATH
+
+
+rabies --plugin MultiProc preprocess --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas -r light_SyN --template_reg_script light_SyN --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --autoreg $analysis_folder/data_small/ds01002 $analysis_folder/preprocess/ds01002
 ```
+
+Practically, within my environment, I need to call the script above as
+such.
+
+``` bash
+/opt/singularity/3.5.2/bin/singularity exec -B /opt/fsl -B /project/4180000.19/multiRat/ /opt/rabies/0.1.3/rabies-0.1.3-dev.simg bash -c /project/4180000.19/multiRat/script/run/rabies_2.sh 
+```
+
+### Quality control
+
+RABIES outputs several QA/QC images that are directly relevant to assess
+image registration (Func to Anat, Anat to template, template to
+commonspace), and motion parameters.
+
+Below are several examples of Func (top row) to Anat (bottom row) for
+several datasets being preprocessed. While the majority of currently
+processed scans passed quality control on the basis of Func to Anat
+registration, some did not. Either RABIES will need optimization to
+improve the registration generalization across datasets, or scans will
+need to be excluded. Importantly, the study preregistration did not make
+contingency in case some scans must be excluded.
+
+\#\#\#\#Passed QC
+
+![func2anat](assets/QC/sub-0100100_ses-1_run-1_bold_EPI2Anat.png)
+![func2anat](assets/QC/sub-0100300_ses-1_run-1_bold_EPI2Anat.png)
+![func2anat](assets/QC/sub-0100401_ses-1_run-1_bold_EPI2Anat.png)
+![func2anat](assets/QC/sub-0100800_ses-1_run-1_bold_EPI2Anat.png)
+![func2anat](assets/QC/sub-0100900_ses-1_run-1_bold_EPI2Anat.png)
+
+\#\#\#\#Failed QC
+
+![func2anat](assets/QC/sub-0100202_ses-1_run-1_bold_EPI2Anat.png)
+![func2anat](assets/QC/sub-0100500_ses-1_run-1_bold_EPI2Anat.png)

@@ -1,6 +1,3 @@
-module load ANTs/20150828
-module load anaconda3
-source activate rabies
 init_folder=/home/traaffneu/joagra/code/MultiRat
 analysis_folder=/project/4180000.19/multiRat
 template=$analysis_folder"/template/WHS_SD_rat_T2star_v1.01.nii.gz"
