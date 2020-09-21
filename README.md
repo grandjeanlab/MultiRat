@@ -31,7 +31,11 @@ The end-goal is to make this as an available resource to researchers and to publ
 [License and permissions](LICENSE.md)  
 [Collaborative model and project details](proj_detail.md)  
 [Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b)  
+<<<<<<< HEAD
 [Preprocessing code](proj_preprocessing.md)  
+=======
+[Analysis code](proj_code.md)  
+>>>>>>> 90bdc73f5e1fd913fdc3046d51341d137f51f4f7
 
 ### Other
 [Lab webpage](https://grandjeanlab.github.io/)  
