@@ -28,10 +28,10 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Symposium on rodent fMRI standards held at the Donders Institute (if funding is available and COVID permit)
 
 ### Analysis
-[1. Environement preparation](proj_env.md)
-[2. Asset preparation](proj_asset.md)
-[3. Preprocessing code](proj_preprocessing.md) 
-[4. Qality control](proj_qa.md)
+[1. Environement preparation](proj_env.md)  
+[2. Asset preparation](proj_asset.md)  
+[3. Preprocessing code](proj_preprocessing.md)   
+[4. Qality control](proj_qa.md)  
 
 ### Usfeful links
 [License and permissions](LICENSE.md)  
