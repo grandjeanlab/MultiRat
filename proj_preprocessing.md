@@ -4,212 +4,177 @@ Joanes Grandjean
 
 ![rat art](assets/img/rat_art.png)
 
-# Foreword
+# RABIES argument justification
 
-This is a R markdown file which contains all the code for reproducing my
-analysis. The code is meant to be followed step-wise. The raw fMRI
-dataset will not be publicly available before the project preprint
-publication on BioArxiv. The raw fMRI dataset can be made available
-prior to publication upon request and review from the authors.
+RABIES is run in 3 steps (preprocessing, confound\_regression,
+analysis). Here I justify my selection of arguments. Below is a full
+`preprocessing` command with the augments I used.
 
-If re-using some of the scripts, please follow citations guidelines for
-the software used. I’ve provided the links to the software wherever
-possible. See also the [license](LICENSE.md) for this software.
+`rabies --plugin MultiProc preprocess --no_STC --anat_template $template
+--brain_mask $template_mask --WM_mask $template_WM --CSF_mask
+$template_CSF --vascular_mask $template_CSF --labels $atlas --autoreg
+--commonspace_resampling 0.35x0.35x0.35
+--anatomical_resampling 0.25x0.25x0.25 $analysis_folder/bids
+$analysis_folder/preprocess`
 
-The code is executed in `bash` (fMRI preprocessing) and `R` (analysis
-and plots).
+`--plugin MultiProc` : I run this software on a high-performance cluster
+(HPC). Due to software installation limitation, I’ve built RABIES into a
+singularity. While using the singularity mode, I cannot use the
+traditional job submission (PBS) mode. Users interesting in running the
+software on their environment will need to adapt this section.
 
-See the [environement](#Environement) section for the required software
-libraries. The `R` libraries are organized using
-[renv](https://rstudio.github.io/renv/).
+‘–no\_STC’ : Unfortunately, it is not possible to ensure the slice
+acquisition sequence for every dataset reliably. For short-TR sequences
+(TR \< 2s), slice timing correction is through to only improve
+marginally.
 
-To reproduce the code contained within this software, please follow
-these steps  
-1\. get the required dependencies for [bash](#Bash_environement) and
-[R](#R_environement)  
-2\. Update the variables `init_folder` and `analysis_folder` for both
-bash and R environments
+`-anat_template $template --brain_mask $template_mask --WM_mask
+$template_WM --CSF_mask $template_CSF --vascular_mask $template_CSF
+--labels $atlas` : The templates and masks arguments assume the assets
+have been prepared as described in [2. Asset
+preparation](proj_asset.md). Notably, there was not vascular map
+available with the template. In [Grandjean et
+al. 2020](https://www.sciencedirect.com/science/article/pii/S1053811919308699),
+I generated a vascular mask from the data by identifying overlapping ICA
+components. It is unclear before preprocessing if I will find such
+components in rat. Also, a vascular mask is a prerequisite for running
+the `confound_regression` command.
 
-# Environement
+`--autoreg` : as of the version used, this is the recommended
+registration argument.
 
-The following was written in  
-\- [R Version: 3.5.1](https://cran.r-project.org/)  
-\- [rstudio Version: 1.3.959](https://rstudio.com/)
+`--commonspace_resampling 0.35x0.35x0.35
+--anatomical_resampling 0.25x0.25x0.25` : Due to space / computer time
+constrains, I have to run the preprocessing with relative low
+resolution. Indeed, I am limited to 72h walltime per script, and some
+datasets would not complete running when using high resolutions.
 
-## Bash environement
+`$analysis_folder/bids $analysis_folder/preprocess` : The standard input
+/ output arguments.
 
-  - [RABIES Version: 0.1.3](https://github.com/CoBrALab/RABIES) build
-    from Dockerfile and converted into a Singulariy
+# Script preparation.
 
-Additional software include  
-\- FSL Version: 6.0.1  
-\- [Bruker2NIfTI
-Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)  
-\- curl  
-\- unzip  
-\- rm
+Because of the variable TR and other parameter, individual dataset are
+preprocessed separately. To accommodate that and generate the
+preprocessing script, I’ve prepared a R script to generate the
+preprocessing code.
 
-Rstudio does not transfer variables between `bash` chunks. Hence, each
-chunks needs to reload the environment. To achieve this seamlessly, I
-use a [bash\_env.sh](bash_env.sh) file to re-initialize the environment
-within each chunk. The content of it should be adapted by the user for
-re-use.
+``` r
+library(stringr)
 
-``` bash
-
-# Update this section to indicate where the code is kept (init_folder) and where the analysis is performed/stored (analysis_folder). 
-init_folder="/home/traaffneu/joagra/code/MultiRat"
-analysis_folder="/project/4180000.19/multiRat"
+# Load bash environment variable, including asset location needed to make our RABIES call. 
+readRenviron("bash_env.sh")
+analysis_folder <- Sys.getenv("analysis_folder")
+template <- Sys.getenv("template")
+template_mask <- Sys.getenv("template_mask")
+template_WM <- Sys.getenv("template_WM")
+template_CSF <- Sys.getenv("template_CSF")
+atlas <- Sys.getenv("atlas")
+ROI <- Sys.getenv("ROI")
 
 
-# no need to update the lines below. 
-echo 'init_folder='$init_folder > bash_env.sh
-echo 'analysis_folder='$analysis_folder >> bash_env.sh
+study <- read.csv('assets/table/meta_data.tsv',sep='\t') # Load the meta data (currently not available on public repository.)
+output.script <- file.path(analysis_folder,'script',paste('run_rabies-',Sys.Date(),'.sh',sep=''))
 
-echo 'template=$analysis_folder"/template/WHS_SD_rat_T2star_v1.01.nii.gz"'  >> bash_env.sh
-echo 'template_mask=$analysis_folder"/template/WHS_SD_v2_brainmask_bin.nii.gz"' >> bash_env.sh
-echo 'template_WM=$analysis_folder"/template/WHS_SD_v2_WM.nii.gz"' >> bash_env.sh
-echo 'template_GM=$analysis_folder"/template/WHS_SD_v2_GM.nii.gz"' >> bash_env.sh
-echo 'template_CSF=$analysis_folder"/template/WHS_SD_v2_CSF.nii.gz"' >> bash_env.sh
-echo 'atlas=$analysis_folder"/template/WHS_SD_rat_atlas_v3.nii.gz"'  >> bash_env.sh
+
+ds.select <- c(1,2,3,4,5,6,7,8,9,10,11,12,13) # Select which dataset to preprocess
+is.rs <- TRUE # Select if resting-state (TRUE) or stimulus-evoked (FALSE). Important because this will impact confound regression and analysis
+use.singularity <- TRUE #select if it is run within a singularity environment (not currently implemented)
+use.qsub <- TRUE #Select if you want to submit calls using qsub job submission command (for HPC). 
+
+# Prepare output directories 
+dir.create(path = file.path(analysis_folder,'script'), recursive = TRUE, showWarnings = FALSE)
+dir.create(path = file.path(analysis_folder,'tmp'), recursive = TRUE, showWarnings = FALSE)
+dir.create(path = file.path(analysis_folder,'preprocess'), recursive = TRUE, showWarnings = FALSE)
+dir.create(path = file.path(analysis_folder,'confound'), recursive = TRUE, showWarnings = FALSE)
+dir.create(path = file.path(analysis_folder,'analysis'), recursive = TRUE, showWarnings = FALSE)
+dir.create(path = file.path(analysis_folder,'qa'), recursive = TRUE, showWarnings = FALSE)
+
+
+# Environment to be exported to PATH within the singularity. 
+singularity.env <- 'export FSLDIR=/opt/fsl/6.0.1; export PATH=$PATH:$FSLDIR/bin; export ANTSPATH=/home/rabies/ants-v2.3.1/bin; export RABIES_VERSION=0.2.0-dev; export RABIES=/home/rabies/RABIES-0.2.0-dev; export PYTHONPATH="${PYTHONPATH}:$RABIES"; export PATH=$PATH:$RABIES/bin; export PATH=$PATH:$RABIES/rabies/shell_scripts; export PATH=$RABIES/twolevel_ants_dbm:$PATH;'
+
+singularity.call <- paste('/opt/singularity/3.5.2/bin/singularity exec -B /opt/fsl -B ',analysis_folder,' /opt/rabies/0.2.0/rabies-0.2.0-dev.simg bash -c \'',sep='')
+
+qsub.short <- ' |  qsub -l \'procs=1,mem=8gb,walltime=1:00:00\''
+qsub.long <- ' |  qsub -l \'procs=1,mem=24gb,walltime=72:00:00\''
+
+sink(output.script)
+
+for( ds in ds.select){
+
+  
+#ds<-1
+study.sub<-study[study$rat.ds == ds, ]
+TR <- study.sub$func.TR[1]
+
+mkdir.tmp.call <- paste('mkdir -p ',file.path(analysis_folder,'tmp',ds),sep='')
+mv2tmp.call <- paste('cp -r ',file.path(analysis_folder,'bids_small',paste('sub-01',str_pad(ds, 3, pad = "0"),'*',sep='')),' ', file.path(analysis_folder,'tmp',ds),sep='')
+mkdir.qa.call<- paste('mkdir -p ',file.path(analysis_folder,'qa',ds),sep='')
+mv2qa.call <- paste('mv ',file.path(analysis_folder,'preprocess',ds,'QC_report/*'),' ', file.path(analysis_folder,'qa',ds),sep='')
+rm.tmp.call <- paste('rm -r ',file.path(analysis_folder,'tmp',ds),sep='')
+
+# RABIES preprocessing call
+if(use.singularity){
+rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies --plugin MultiProc preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ', file.path(analysis_folder,'preprocess',ds),sep='')
+}else{
+rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ',file.path(analysis_folder,'preprocess',ds),sep='')}
+
+# RABIES confound call (maybe make into a loop for every confound type in future.)
+
+rabies.confound.call.aroma <- paste('analysis_folder=',analysis_folder,'; rabies confound_regression ', file.path(analysis_folder,'preprocess',ds),' ',file.path(analysis_folder,'confound',ds), ' --commonspace_bold --highpass 0.01 --lowpass 0.1 --smoothing_filter 0.5 --diagnosis_output --run_aroma --TR ', TR, 's',sep='')
+
+# RABIES analysis call (maybe make into a loop for every ROI in the future)
+rabies.analysis.call <- paste('analysis_folder=',analysis_folder,'; rabies analysis ', file.path(analysis_folder,'confound',ds),' ',file.path(analysis_folder,'analysis',ds), ' --seed_list ', ROI,'S1bf_l.nii.gz',sep='')
+
+
+cat(paste('# now processing DS ',ds,sep=''))
+cat("\n")
+
+cat(mkdir.tmp.call)
+if(use.qsub){cat(qsub.short)}
+cat("\n")
+
+cat(mv2tmp.call)
+if(use.qsub){cat(qsub.short)}
+cat("\n")
+cat("\n")
+
+if(use.singularity){cat(c(singularity.call,singularity.env))}
+cat(rabies.preprocess.call)
+if(use.singularity){cat("\'")}
+if(use.qsub){cat(qsub.long)}
+cat("\n")
+cat("\n")
+
+
+if(use.singularity){cat(c(singularity.call,singularity.env))}
+cat(rabies.confound.call.aroma)
+if(use.singularity){cat("\'")}
+if(use.qsub){cat(qsub.long)}
+cat("\n")
+cat("\n")
+
+
+cat(mv2qa.call)
+if(use.qsub){cat(qsub.short)}
+cat("\n")
+
+cat(rm.tmp.call)
+if(use.qsub){cat(qsub.short)}
+cat("\n")
+cat("\n")
+
+if(use.singularity){cat(c(singularity.call,singularity.env))}
+cat(rabies.analysis.call)
+if(use.singularity){cat("\'")}
+if(use.qsub){cat(qsub.long)}
+cat("\n")
+cat("\n")
+cat("\n")
+
+
+}
+
+sink()
 ```
-
-# Asset preparation
-
-## Dowload and prepare the template
-
-For this project, I will use the WHS rat template available
-[here](https://www.nitrc.org/projects/whs-sd-atlas). The reference for
-the template is: Papp EA, Leergaard TB, Calabrese E, Johnson GA, Bjaalie
-JG (2014) “Waxholm Space atlas of the Sprague Dawley rat brain”
-NeuroImage 97:374-386.
-[doi 10.1016/j.neuroimage.2014.04.001](https://doi.org/10.1016/j.neuroimage.2014.04.001)
-
-In this chunk, I download the template and atlas, and generate separate
-white (WM), gray (GM), and cerebrospinal fluid (CSF) binary maps. An
-additional xml file to make the atlas compatible with FSL was downloaded
-from this [board](https://www.nitrc.org/forum/message.php?msg_id=29057),
-and made available in the
-[assets](assets/atlas/WHS_SD_rat_atlas_v3-FSL.xml)
-
-``` bash
-source bash_env.sh
-
-mkdir -p $analysis_folder'/template'
-
-curl https://www.nitrc.org/frs/download.php/9441/WHS_SD_rat_atlas_v2_pack.zip --output $analysis_folder'/template/WHS_SD.zip'
-curl https://www.nitrc.org/frs/download.php/9746/WHS_SD_v2_white_gray_mask_clipped.nii.gz --output $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz'
-curl https://www.nitrc.org/frs/download.php/9748/WHS_SD_v2_brainmask_bin.nii.gz --output $analysis_folder'/template/WHS_SD_v2_brainmask_bin.nii.gz'
-curl https://www.nitrc.org/frs/download.php/11404/WHS_SD_rat_atlas_v3.label --output $analysis_folder'/template/WHS_SD_rat_atlas_v3.label'
-curl https://www.nitrc.org/frs/download.php/11403/WHS_SD_rat_atlas_v3.nii.gz --output $analysis_folder'/template/WHS_SD_rat_atlas_v3.nii.gz'
-
-
-unzip -d $analysis_folder'/template/' $analysis_folder'/template/WHS_SD.zip' 
-rm $analysis_folder'/template/WHS_SD.zip' 
-
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 1 -uthr 1 -bin $analysis_folder'/template/WHS_SD_v2_WM.nii.gz'
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 2 -uthr 2 -bin $analysis_folder'/template/WHS_SD_v2_GM.nii.gz'
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 3 -uthr 3 -bin $analysis_folder'/template/WHS_SD_v2_CSF.nii.gz'
-```
-
-## Dataset preparation
-
-Datasets included in this study were accepted in any format (bruker,
-dicom, nifti, minc). The first step consists of arranging all datasets
-within the same convention. I opted for true voxel size and
-**A**nterior-**P**osterior axis defined as the rostro-caudal axis. Some
-datasets were provided with x10 inflated voxeld and the
-**S**uperior-**I**nferior axis defined as the rostro-caudal axis
-instead, e.g.:
-
-![raw structrual image](assets/img/orient_pre.png)
-
-These had to be corrected, and organized into
-[BIDS](https://bids.neuroimaging.io/) format manually. To do so, I wrote
-scripts using a combination of the following FSL and AFNI commands,
-`fslinfo`, `fslmerge`, `fslorient`, `fslchpixdim`, `fslswapdim`, and
-`3dresample`.
-
-Two scripts used to convert datasets are provided as examples. [Convert
-raw Bruker data](assets/script/convert_bruker.sh) and [convert nifti
-data](assets/script/convert_nifti.sh). Raw Bruker data were converted
-using the [Bruker2NIfTI](https://github.com/neurolabusc/Bru2Nii)
-v1.0.20180303 package, written by Matthew Brett, Andrew Janke, Mikaël
-Naveau, Chris Rorden. Please note that this software is no longer
-supported. New users are invited to try
-[BrkRaw](https://github.com/BrkRaw/bruker) instead.
-
-Below is an example of a corrected structural image. Note how the
-**S**uperior, **I**nferior, **A**nterior, **P**osterior axis labels are
-indicated in `fsleyes`.
-
-![corrected structrual image](assets/img/orient_post.png)
-
-## Dataset preparation limiation
-
-Unfortunately, I cannot ensure the **L**eft / **R**ight axis are
-represented correctly across all datasets. While this is less of an
-issue for resting-state fMRI, this is a caveat in the stimulus-evoked
-fMRI arm of this study, and should be acknowledged as a limitation.
-Similarly, I cannot ensure the slicing acquisition order, hence,
-preprocessing is performed without slice timing correction.
-
-# Testing RABIES
-
-This is an example of a RABIES preprocessing call for dataset `ds01002`.
-Because this is called within a Singularity, the call might differ from
-platform to platform.
-
-``` bash
-source /home/traaffneu/joagra/code/MultiRat/bash_env.sh
-
-export FSLDIR=/opt/fsl/6.0.1
-export PATH=$PATH:$FSLDIR/bin
-
-
-export ANTSPATH=/home/rabies/ants-v2.3.1/bin 
-
-export RABIES_VERSION=0.1.3-dev
-export RABIES=/home/rabies/RABIES-0.1.3-dev
-export PYTHONPATH="${PYTHONPATH}:$RABIES"
-export PATH=$PATH:$RABIES/bin
-export PATH=$PATH:$RABIES/rabies/shell_scripts
-export PATH=$RABIES/twolevel_ants_dbm:$PATH
-
-
-rabies --plugin MultiProc preprocess --no_STC --anat_template $template --brain_mask $template_mask --WM_mask $template_WM --CSF_mask $template_CSF --labels $atlas -r light_SyN --template_reg_script light_SyN --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --autoreg $analysis_folder/data_small/ds01002 $analysis_folder/preprocess/ds01002
-```
-
-Practically, within my environment, I need to call the script above as
-such.
-
-``` bash
-/opt/singularity/3.5.2/bin/singularity exec -B /opt/fsl -B /project/4180000.19/multiRat/ /opt/rabies/0.1.3/rabies-0.1.3-dev.simg bash -c /project/4180000.19/multiRat/script/run/rabies_2.sh 
-```
-
-### Quality control
-
-RABIES outputs several QA/QC images that are directly relevant to assess
-image registration (Func to Anat, Anat to template, template to
-commonspace), and motion parameters.
-
-Below are several examples of Func (top row) to Anat (bottom row) for
-several datasets being preprocessed. While the majority of currently
-processed scans passed quality control on the basis of Func to Anat
-registration, some did not. Either RABIES will need optimization to
-improve the registration generalization across datasets, or scans will
-need to be excluded. Importantly, the study preregistration did not make
-contingency in case some scans must be excluded.
-
-\#\#\#\#Passed QC
-
-![func2anat](assets/QC/sub-0100100_ses-1_run-1_bold_EPI2Anat.png)
-![func2anat](assets/QC/sub-0100300_ses-1_run-1_bold_EPI2Anat.png)
-![func2anat](assets/QC/sub-0100401_ses-1_run-1_bold_EPI2Anat.png)
-![func2anat](assets/QC/sub-0100800_ses-1_run-1_bold_EPI2Anat.png)
-![func2anat](assets/QC/sub-0100900_ses-1_run-1_bold_EPI2Anat.png)
-
-\#\#\#\#Failed QC
-
-![func2anat](assets/QC/sub-0100202_ses-1_run-1_bold_EPI2Anat.png)
-![func2anat](assets/QC/sub-0100500_ses-1_run-1_bold_EPI2Anat.png)

@@ -25,15 +25,19 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Publicly available code to replicate the study on github.com
 * Bioarxiv preprint
 * Journal publication
-* Symposium on rodent fMRI standards held at the Donders Institute (if funding is available)
+* Symposium on rodent fMRI standards held at the Donders Institute (if funding is available and COVID permit)
 
-### Links
+### Analysis
+[1. Environement preparation](proj_env.md)
+[2. Asset preparation](proj_asset.md)
+[3. Preprocessing code](proj_preprocessing.md) 
+[4. Qality control](proj_qa.md)
+
+### Usfeful links
 [License and permissions](LICENSE.md)  
 [Collaborative model and project details](proj_detail.md)  
 [Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b)  
-[Preprocessing code](proj_preprocessing.md)  
-
-### Other
 [Lab webpage](https://grandjeanlab.github.io/)  
 [Twitter](https://twitter.com/grandjeanlab)  
+
 
