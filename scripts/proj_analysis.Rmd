@@ -8,13 +8,13 @@ author: 'Joanes Grandjean'
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-![rat art](assets/img/rat_art.png)
+![rat art](../assets/img/rat_art.png)
 
 # Foreword
 This is a R markdown file which contains all the code for reproducing my analysis.
 The code is meant to be followed step-wise. The raw fMRI dataset will not be publicly available before the project preprint publication on BioArxiv. The raw fMRI dataset can be made available prior to publication upon request and review from the authors. 
 
-If re-using some of the scripts, please follow citations guidelines for the software used. I've provided the links to the software wherever possible. See also the [license](LICENSE.md) for this software.  
+If re-using some of the scripts, please follow citations guidelines for the software used. I've provided the links to the software wherever possible. See also the [license](../LICENSE.md) for this software.  
 
 The code is executed in `bash` (fMRI preprocessing) and `R` (analysis and plots).
 

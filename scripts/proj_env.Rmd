@@ -7,12 +7,13 @@ author: 'Joanes Grandjean'
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+![rat art](../assets/img/rat_art.png)
 
 # Foreword
 This and the follow are R markdown files which contains all the code for reproducing my analysis and detail the process.
 The code is meant to be followed step-wise. The raw fMRI dataset will not be publicly available before the project preprint publication on BioRxiv. The raw fMRI dataset can be made available prior to publication upon request and review from the authors. 
 
-If re-using some of the scripts, please follow citations guidelines for the software used. I've provided the links to the software wherever possible. See also the [license](LICENSE.md) for this software.  
+If re-using some of the scripts, please follow citations guidelines for the software used. I've provided the links to the software wherever possible. See also the [license](../LICENSE.md) for this software.  
 
 The code is executed in `bash` (fMRI preprocessing) and `R` (analysis and plots).
 
@@ -35,7 +36,7 @@ Additional software include
 - [Bruker2NIfTI Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)  
 - bash binaries (curl, unzip, rm, mv, cp)  
 
-Rstudio does not transfer variables between `bash` chunks. Hence, each chunks needs to reload the environment. To achieve this seamlessly, I use a [bash_env.sh](bash_env.sh) file to re-initialize the environment within each chunk. The content of it should be adapted by the user for re-use. 
+Rstudio does not transfer variables between `bash` chunks. Hence, each chunks needs to reload the environment. To achieve this seamlessly, I use a [bash_env.sh](../bash_env.sh) file to re-initialize the environment within each chunk. The content of it should be adapted by the user for re-use. 
 
 ```{bash init bash_environement, eval=FALSE}
 

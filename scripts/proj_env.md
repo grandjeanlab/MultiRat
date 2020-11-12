@@ -2,6 +2,8 @@ MultiRAT environement preparation
 ================
 Joanes Grandjean
 
+![rat art](../assets/img/rat_art.png)
+
 # Foreword
 
 This and the follow are R markdown files which contains all the code for
@@ -13,7 +15,7 @@ the authors.
 
 If re-using some of the scripts, please follow citations guidelines for
 the software used. I’ve provided the links to the software wherever
-possible. See also the [license](LICENSE.md) for this software.
+possible. See also the [license](../LICENSE.md) for this software.
 
 The code is executed in `bash` (fMRI preprocessing) and `R` (analysis
 and plots).
@@ -48,9 +50,9 @@ Version: 1.0.20180303](https://github.com/neurolabusc/Bru2Nii)
 
 Rstudio does not transfer variables between `bash` chunks. Hence, each
 chunks needs to reload the environment. To achieve this seamlessly, I
-use a [bash\_env.sh](bash_env.sh) file to re-initialize the environment
-within each chunk. The content of it should be adapted by the user for
-re-use.
+use a [bash\_env.sh](../bash_env.sh) file to re-initialize the
+environment within each chunk. The content of it should be adapted by
+the user for re-use.
 
 ``` bash
 

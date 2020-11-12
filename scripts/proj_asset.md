@@ -2,7 +2,7 @@ MultiRAT asset preparation
 ================
 Joanes Grandjean
 
-![rat art](assets/img/rat_art.png)
+![rat art](../assets/img/rat_art.png)
 
 ## Dowload and prepare the template
 
@@ -55,8 +55,8 @@ fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -t
 Here, I create regions-of-interest for seed-based analysis. The
 preregistration specifies the seeds should be 0.9 mm3 and placed on both
 hemispheres. It specifies the following ROIs: S1 barrel field area,
-Cingulate area, Retrosplenial area, Insula area, motor area, dorsal
-hippocampus, caudate putamen, amygdala, striatum, thalamus.
+Cingulate area, Retrosplenial area, Insula area, motor area,
+caudate-putamen, dorsal hippocampus, amygdala, thalamus.
 
 ``` bash
 source bash_env.sh
@@ -81,6 +81,26 @@ roi_name='MOp_l'
 fslmaths $template -mul 0 -add 1 -roi 65 9 268 9 143 9 0 1 $ROI$roi_name -odt int
 roi_name='MOp_r'
 fslmaths $template -mul 0 -add 1 -roi 126 9 268 9 143 9 0 1 $ROI$roi_name -odt int
+
+roi_name='CPu_l'
+fslmaths $template -mul 0 -add 1 -roi 62 9 250 9 112 9 0 1 $ROI$roi_name -odt int
+roi_name='CPu_r'
+fslmaths $template -mul 0 -add 1 -roi 129 9 250 9 112 9 0 1 $ROI$roi_name -odt int
+
+roi_name='dHC_l'
+fslmaths $template -mul 0 -add 1 -roi 63 9 209 9 142 9 0 1 $ROI$roi_name -odt int
+roi_name='dHC_r'
+fslmaths $template -mul 0 -add 1 -roi 122 9 209 9 142 9 0 1 $ROI$roi_name -odt int
+
+roi_name='AMG_l'
+fslmaths $template -mul 0 -add 1 -roi 42 9 215 9 80 9 0 1 $ROI$roi_name -odt int
+roi_name='AMG_r'
+fslmaths $template -mul 0 -add 1 -roi 145 9 215 9 80 9 0 1 $ROI$roi_name -odt int
+
+roi_name='TH_l'
+fslmaths $template -mul 0 -add 1 -roi 63 9 215 9 113 9 0 1 $ROI$roi_name -odt int
+roi_name='TH_r'
+fslmaths $template -mul 0 -add 1 -roi 122 9 215 9 113 9 0 1 $ROI$roi_name -odt int
 ```
 
 ## Dataset preparation
@@ -93,7 +113,7 @@ datasets were provided with x10 inflated voxels and the
 **S**uperior-**I**nferior axis defined as the rostro-caudal axis
 instead, e.g.:
 
-![raw structrual image](assets/img/orient_pre.png)
+![raw structrual image](../assets/img/orient_pre.png)
 
 These had to be corrected, and organized into
 [BIDS](https://bids.neuroimaging.io/) format manually. To do so, I wrote
@@ -102,8 +122,8 @@ scripts using a combination of the following FSL and AFNI commands,
 `3dresample`.
 
 Two scripts used to convert datasets are provided as examples. [Convert
-raw Bruker data](assets/script/convert_bruker.sh) and [convert nifti
-data](assets/script/convert_nifti.sh). Raw Bruker data were converted
+raw Bruker data](../assets/script/convert_bruker.sh) and [convert nifti
+data](../assets/script/convert_nifti.sh). Raw Bruker data were converted
 using the [Bruker2NIfTI](https://github.com/neurolabusc/Bru2Nii)
 v1.0.20180303 package, written by Matthew Brett, Andrew Janke, Mikaël
 Naveau, Chris Rorden. Please note that this software is no longer
@@ -114,7 +134,7 @@ Below is an example of a corrected structural image. Note how the
 **S**uperior, **I**nferior, **A**nterior, **P**osterior axis labels are
 indicated in `fsleyes`.
 
-![corrected structrual image](assets/img/orient_post.png)
+![corrected structrual image](../assets/img/orient_post.png)
 
 ## Dataset preparation limiation
 

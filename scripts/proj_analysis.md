@@ -2,7 +2,7 @@ MultiRAT analysis code
 ================
 Joanes Grandjean
 
-![rat art](assets/img/rat_art.png)
+![rat art](../assets/img/rat_art.png)
 
 # Foreword
 
@@ -14,7 +14,7 @@ prior to publication upon request and review from the authors.
 
 If re-using some of the scripts, please follow citations guidelines for
 the software used. I’ve provided the links to the software wherever
-possible. See also the [license](LICENSE.md) for this software.
+possible. See also the [license](../LICENSE.md) for this software.
 
 The code is executed in `bash` (fMRI preprocessing) and `R` (analysis
 and plots).

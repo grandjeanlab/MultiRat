@@ -2,7 +2,7 @@ MultiRAT analysis code
 ================
 Joanes Grandjean
 
-![rat art](assets/img/rat_art.png)
+![rat art](../assets/img/rat_art.png)
 
 # RABIES argument justification
 
@@ -32,7 +32,7 @@ marginally.
 $template_WM --CSF_mask $template_CSF --vascular_mask $template_CSF
 --labels $atlas` : The templates and masks arguments assume the assets
 have been prepared as described in [2. Asset
-preparation](proj_asset.md). Notably, there was not vascular map
+preparation](../proj_asset.md). Notably, there was not vascular map
 available with the template. In [Grandjean et
 al. 2020](https://www.sciencedirect.com/science/article/pii/S1053811919308699),
 I generated a vascular mask from the data by identifying overlapping ICA
@@ -63,7 +63,7 @@ preprocessing code.
 library(stringr)
 
 # Load bash environment variable, including asset location needed to make our RABIES call. 
-readRenviron("bash_env.sh")
+readRenviron("../bash_env.sh")
 analysis_folder <- Sys.getenv("analysis_folder")
 template <- Sys.getenv("template")
 template_mask <- Sys.getenv("template_mask")
@@ -73,14 +73,20 @@ atlas <- Sys.getenv("atlas")
 ROI <- Sys.getenv("ROI")
 
 
-study <- read.csv('assets/table/meta_data.tsv',sep='\t') # Load the meta data (currently not available on public repository.)
+study <- read.csv('../assets/table/meta_data.tsv',sep='\t') # Load the meta data (currently not available on public repository.)
 output.script <- file.path(analysis_folder,'script',paste('run_rabies-',Sys.Date(),'.sh',sep=''))
 
 
-ds.select <- c(1,2,3,4,5,6,7,8,9,10,11,12,13) # Select which dataset to preprocess
+ds.select <- c(2) # Select which dataset to preprocess
 is.rs <- TRUE # Select if resting-state (TRUE) or stimulus-evoked (FALSE). Important because this will impact confound regression and analysis
 use.singularity <- TRUE #select if it is run within a singularity environment (not currently implemented)
 use.qsub <- TRUE #Select if you want to submit calls using qsub job submission command (for HPC). 
+
+# resting state confound
+confound.list <- c('aroma_s','aroma_l','WMCSF','GSR')
+confound.arguments <- c('--lowpass 0.1 --run_aroma', '--lowpass 0.25 --run_aroma','--lowpass 0.1 --conf_list WM_signal CSF_signal mot_6','--lowpass 0.1 --conf_list global_signal mot_6')
+
+seed.list <- c('S1bf_l', 'ACA_l', 'RSP_l','AI_l','MOp_l')
 
 # Prepare output directories 
 dir.create(path = file.path(analysis_folder,'script'), recursive = TRUE, showWarnings = FALSE)
@@ -102,7 +108,6 @@ qsub.long <- ' |  qsub -l \'procs=1,mem=24gb,walltime=72:00:00\''
 sink(output.script)
 
 for( ds in ds.select){
-
   
 #ds<-1
 study.sub<-study[study$rat.ds == ds, ]
@@ -114,18 +119,6 @@ mkdir.qa.call<- paste('mkdir -p ',file.path(analysis_folder,'qa',ds),sep='')
 mv2qa.call <- paste('mv ',file.path(analysis_folder,'preprocess',ds,'QC_report/*'),' ', file.path(analysis_folder,'qa',ds),sep='')
 rm.tmp.call <- paste('rm -r ',file.path(analysis_folder,'tmp',ds),sep='')
 
-# RABIES preprocessing call
-if(use.singularity){
-rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies --plugin MultiProc preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ', file.path(analysis_folder,'preprocess',ds),sep='')
-}else{
-rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ',file.path(analysis_folder,'preprocess',ds),sep='')}
-
-# RABIES confound call (maybe make into a loop for every confound type in future.)
-
-rabies.confound.call.aroma <- paste('analysis_folder=',analysis_folder,'; rabies confound_regression ', file.path(analysis_folder,'preprocess',ds),' ',file.path(analysis_folder,'confound',ds), ' --commonspace_bold --highpass 0.01 --lowpass 0.1 --smoothing_filter 0.5 --diagnosis_output --run_aroma --TR ', TR, 's',sep='')
-
-# RABIES analysis call (maybe make into a loop for every ROI in the future)
-rabies.analysis.call <- paste('analysis_folder=',analysis_folder,'; rabies analysis ', file.path(analysis_folder,'confound',ds),' ',file.path(analysis_folder,'analysis',ds), ' --seed_list ', ROI,'S1bf_l.nii.gz',sep='')
 
 
 cat(paste('# now processing DS ',ds,sep=''))
@@ -134,11 +127,20 @@ cat("\n")
 cat(mkdir.tmp.call)
 if(use.qsub){cat(qsub.short)}
 cat("\n")
+cat(mkdir.qa.call)
+if(use.qsub){cat(qsub.short)}
+cat("\n")
 
 cat(mv2tmp.call)
 if(use.qsub){cat(qsub.short)}
 cat("\n")
 cat("\n")
+
+# RABIES preprocessing call
+if(use.singularity){
+rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies --plugin MultiProc preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ', file.path(analysis_folder,'preprocess',ds),sep='')
+}else{
+rabies.preprocess.call <- paste('analysis_folder=',analysis_folder,'; rabies preprocess --no_STC --anat_template ',template,' --brain_mask ', template_mask, ' --WM_mask ', template_WM, ' --CSF_mask ', template_CSF, ' --vascular_mask ',template_CSF, ' --labels ', atlas, ' --autoreg --commonspace_resampling 0.35x0.35x0.35 --anatomical_resampling 0.25x0.25x0.25 --TR ', TR, 's ', file.path(analysis_folder,'tmp',ds), ' ',file.path(analysis_folder,'preprocess',ds),sep='')}
 
 if(use.singularity){cat(c(singularity.call,singularity.env))}
 cat(rabies.preprocess.call)
@@ -147,14 +149,47 @@ if(use.qsub){cat(qsub.long)}
 cat("\n")
 cat("\n")
 
+# Analysis path if dataset is resting-state
+if(is.rs){
+  for(confound in confound.list){
+    
+    # Call RABIES for confound regression. Loop across the different options specified
+    rabies.confound.call <- paste('analysis_folder=',analysis_folder,'; rabies confound_regression ', file.path(analysis_folder,'preprocess',ds),' ',file.path(analysis_folder,'confound',ds,confound), ' --commonspace_bold --highpass 0.01 ', confound.arguments[which(confound == confound.list)], ' --smoothing_filter 0.5 --diagnosis_output  --TR ', TR, 's',sep='')
 
-if(use.singularity){cat(c(singularity.call,singularity.env))}
-cat(rabies.confound.call.aroma)
-if(use.singularity){cat("\'")}
-if(use.qsub){cat(qsub.long)}
-cat("\n")
-cat("\n")
+    if(use.singularity){cat(c(singularity.call,singularity.env))}
+    cat(rabies.confound.call)
+    if(use.singularity){cat("\'")}
+    if(use.qsub){cat(qsub.long)}
+    cat("\n")
+    cat("\n")
+    
+    for(seed in seed.list){
+      
+      # RABIES analysis call
+      rabies.analysis.call <- paste('analysis_folder=',analysis_folder,'; rabies analysis ', file.path(analysis_folder,'confound',ds),' ',file.path(analysis_folder,'analysis',ds), ' --seed_list ', ROI,seed,'.nii.gz',sep='')
+      
+      if(use.singularity){cat(c(singularity.call,singularity.env))}
+      cat(rabies.preprocess.call)
+      if(use.singularity){cat("\'")}
+      if(use.qsub){cat(qsub.long)}
+      cat("\n")
+      cat("\n")
+    }
+  }
+}
 
+# confound regression for stimulus evoked only high-pass filter. 
+if(!is.rs){
+  confound<-'stim'
+  rabies.confound.call <- paste('analysis_folder=',analysis_folder,'; rabies confound_regression ', file.path(analysis_folder,'preprocess',ds),' ',file.path(analysis_folder,'confound',ds,confound), ' --commonspace_bold --highpass 0.01  --run_aroma --smoothing_filter 0.5 --diagnosis_output  --TR ', TR, 's',sep='')
+
+    if(use.singularity){cat(c(singularity.call,singularity.env))}
+    cat(rabies.confound.call)
+    if(use.singularity){cat("\'")}
+    if(use.qsub){cat(qsub.long)}
+    cat("\n")
+    cat("\n")
+}
 
 cat(mv2qa.call)
 if(use.qsub){cat(qsub.short)}
@@ -164,15 +199,6 @@ cat(rm.tmp.call)
 if(use.qsub){cat(qsub.short)}
 cat("\n")
 cat("\n")
-
-if(use.singularity){cat(c(singularity.call,singularity.env))}
-cat(rabies.analysis.call)
-if(use.singularity){cat("\'")}
-if(use.qsub){cat(qsub.long)}
-cat("\n")
-cat("\n")
-cat("\n")
-
 
 }
 

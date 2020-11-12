@@ -1,4 +1,4 @@
-![rat art](assets/img/rat_art.png)
+![rat art](../assets/img/rat_art.png)
 
 ### Collaborative model
 Every laboratory is invited to participate with 1 or multiple rat fMRI dataset (see **Data specification**). Invitation to collaborate is made through email, announced at conferences (ESMI, ISMRM), announced on [Twitter](https://twitter.com/grandjeanlab). See the list of currently listed laboratories (**section 2**). 
