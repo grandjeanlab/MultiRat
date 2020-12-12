@@ -2,7 +2,7 @@
 
 # A collaborative rat functional MRI multi-center study.
 A Rat fMRI multi-center study
-*updated 2020_11_12*
+*updated 2020_12_11*
 
 ### Executive summary
 In this international collaborative project, we seek to gather the rodent imaging community toward performing a rat fMRI multi-center comparison, within the same template as Grandjean et al. NIMG 2020. We want to examine functional connectivity (FC) parameter distribution at the population level within key networks (somatosensory and default-mode network) of the rat brain, as well as establish connectivity sensitivity and specificity in the collected datasets. To do so, we will gather rat BOLD fMRI datasets from individual labs (n=10, any protocol).
@@ -39,5 +39,9 @@ The end-goal is to make this as an available resource to researchers and to publ
 [Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b)  
 [Lab webpage](https://grandjeanlab.github.io/)  
 [Twitter](https://twitter.com/grandjeanlab)  
+
+### Deviations from preregistration
+11.12.2020 - Use SIGMA template instead of WHS
+11.12.2020 - Generate dataset-specific anatomical template outside RABIES
 
 

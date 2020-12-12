@@ -65,11 +65,11 @@ analysis_folder="/project/4180000.19/multiRat"
 echo 'init_folder='$init_folder > bash_env.sh
 echo 'analysis_folder='$analysis_folder >> bash_env.sh
 
-echo 'template=$analysis_folder"/template/WHS_SD_rat_T2star_100um.nii.gz"'  >> bash_env.sh
-echo 'template_mask=$analysis_folder"/template/WHS_SD_v2_brainmask_bin_100um.nii.gz"' >> bash_env.sh
-echo 'template_WM=$analysis_folder"/template/WHS_SD_v2_WM_100um.nii.gz"' >> bash_env.sh
-echo 'template_GM=$analysis_folder"/template/WHS_SD_v2_GM_100um.nii.gz"' >> bash_env.sh
-echo 'template_CSF=$analysis_folder"/template/WHS_SD_v2_CSF_100um.nii.gz"' >> bash_env.sh
-echo 'atlas=$analysis_folder"/template/WHS_SD_rat_atlas_v3_100um.nii.gz"'  >> bash_env.sh
+echo 'template=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_Brain_Template.nii"'  >> bash_env.sh
+echo 'template_mask=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_Brain_Mask.nii"' >> bash_env.sh
+echo 'template_WM=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_WM.nii"' >> bash_env.sh
+echo 'template_GM=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_GM.nii"' >> bash_env.sh
+echo 'template_CSF=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_CSF.nii"' >> bash_env.sh
+echo 'atlas=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Brain_Atlases/SIGMA_Anatomical_Atlas/SIGMA_Anatomical_Brain_Atlas.nii"'  >> bash_env.sh
 echo 'ROI=$analysis_folder"/template/roi/"'  >> bash_env.sh
 ```

@@ -11,39 +11,22 @@ knitr::opts_chunk$set(echo = TRUE)
 ![rat art](../assets/img/rat_art.png)
 
 ## Dowload and prepare the template
-For this project, I will use the WHS rat template available [here](https://www.nitrc.org/projects/whs-sd-atlas).
+For this project, I will use the SIGMA rat template available [here](https://www.nitrc.org/projects/sigma_template)
 The reference for the template is: 
-Papp EA, Leergaard TB, Calabrese E, Johnson GA, Bjaalie JG (2014) "Waxholm Space atlas of the Sprague Dawley rat brain" NeuroImage 97:374-386. [doi 10.1016/j.neuroimage.2014.04.001](https://doi.org/10.1016/j.neuroimage.2014.04.001)
+Barrière, D.A., Magalhães, R., Novais, A. et al. The SIGMA rat brain templates and atlases for multimodal MRI data analysis and visualization. Nat Commun 10, 5699 (2019). [https://doi.org/10.1038/s41467-019-13575-7](https://doi.org/10.1038/s41467-019-13575-7)
 
-In this chunk, I download the template and atlas, and generate separate white (WM), gray (GM), and cerebrospinal fluid (CSF) binary maps. An additional xml file to make the atlas compatible with FSL was downloaded from this [board](https://www.nitrc.org/forum/message.php?msg_id=29057), and made available in the [assets](assets/atlas/WHS_SD_rat_atlas_v3-FSL.xml).
-The final step is to downsample the templates to a workable resolution. I will use 0.1 x 0.1 x 0.1 mm3 for now. 
+Originally, I intended to use the [WHS atlas](doi 10.1016/j.neuroimage.2014.04.001) but differences in contrast with the majority of the dataset, ex vivo template with empty ventricles, and image artifacts rendered image registration complicated. This is a deviation from the [preregistration](https://osf.io/emq4b). 
 
-```{bash download template, eval=FALSE}
+
+```{bash download SIGMA, eval=FALSE}
 source bash_env.sh
 
 mkdir -p $analysis_folder'/template'
 
-curl https://www.nitrc.org/frs/download.php/9441/WHS_SD_rat_atlas_v2_pack.zip --output $analysis_folder'/template/WHS_SD.zip'
-curl https://www.nitrc.org/frs/download.php/9746/WHS_SD_v2_white_gray_mask_clipped.nii.gz --output $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz'
-curl https://www.nitrc.org/frs/download.php/9748/WHS_SD_v2_brainmask_bin.nii.gz --output $analysis_folder'/template/WHS_SD_v2_brainmask_bin.nii.gz'
-curl https://www.nitrc.org/frs/download.php/11404/WHS_SD_rat_atlas_v3.label --output $analysis_folder'/template/WHS_SD_rat_atlas_v3.label'
-curl https://www.nitrc.org/frs/download.php/11403/WHS_SD_rat_atlas_v3.nii.gz --output $analysis_folder'/template/WHS_SD_rat_atlas_v3.nii.gz'
-
-
-unzip -d $analysis_folder'/template/' $analysis_folder'/template/WHS_SD.zip' 
-rm $analysis_folder'/template/WHS_SD.zip' 
-
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 1 -uthr 1 -bin $analysis_folder'/template/WHS_SD_v2_WM.nii.gz'
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 2 -uthr 2 -bin $analysis_folder'/template/WHS_SD_v2_GM.nii.gz'
-fslmaths $analysis_folder'/template/WHS_SD_v2_white_gray_mask_clipped.nii.gz' -thr 3 -uthr 3 -bin $analysis_folder'/template/WHS_SD_v2_CSF.nii.gz'
-
-
-3dresample -inset $analysis_folder'/template/WHS_SD_rat_T2star_v1.01.nii.gz' -prefix $analysis_folder'/template/WHS_SD_rat_T2star_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode Cu
-3dresample -inset $analysis_folder'/template/WHS_SD_rat_atlas_v3.nii.gz' -prefix $analysis_folder'/template/WHS_SD_rat_atlas_v3_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode NN
-3dresample -inset $analysis_folder'/template/WHS_SD_v2_brainmask_bin.nii.gz' -prefix $analysis_folder'/template/WHS_SD_v2_brainmask_bin_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode NN
-3dresample -inset $analysis_folder'/template/WHS_SD_v2_CSF.nii.gz' -prefix $analysis_folder'/template/WHS_SD_v2_CSF_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode NN
-3dresample -inset $analysis_folder'/template/WHS_SD_v2_WM.nii.gz' -prefix $analysis_folder'/template/WHS_SD_v2_WM_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode NN
-3dresample -inset $analysis_folder'/template/WHS_SD_v2_GM.nii.gz' -prefix $analysis_folder'/template/WHS_SD_v2_GM_100um.nii.gz' -dxyz 0.1 0.1 0.1 -rmode NN
+# the following requires NITRC login credentials
+wget https://www.nitrc.org/frs/download.php/11708/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1.zip -O $analysis_folder'/template'
+unzip -d $analysis_folder'/template/' $analysis_folder'/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1.zip' 
+rm $analysis_folder'/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1.zip' 
 
 ```
 
@@ -54,6 +37,7 @@ S1 barrel field area, Cingulate area, Retrosplenial area, Insula area, motor are
 ```{bash init ROI, eval=FALSE}
 source bash_env.sh
 
+# JG 11.12.2020, update ROI to new template specs. 
 mkdir -p $ROI
 roi_name='S1bf_l'
 fslmaths $template -mul 0 -add 1 -roi 33 9 237 9 134 9 0 1 $ROI$roi_name -odt int
