@@ -13,10 +13,33 @@ knitr::opts_chunk$set(echo = TRUE)
 In this section, I provide a brief summary of the datasets that were supplied for this study. 
 
 Normalization steps:
-- Strain simplified. 
+- Columns with .orig have been left unaltered from how it was provided by the dataset owner. 
+- Strain was simplified. 
 - Age normalized to months, in 2 month bins. When long range are provided, the middle bin is selected. 
 - Weight normalized to in 50 g bins. When long range are provided,  the middle bin is selected. 
 - Dexmedetomidine dose converted to medetomidine (*0.5) for simplicity. 
 - Injectable anesthesia dose converted to mg/kg
+- Bolus injeactable added to induction column, infusions kept in maintenance column. 
+- Multiple anesthesia agents for either induction or maintenance indicated with '/'. Corresponding doses follow same order. 
+- Measurement post induction, breathing rate, heart rate rounded to the nearest tenth
+- TR and TE converted to s
+- Bandwidth converted to Hz
 
+```{r load dataset table, eval=FALSE}
+library(ggplot2)
+df <- read.csv2('../assets/table/meta_data.tsv',sep='\t')
+df$rat.age <- factor(df$rat.age, levels = c("0-2", "2-4", "4-6","6-8","8-10","10-12","12-14","14-16","16-18","18-20"))
+```
 
+```{r summary strain, eval=FALSE}
+summary(df$rat.strain)
+```
+
+```{r summary sex, eval=FALSE}
+summary(df$rat.sex)
+```
+
+```{r summary age, eval=FALSE}
+#summary(df$rat.age)
+ggplot(df, aes(x = rat.age, fill=rat.strain)) + geom_dotplot(binwidth = 0.1)
+```
