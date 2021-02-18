@@ -1,9 +1,9 @@
 init_folder=/home/traaffneu/joagra/code/MultiRat
 analysis_folder=/project/4180000.19/multiRat
-template=$analysis_folder"/template/WHS_SD_rat_T2star_100um.nii.gz"
-template_mask=$analysis_folder"/template/WHS_SD_v2_brainmask_bin_100um.nii.gz"
-template_WM=$analysis_folder"/template/WHS_SD_v2_WM_100um.nii.gz"
-template_GM=$analysis_folder"/template/WHS_SD_v2_GM_100um.nii.gz"
-template_CSF=$analysis_folder"/template/WHS_SD_v2_CSF_100um.nii.gz"
-atlas=$analysis_folder"/template/WHS_SD_rat_atlas_v3_100um.nii.gz"
+template=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_Brain_Template.nii"
+template_mask=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_Brain_Mask.nii"
+template_WM=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_WM.nii"
+template_GM=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_GM.nii"
+template_CSF=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Anatomical_Imaging/SIGMA_Rat_Anatomical_InVivo_Template/SIGMA_InVivo_CSF.nii"
+atlas=$analysis_folder"/template/SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1/SIGMA_Rat_Brain_Atlases/SIGMA_Anatomical_Atlas/SIGMA_Anatomical_Brain_Atlas.nii"
 ROI=$analysis_folder"/template/roi/"

@@ -40,44 +40,44 @@ source bash_env.sh
 # JG 11.12.2020, update ROI to new template specs. 
 mkdir -p $ROI
 roi_name='S1bf_l'
-fslmaths $template -mul 0 -add 1 -roi 33 9 237 9 134 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 29 6 118 6 76 6 0 1 $ROI$roi_name -odt int
 roi_name='S1bf_r'
-fslmaths $template -mul 0 -add 1 -roi 147 9 237 9 134 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 93 6 118 6 76 6 0 1 $ROI$roi_name -odt int
 
 roi_name='ACA_l'
-fslmaths $template -mul 0 -add 1 -roi 92 9 256 9 143 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 55 6 132 6 76 6 0 1 $ROI$roi_name -odt int
 roi_name='RSP_l'
-fslmaths $template -mul 0 -add 1 -roi 89 9 208 9 157 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 55 6 98 6 83 6 0 1 $ROI$roi_name -odt int
 
 roi_name='AI_l'
-fslmaths $template -mul 0 -add 1 -roi 45 9 268 9 99 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 31 6 137 6 49 6 0 1 $ROI$roi_name -odt int
 roi_name='AI_r'
-fslmaths $template -mul 0 -add 1 -roi 139 9 268 9 99 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 90 6 137 6 49 6 0 1 $ROI$roi_name -odt int
 
 roi_name='MOp_l'
-fslmaths $template -mul 0 -add 1 -roi 65 9 268 9 143 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 41 6 137 6 78 6 0 1 $ROI$roi_name -odt int
 roi_name='MOp_r'
-fslmaths $template -mul 0 -add 1 -roi 126 9 268 9 143 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 83 6 137 6 78 6 0 1 $ROI$roi_name -odt int
 
 roi_name='CPu_l'
-fslmaths $template -mul 0 -add 1 -roi 62 9 250 9 112 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 41 6 128 6 58 6 0 1 $ROI$roi_name -odt int
 roi_name='CPu_r'
-fslmaths $template -mul 0 -add 1 -roi 129 9 250 9 112 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 83 6 128 6 58 6 0 1 $ROI$roi_name -odt int
 
 roi_name='dHC_l'
-fslmaths $template -mul 0 -add 1 -roi 63 9 209 9 142 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 43 6 98 6 71 6 0 1 $ROI$roi_name -odt int
 roi_name='dHC_r'
-fslmaths $template -mul 0 -add 1 -roi 122 9 209 9 142 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 78 6 98 6 71 6 0 1 $ROI$roi_name -odt int
 
 roi_name='AMG_l'
-fslmaths $template -mul 0 -add 1 -roi 42 9 215 9 80 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 31 6 101 6 35 6 0 1 $ROI$roi_name -odt int
 roi_name='AMG_r'
-fslmaths $template -mul 0 -add 1 -roi 145 9 215 9 80 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 95 6 101 6 35 6 0 1 $ROI$roi_name -odt int
 
 roi_name='TH_l'
-fslmaths $template -mul 0 -add 1 -roi 63 9 215 9 113 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 46 6 103 6 53 6 0 1 $ROI$roi_name -odt int
 roi_name='TH_r'
-fslmaths $template -mul 0 -add 1 -roi 122 9 215 9 113 9 0 1 $ROI$roi_name -odt int
+fslmaths $template -mul 0 -add 1 -roi 75 6 103 6 53 6 0 1 $ROI$roi_name -odt int
 ```
 
 ## Dataset preparation

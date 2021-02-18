@@ -30,8 +30,9 @@ The end-goal is to make this as an available resource to researchers and to publ
 ### Analysis
 [1. Environement preparation](scripts/proj_env.md)  
 [2. Asset preparation](scripts/proj_asset.md)  
-[3. Preprocessing code](scripts/proj_preprocessing.md)   
-[4. Qality control](scripts/proj_qa.md)  
+[3. Dataset description](scripts/proj_dataset.md)   
+[4. Preprocessing code](scripts/proj_preprocessing.md)   
+[5. Qality control](scripts/proj_qa.md)  
 
 ### Usfeful links
 [License and permissions](LICENSE.md)  

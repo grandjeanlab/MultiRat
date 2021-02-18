@@ -1,0 +1,14 @@
+MultiRAT analysis code
+================
+Joanes Grandjean
+
+![rat art](../assets/img/rat_art.png)
+
+In this section, I provide a brief summary of the datasets that were
+supplied for this study.
+
+Normalization steps: - Strain simplified. - Age normalized to months, in
+2 month bins. When long range are provided, the middle bin is selected.
+- Weight normalized to in 50 g bins. When long range are provided, the
+middle bin is selected. - Dexmedetomidine dose converted to medetomidine
+(\*0.5) for simplicity. - Injectable anesthesia dose converted to mg/kg
