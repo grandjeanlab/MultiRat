@@ -1,0 +1,39 @@
+#	Lab	Department	Institution	Road	City	State	Country	Lat.Long
+1		Department of Medical Imaging & Department for Cognitive Neuroscinece, Donders Institute for Brain, Behaviour, and Cognition	Radboud University Medical Center		Nijmegen		Netherlands	51.823765, 5.861192
+2	Univ. Grenoble Alpes, CNRS, Gipsa-lab, F-38000, Grenoble, France				Grenoble		France	45.204713, 5.699564
+3	Univ. Grenoble Alpes, Inria, CNRS, Grenoble INP, LJK, 38000 Grenoble, France				Grenoble		France	45.204713, 5.699564
+4	Univ. Grenoble Alpes, Inserm, U1216, Grenoble Institut Neurosciences, 38000 Grenoble, France				Grenoble		France	45.204713, 5.699564
+5	Experimental and Regenerative Neurosciences	School of Biological Sciences	The University of Western Australia	35 Stirling Highway	Crawley	Western Australia	Australia	-31.979064, 115.818782
+6	Brain Plasticity Group		Perron Institute for Neurological and Translational Science	8 Verdun Street	Nedlands	Western Australia	Australia	-31.979064, 115.818782
+7	Centre for Microscopy, Characterisation & Analysis	Research Infrastructure Centres	The University of Western Australia	6 Verdun Street	Nedlands	Western Australia	Australia	-31.979064, 115.818782
+8		Queensland Brain Institute and Centre for Advanced Imaging	Univeristy of Queensland	Building 79	St Lucia	Queensland	Australia	-27.497960, 153.010086
+9	Focused Ultrasound Laboratory	Radiology	Brigham and Women's Hospital	221 Longwood Ave	Boston	MA	United States	42.335685, -71.106264
+10	Room 316, Duff Medical Building	Biological and Biomedical Engineering	McGill University	3775, rue University	Montreal	Quebec	Canada	45.504537, -73.577452
+11	office GH-2113	Cerebral Imaging Centre	Douglas Mental Health University Institute	6875 Boulevard LaSalle	Montreal	Quebec	Canada	45.504537, -73.577452
+12	Ludmer Research & Training Building	Psychiatry	McGill University	1033 Pine Avenue West	Montreal	Quebec	Canada	45.504537, -73.577452
+13	Experimental Mangetic Resonance Group	Clinic of Radiology	University Hospital Münster	Albert-Schweitzer-Campus 1	Muenster		Germany	51.960388, 7.596481
+14	Febo Laboratory	Psychiatry	University of Florida	1149 S. Newell Drive	Gainesville	Florida	United States	29.643679, -82.355016
+15	Biomedical Imaging Unit		A.I.V. Institute for Molecular Sciences		Kuopio		Finland	62.890637, 27.631624
+16	Functional Imaging Laboratory		German Primate Center - Leibniz Institute for Primate Research	Kellnerweg 4	Göttingen		Germany	51.561975, 9.951014
+17		Faculty of Biology and Psychology	Georg-August University of Göttingen		Göttingen		Germany	51.561975, 9.951014
+18			DFG Research Center for Nanoscale Microscopy and Molecular Physiology of the Brain (CNMPB)		Göttingen		Germany	51.561975, 9.951014
+19	Seaver Autism Center for Research & Treatment	Psychiatry	Icahn School of Medicine at Mount Sinai	1468 Madison Avenue	New York City	New York	USA	40.789934, -73.953319
+20	BioMedical Engineering and Imaging Institute		Icahn School of Medicine at Mount Sinai	1470 Madison Avenue	New York City	New York	USA	40.789934, -73.953319
+21		Berlin Ultrahigh Field Facility (B.U.F.F.)	Max-Delbrück Center for Molecular Medicine, Helmholtz Association of German Research Centers (HZ), Berlin, Germany	Robert-Rössle-Str. 10	Berlin	Berlin	Germany	52.625344, 13.501894
+22			Experimental and Clinical Research Center, A Joint Cooperation Between the Charité Medical Faculty and the Max-Delbrück Center for Molecular Medicine		Berlin	Berlin	Germany	52.625344, 13.501894
+32	Animal Imaging and Technology Section	Center for Biomedical Imaging	École polytechnique fédérale de Lausanne	Route Cantonale	Lausanne	VAUD	Switzerland	46.518347, 6.566704
+24	Psychiatric neurosciences	Center for Psychiatric Neuroscience	Lausanne University and University Hospital Center	Unicentre	Lausanne	VAUD	Switzerland	46.518347, 6.566704
+25		Departamento de Neurobiología Conductual y Cognitiva, Instituto de Neurobiología	Universidad Nacional Autónoma de México, Campus Juriquilla	Av. Juriquilla 3001	Queretaro	Queretaro	Mexico	20.701492, -100.446004
+26		Simons Initiative for the Developing Brain	The University of Edinburgh		Edinburgh		UK	55.944654, -3.190604
+27		Patrick Wild Centre	The University of Edinburgh		Edinburgh		UK	55.944654, -3.190604
+28		Centre for Discovery Brain Sciences	The University of Edinburgh		Edinburgh		UK	55.944654, -3.190604
+29		Centre for Brain Development and Repair	Institute for Stem Cell Biology and Regenerative Medicine		Bangalore		India	13.075883, 77.577644
+30	Biomarker Research And Imaging in Neuroscience (BRAIN) Centre	Department of Neuroimaging	King's College London	Coldharbour Lane	London		UK	51.511266, -0.116115
+31	Translational Neuroimaging and Systems Neuroscience Lab	Biomedical Engineering	Pennsylvania State University	122 Chemical and Biomedical Engineering Building	University Park	PA	USA	40.798051, -77.860541
+32		Institute of Development, Aging and Cancer	Tohoku University	4-1 Seiryo-machi, Aoba-ku, Sendai			Japan	38.254719, 140.835369
+33	Translational Neuroimaging and Neural Control Group	High-Field Magnetic Resonance	Max Planck Institute for Biological Cybernetics	72076	Tuebingen		Germany	48.536453, 9.057449
+34		Athinoula A. Martinos Center for Biomedical Imaging	Massachusetts General Hospital and Harvard Medical School	MA 02129	Charlestown		USA	42.377453, -71.052282
+35	Graduate Training Centre of Neuroscience	International Max Planck Research School	University of Tuebingen	72074	Tuebingen		Germany	48.536453, 9.057449
+36	Medical Imaging Physics (INM-4)	Institute of Neuroscience and Medicine	Forschungszentrum Juelich	52428	Juellich		Germany	50.905291, 6.404716
+37	Animal Imaging and Technology	Center for Biomedical Imaging	Ecole Polytechnique Fédérale de Lausanne	Route des Noyerettes	Lausanne	Vaud	Switzerland	46.518347, 6.566704
+38	Laboratory for Functional and Metabolic Imaging	Physics	Ecole Polytechnique Fédérale de Lausanne	Route des Noyerettes	Lausanne	Vaud	Switzerland	46.518347, 6.566704
