@@ -28,11 +28,15 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Symposium on rodent fMRI standards held at the Donders Institute (if funding is available and COVID permit)
 
 ### Analysis
-[1. Environement preparation](scripts/proj_env.ipynb)  
-[2. Asset preparation](scripts/proj_asset.ipynb)  
-[3. Dataset description](scripts/proj_dataset.ipynb)   
-[4. Preprocessing code](scripts/proj_preprocessing.ipynb)   
-[5. Qality control](scripts/proj_qa.ipynb)  
+[1. Environement preparation](scripts/proj_env.md)  
+[2. Asset preparation](scripts/proj_asset.md)  
+[3. Dataset description](scripts/proj_dataset.md)   
+[4. Preprocessing code](scripts/proj_preprocessing.md)   
+[5. Qality control](scripts/proj_qa.md)
+[6. Analysis tSNR](scripts/proj_analysis_snr.md)  
+[7. Analysis seed-based analysis](scripts/proj_analysis_sba.md) 
+8. Analysis ica analsysis 
+9. Analysis stimulus evoked 
 
 ### Usfeful links
 [License and permissions](LICENSE.md)  
@@ -44,8 +48,9 @@ The end-goal is to make this as an available resource to researchers and to publ
 ### Deviations from preregistration
 11.12.2020 - Use SIGMA template instead of WHS  
 11.04.2021 - Changed analysis to Python   
-11.04.2021 - Analysis using tSNR instead of SNR   
+11.04.2021 - Analysis using tSNR instead of SNR, because former is readily output in RABIES.  
 11.04.2021 - reduced number volumes -> 1200 for ds 1001 (too long preprocessing time)   
-11.04.2021 - cropped FOV for ds 1029, 1030, 1036 (improve registrations)   s
+11.04.2021 - cropped FOV for ds 1029, 1030, 1036 (improve registrations)
+12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had converage along A-P axis, and this seemed to cause RABIES crashes. 
 
 
