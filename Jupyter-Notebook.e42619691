@@ -1,0 +1,535 @@
+[I 09:04:58.790 NotebookApp] [jupyter_nbextensions_configurator] enabled 0.4.1
+[1m[33m[INFO 2021-04-26 09:04:58.854 TabNine][0m:  install dir: /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/jupyter_tabnine
+[1m[33m[INFO 2021-04-26 09:04:58.884 TabNine][0m: TabNine binary already exists in /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/jupyter_tabnine/binaries/3.3.108/x86_64-unknown-linux-gnu/TabNine ignore downloading
+[1m[33m[INFO 2021-04-26 09:05:01.006 TabNine][0m:  Semantic completion enabled.
+[I 09:05:01.009 NotebookApp] Serving notebooks from local directory: /home/traaffneu/joagra/code/MultiRat
+[I 09:05:01.009 NotebookApp] Jupyter Notebook 6.3.0 is running at:
+[I 09:05:01.009 NotebookApp] http://dccn-c032.dccn.nl:8888/?token=c6dc8eb28c7e36d2a2eb5a587bb5a4596c1f3c591d1fcc70
+[I 09:05:01.009 NotebookApp]  or http://127.0.0.1:8888/?token=c6dc8eb28c7e36d2a2eb5a587bb5a4596c1f3c591d1fcc70
+[I 09:05:01.009 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 09:05:01.514 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///home/traaffneu/joagra/.local/share/jupyter/runtime/nbserver-6469-open.html
+    Or copy and paste one of these URLs:
+        http://dccn-c032.dccn.nl:8888/?token=c6dc8eb28c7e36d2a2eb5a587bb5a4596c1f3c591d1fcc70
+     or http://127.0.0.1:8888/?token=c6dc8eb28c7e36d2a2eb5a587bb5a4596c1f3c591d1fcc70
+[W 09:05:37.399 NotebookApp] delete /Jupyter-Notebook.e42435610
+[W 09:05:37.493 NotebookApp] delete /Jupyter-Notebook.o42435610
+[W 09:06:20.993 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.086 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.151 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.159 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.241 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.262 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.293 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.343 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.467 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.474 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.801 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.810 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.952 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:21.966 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.040 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.048 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.071 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.087 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.111 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.124 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.182 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.191 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.465 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:22.474 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:24.950 NotebookApp] Notebook scripts/proj_dataset.ipynb is not trusted
+[I 09:06:25.189 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 21.600000ms
+[I 09:06:25.777 NotebookApp] Kernel started: 02a0bc6f-5705-437a-92e6-b4281ad29b9d, name: python3
+[I 09:06:46.012 NotebookApp] Saving file at /scripts/proj_dataset.ipynb
+[W 09:06:46.013 NotebookApp] Notebook scripts/proj_dataset.ipynb is not trusted
+[I 09:06:46.084 NotebookApp] Starting buffering for 02a0bc6f-5705-437a-92e6-b4281ad29b9d:211291dcc53846b1990867d1b93d43d2
+[W 09:06:59.319 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.336 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.403 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.412 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.433 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.445 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.469 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.482 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.533 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.540 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.749 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.758 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.872 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.884 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.937 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.945 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.967 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:06:59.979 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.006 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.018 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.074 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.082 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.290 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:00.298 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 09:07:01.006 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 09:07:01.244 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 1.650000ms
+[I 09:07:01.877 NotebookApp] Kernel started: 7574edd0-0523-4357-88e3-977d81b8ee01, name: python3
+[I 09:09:01.917 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 09:09:01.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 09:16:02.097 NotebookApp] Saving file at /scripts/proj_preprocessing.md
+[I 10:20:27.945 NotebookApp] Saving file at /scripts/proj_preprocessing.md
+[I 10:21:00.639 NotebookApp] Saving file at /scripts/proj_preprocessing.md
+[W 10:21:29.365 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.381 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.449 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.457 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.482 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.497 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.525 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.539 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.590 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.597 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.802 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:29.811 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.007 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.019 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.076 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.084 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.108 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.120 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.145 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.160 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.214 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.224 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.448 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:30.458 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 10:21:31.087 NotebookApp] Notebook scripts/proj_analysis_snr.ipynb is not trusted
+[I 10:21:31.362 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 1.630000ms
+[I 10:21:31.648 NotebookApp] Kernel started: 5cc75c86-f318-43c2-8c9f-814f0d3ad233, name: python3
+[I 10:22:00.971 NotebookApp] Starting buffering for 5cc75c86-f318-43c2-8c9f-814f0d3ad233:38865304c3c7425b82d9024388310ac9
+[I 10:22:01.287 NotebookApp] Kernel restarted: 5cc75c86-f318-43c2-8c9f-814f0d3ad233
+[I 10:22:01.311 NotebookApp] Restoring connection for 5cc75c86-f318-43c2-8c9f-814f0d3ad233:38865304c3c7425b82d9024388310ac9
+[I 10:22:02.209 NotebookApp] Replaying 3 buffered messages
+[I 10:23:31.676 NotebookApp] Saving file at /scripts/proj_analysis_snr.ipynb
+[I 10:25:31.628 NotebookApp] Saving file at /scripts/proj_analysis_snr.ipynb
+[I 10:59:31.637 NotebookApp] Saving file at /scripts/proj_analysis_snr.ipynb
+[I 11:00:01.128 NotebookApp] Saving file at /scripts/proj_analysis_snr.ipynb
+[I 11:00:27.055 NotebookApp] Saving file at /README.md
+[I 11:03:01.952 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 11:03:01.953 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 11:05:01.943 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 11:05:01.943 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 11:07:01.945 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:15:01.945 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:21:01.939 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:23:01.949 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:25:01.944 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:27:01.932 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:29:01.968 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:31:01.958 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:37:01.940 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:39:01.926 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:41:01.927 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:43:02.093 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:45:02.025 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:47:02.008 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:49:02.020 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:51:02.034 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:53:02.020 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:55:02.054 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 11:57:03.146 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:03:02.030 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:05:02.025 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:07:02.000 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:09:02.038 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:11:02.017 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:43:02.029 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:45:02.119 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:47:02.040 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:49:02.037 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:51:02.011 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:53:02.029 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:55:02.013 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:57:01.961 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 12:59:02.408 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:01:01.979 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:03:01.977 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:07:02.006 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:09:01.990 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:11:01.970 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:13:01.981 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:15:01.978 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:17:01.975 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:19:01.974 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 13:20:45.427 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.453 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.522 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.537 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.566 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.581 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.622 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.644 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.717 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:45.730 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.024 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.033 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.191 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.211 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.278 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.289 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.318 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.338 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.371 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.393 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.467 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.475 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.771 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:46.785 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:20:47.732 NotebookApp] Notebook scripts/proj_dataset.ipynb is not trusted
+[I 13:20:48.245 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 1.980000ms
+[I 13:21:03.188 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 13:21:07.078 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.101 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.185 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.203 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.233 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.247 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.286 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.310 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.384 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.403 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.682 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.694 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.849 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.870 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.935 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.952 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.977 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:07.996 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.036 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.056 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.136 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.154 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.439 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:08.456 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 13:21:09.312 NotebookApp] Notebook scripts/proj_qa.ipynb is not trusted
+[I 13:21:09.605 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 0.850000ms
+[I 13:21:09.968 NotebookApp] 302 GET /notebooks/assets/QC/template2std/02004.png (131.174.44.169) 34.290000ms
+[I 13:21:09.978 NotebookApp] 302 GET /notebooks/assets/QC/anat2tempalte/sub-0200307_ses-1_T2w_registration.png (131.174.44.169) 8.540000ms
+[I 13:21:09.979 NotebookApp] 302 GET /notebooks/assets/QC/anat2tempalte/sub-0200309_ses-1_T2w_registration.png (131.174.44.169) 9.480000ms
+[I 13:21:09.996 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200103_ses-1_run-1_bold_registration.png (131.174.44.169) 25.880000ms
+[I 13:21:09.998 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200106_ses-1_run-1_bold_registration.png (131.174.44.169) 27.280000ms
+[I 13:21:09.999 NotebookApp] 302 GET /notebooks/assets/QC/template2std/02005.png (131.174.44.169) 28.310000ms
+[I 13:21:10.003 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200604_ses-1_run-1_bold_registration.png (131.174.44.169) 3.760000ms
+[I 13:21:10.005 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200606_ses-1_run-1_bold_registration.png (131.174.44.169) 4.790000ms
+[I 13:21:10.006 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200608_ses-1_run-1_bold_registration.png (131.174.44.169) 5.740000ms
+[I 13:21:10.060 NotebookApp] Kernel started: d5494d16-0697-4b49-aaba-59c956931df5, name: python3
+[I 13:21:10.062 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200602_ses-1_run-1_bold_registration.png (131.174.44.169) 55.920000ms
+[I 13:21:10.067 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200806_ses-1_run-1_bold_registration.png (131.174.44.169) 3.720000ms
+[I 13:21:10.072 NotebookApp] 302 GET /notebooks/assets/QC/epi2anat/sub-0200609_ses-1_run-1_bold_registration.png (131.174.44.169) 3.020000ms
+[I 13:22:49.066 NotebookApp] Saving file at /scripts/proj_dataset.ipynb
+[W 13:22:49.066 NotebookApp] Notebook scripts/proj_dataset.ipynb is not trusted
+[I 13:23:10.038 NotebookApp] Saving file at /scripts/proj_qa.ipynb
+[W 13:23:10.038 NotebookApp] Notebook scripts/proj_qa.ipynb is not trusted
+[I 13:25:02.072 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:39:02.106 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:41:01.988 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:43:01.978 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:45:01.983 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:51:02.053 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:53:02.019 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:55:02.022 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:57:02.123 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 13:59:02.013 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:01:02.009 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:03:02.008 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:45:02.024 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:47:02.009 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:49:02.076 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:51:02.006 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:57:02.022 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 14:59:02.025 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 15:01:02.019 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[I 15:11:53.523 NotebookApp] Saving file at /scripts/proj_dataset.ipynb
+[W 15:11:53.523 NotebookApp] Notebook scripts/proj_dataset.ipynb is not trusted
+[I 15:11:55.618 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 15:12:21.137 NotebookApp] 404 GET /api/contents/scripts/proj_preanalysis_sba.ipynb?type=notebook&content=0&_=1619420820576 (131.174.44.169): No such file or directory: scripts/proj_preanalysis_sba.ipynb
+[W 15:12:21.137 NotebookApp] No such file or directory: scripts/proj_preanalysis_sba.ipynb
+[W 15:12:21.137 NotebookApp] 404 GET /api/contents/scripts/proj_preanalysis_sba.ipynb?type=notebook&content=0&_=1619420820576 (131.174.44.169) 1.870000ms referer=http://dccn-c032.dccn.nl:8888/notebooks/scripts/proj_analysis_sba.ipynb
+[I 15:12:21.241 NotebookApp] Uploading file to /scripts/proj_preanalysis_sba.ipynb
+[I 15:12:36.622 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:12:37.590 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:15:02.663 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:19:01.906 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:21:01.909 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:23:01.908 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:25:02.004 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:27:01.906 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:33:01.913 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:35:02.572 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:41:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:43:01.908 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:45:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:49:01.908 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:51:01.909 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:55:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:57:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 15:59:01.921 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:01:01.911 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:03:01.912 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:05:01.911 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:07:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:09:01.912 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:11:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:15:01.910 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:17:01.911 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:19:01.911 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:21:01.915 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:23:01.912 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:23:53.312 NotebookApp] Starting buffering for 02a0bc6f-5705-437a-92e6-b4281ad29b9d:0fcb528c6e1048d18131b37506cdd7f6
+[I 16:23:54.223 NotebookApp] Starting buffering for 5cc75c86-f318-43c2-8c9f-814f0d3ad233:38865304c3c7425b82d9024388310ac9
+[I 16:23:55.802 NotebookApp] Starting buffering for d5494d16-0697-4b49-aaba-59c956931df5:4ec03ab67ad343088b0cc7a667b79752
+[W 16:24:06.274 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.309 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.385 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.401 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.461 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.482 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.534 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.552 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.653 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:06.679 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.118 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.130 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.380 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.414 NotebookApp] Config option `template_path` not recognized by `ExporterCollapsibleHeadings`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.523 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.545 NotebookApp] Config option `template_path` not recognized by `TocExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.591 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.607 NotebookApp] Config option `template_path` not recognized by `LenvsHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.651 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.685 NotebookApp] Config option `template_path` not recognized by `LenvsTocHTMLExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.796 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:07.804 NotebookApp] Config option `template_path` not recognized by `LenvsLatexExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:08.344 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:08.370 NotebookApp] Config option `template_path` not recognized by `LenvsSlidesExporter`.  Did you mean one of: `extra_template_paths, template_name, template_paths`?
+[W 16:24:09.860 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:24:10.461 NotebookApp] 302 GET /notebooks/assets/img/rat_art.png (131.174.44.169) 1.620000ms
+[I 16:24:12.615 NotebookApp] Kernel started: 318de753-6dce-4ec8-9fcf-3f3f373caadf, name: python3
+[I 16:25:01.921 NotebookApp] Saving file at /scripts/proj_preanalysis_sba.ipynb
+[I 16:26:12.794 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:26:12.795 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:28:12.752 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:28:12.753 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:30:12.757 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:30:12.762 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:32:12.780 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:32:12.781 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:34:12.914 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:34:12.915 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:36:12.774 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:36:12.775 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:38:12.758 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:38:12.759 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:40:12.754 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:40:12.755 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:42:12.762 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:42:12.765 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:44:12.758 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:44:12.759 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:46:12.915 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:46:12.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:48:13.338 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:48:13.339 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:50:12.938 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:50:12.939 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:52:12.944 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:52:12.945 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:53:36.325 NotebookApp] Starting buffering for 7574edd0-0523-4357-88e3-977d81b8ee01:6e4fb5632d4a4bd0828bee8f9fac8822
+[I 16:54:13.002 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:54:13.003 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:56:12.947 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:56:12.953 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 16:58:12.924 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 16:58:12.925 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:00:12.950 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:00:12.951 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:02:12.959 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:02:12.961 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:04:12.916 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:04:12.917 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:06:12.933 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:06:12.935 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:08:12.947 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:08:12.949 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:10:12.958 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:10:12.968 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:12:12.986 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:12:12.988 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:14:12.935 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:14:12.936 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:16:12.927 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:16:12.946 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:18:12.927 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:18:12.928 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:20:12.949 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:20:12.951 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:22:12.968 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:22:12.970 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:24:12.967 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:24:12.985 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:26:12.947 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:26:12.956 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:28:12.951 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:28:12.952 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:30:12.926 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:30:12.927 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:32:12.964 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:32:12.965 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:34:12.960 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:34:12.972 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:36:12.942 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:36:12.956 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:38:12.957 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:38:12.958 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:40:12.945 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:40:12.947 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:42:12.940 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:42:12.941 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:44:12.947 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:44:12.949 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:46:12.958 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:46:12.959 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:48:12.947 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:48:12.956 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:50:12.948 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:50:12.951 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:52:12.961 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:52:12.962 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:54:12.964 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:54:12.965 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:56:12.943 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:56:12.957 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 17:58:12.961 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 17:58:12.962 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:00:13.411 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:00:13.412 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:02:13.830 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:02:13.831 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:04:14.027 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:04:14.041 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:06:14.760 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:06:14.761 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:08:15.256 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:08:15.257 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:10:15.928 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:10:15.929 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:12:15.898 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:12:15.908 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:14:16.026 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:14:16.027 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:16:15.937 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:16:15.939 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:18:15.901 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:18:15.902 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:20:15.918 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:20:15.920 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:22:15.965 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:22:15.967 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:24:15.916 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:24:15.917 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:26:15.911 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:26:15.912 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:28:15.906 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:28:15.907 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:30:15.918 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:30:15.919 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:32:15.917 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:32:15.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:34:15.936 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:34:15.938 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:36:15.897 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:36:15.912 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:38:15.895 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:38:15.902 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:40:15.904 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:40:15.906 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:42:15.907 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:42:15.932 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:44:15.948 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:44:15.950 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:46:15.914 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:46:15.916 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:48:15.901 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:48:15.902 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:50:15.887 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:50:15.888 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:52:15.904 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:52:15.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:54:15.930 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:54:15.931 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:56:15.916 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:56:15.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 18:58:15.903 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 18:58:15.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:00:15.920 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:00:15.922 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:00:33.868 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:00:33.893 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:02:15.907 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:02:15.915 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:04:15.935 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:04:15.936 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:06:15.932 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:06:15.934 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:08:15.967 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:08:15.968 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:10:15.933 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:10:15.948 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:12:15.906 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:12:15.916 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:14:15.900 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:14:15.920 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:16:15.897 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:16:15.898 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:18:15.920 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:18:15.921 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:20:15.904 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:20:15.915 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:22:15.904 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:22:15.910 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:24:15.901 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:24:15.902 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:26:15.900 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:26:15.902 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:28:15.916 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:28:15.918 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:30:15.915 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:30:15.917 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:32:15.911 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:32:15.913 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:34:15.913 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:34:15.914 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:36:15.902 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:36:15.903 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:38:15.912 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:38:15.913 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:40:15.909 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:40:15.911 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:42:15.952 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:42:15.959 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:44:15.885 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:44:15.909 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:46:15.890 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:46:15.905 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:48:15.939 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:48:15.944 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:50:15.952 NotebookApp] Saving file at /scripts/proj_analysis_sba.ipynb
+[W 19:50:15.953 NotebookApp] Notebook scripts/proj_analysis_sba.ipynb is not trusted
+[I 19:50:44.797 NotebookApp] Kernel interrupted: 318de753-6dce-4ec8-9fcf-3f3f373caadf
+[I 19:50:50.642 NotebookApp] Starting buffering for 318de753-6dce-4ec8-9fcf-3f3f373caadf:272cb50de7754787b6c6bf1cd357dd81
+[C 19:50:53.708 NotebookApp] received signal 15, stopping
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.

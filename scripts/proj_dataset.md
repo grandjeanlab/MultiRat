@@ -1,4 +1,4 @@
-MultiRAT analysis code
+MultiRAT dataset description code
 ================
 Joanes Grandjean
 

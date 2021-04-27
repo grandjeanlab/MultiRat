@@ -31,7 +31,7 @@ import glob
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('../assets/table/meta_data_20210411.tsv', sep='\t')
+df = pd.read_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
 ```
 
 
@@ -41,7807 +41,1596 @@ df['aromas_CPu_CPu'] = np.nan
 df['aromas_MOp_MOp'] = np.nan
 df['aromas_S1bf_S1bf'] = np.nan
 df['aromas_S1bf_ACA'] = np.nan
+df['aromas_S1bf_cat'] = np.nan
 
+df['aromal_CPu_CPu'] = np.nan
+df['aromal_MOp_MOp'] = np.nan
+df['aromal_S1bf_S1bf'] = np.nan
+df['aromal_S1bf_ACA'] = np.nan
+df['aromal_S1bf_cat'] = np.nan
+
+df['aromasr_CPu_CPu'] = np.nan
+df['aromasr_MOp_MOp'] = np.nan
+df['aromasr_S1bf_S1bf'] = np.nan
+df['aromasr_S1bf_ACA'] = np.nan
+df['aromasr_S1bf_cat'] = np.nan
+
+df['WMCSFs_CPu_CPu'] = np.nan
+df['WMCSFs_MOp_MOp'] = np.nan
+df['WMCSFs_S1bf_S1bf'] = np.nan
+df['WMCSFs_S1bf_ACA'] = np.nan
+df['WMCSFs_S1bf_cat'] = np.nan
+
+df['GSRs_CPu_CPu'] = np.nan
+df['GSRs_MOp_MOp'] = np.nan
+df['GSRs_S1bf_S1bf'] = np.nan
+df['GSRs_S1bf_ACA'] = np.nan
+df['GSRs_S1bf_cat'] = np.nan
 ```
 
 
 ```python
-seed_txt_list = glob.glob((os.path.join(analysis_folder, 'scratch', 'seed_txt','aromas'))+'/*')
-
+roi_list = glob.glob((os.path.join(analysis_folder, 'template', 'roi'))+'/*')
+seed_list = glob.glob((os.path.join(analysis_folder, 'scratch', 'seed','*'))+'/*')
 ```
 
 
 ```python
-for i in seed_txt_list:
-    #print(i)
-    fc=pd.read_csv(i, delim_whitespace=True, header=None)
-    i=i.replace('_RAS','')
+import pandas as pd
+pd.options.mode.chained_assignment = None
+
+from nilearn.input_data import NiftiMasker
+import re
+import numpy as np
+
+for i_orig in seed_list:
+    #print(i_orig)
+    i=i_orig.replace('_RAS','')
+    i=i.replace('_aroma','')
     sub=int(os.path.basename(i).split('_')[0].split('-')[1])
     ses=int(os.path.basename(i).split('_')[1].split('-')[1])
     denoise=i.split('/')[6]
-    seed=os.path.basename(i).split('_')[7]
-    roi=os.path.basename(i).split('_')[11]
-    df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
+    seed=os.path.basename(i).split('_')[6]
+    if(seed =='ACA'):
+        continue
+    elif(seed =='S1bf'):
+        roi='ACA'
+        r = re.compile('ACA'+'_l')
+        nifti_mask=list(filter(r.findall, roi_list))[0]
+        fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
+        df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
+    
+    roi=seed
+    r = re.compile(seed+'_r')
+    nifti_mask=list(filter(r.findall, roi_list))[0]
+    fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
+    df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
+    
+df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
+```
+
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
+      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
+
+
+
+```python
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(df['exp.type'] == 'resting-state')]
+print('missing aromas')
+print(df_exclude[np.isnan(df['aromas_S1bf_S1bf']) | np.isnan(df['aromas_S1bf_ACA']) | np.isnan(df['aromas_MOp_MOp'])  | np.isnan(df['aromas_CPu_CPu'])]['rat.ds'].unique())
+
+print('missing aromal')
+print(df_exclude[np.isnan(df['aromal_S1bf_S1bf']) | np.isnan(df['aromal_S1bf_ACA']) | np.isnan(df['aromal_MOp_MOp'])  | np.isnan(df['aromal_CPu_CPu'])]['rat.ds'].unique())
+
+print('missing aromasr')
+print(df_exclude[np.isnan(df['aromasr_S1bf_S1bf']) | np.isnan(df['aromasr_S1bf_ACA']) | np.isnan(df['aromasr_MOp_MOp'])  | np.isnan(df['aromasr_CPu_CPu'])]['rat.ds'].unique())
+
+print('missing WMCSFs')
+print(df_exclude[np.isnan(df['WMCSFs_S1bf_S1bf']) | np.isnan(df['WMCSFs_S1bf_ACA']) | np.isnan(df['WMCSFs_MOp_MOp'])  | np.isnan(df['WMCSFs_CPu_CPu'])]['rat.ds'].unique())
+
+print('missing GSRs')
+print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) | np.isnan(df['GSRs_MOp_MOp'])  | np.isnan(df['GSRs_CPu_CPu'])]['rat.ds'].unique())
 
 ```
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100100_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100100_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100100_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100100_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100101_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100101_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100101_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100101_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100102_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100102_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100102_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100102_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100103_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100103_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100103_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100103_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100104_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100104_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100104_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100104_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100105_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100105_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
+    missing aromas
+    [1020 1022 1035]
+    missing aromal
+    [1007 1018 1020 1022 1026 1035]
+    missing aromasr
+    [1001 1004 1006 1007 1009 1010 1020 1022 1025 1027 1033 1034 1035]
+    missing WMCSFs
+    [1006 1010 1017 1022 1025 1033 1034]
+    missing GSRs
+    [1001 1006 1009 1020 1022 1025 1027 1034 1036]
+
+
+    <ipython-input-26-25e6d1fc9ab8>:3: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+      print(df_exclude[np.isnan(df['aromas_S1bf_S1bf']) | np.isnan(df['aromas_S1bf_ACA']) | np.isnan(df['aromas_MOp_MOp'])  | np.isnan(df['aromas_CPu_CPu'])]['rat.ds'].unique())
+    <ipython-input-26-25e6d1fc9ab8>:6: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+      print(df_exclude[np.isnan(df['aromal_S1bf_S1bf']) | np.isnan(df['aromal_S1bf_ACA']) | np.isnan(df['aromal_MOp_MOp'])  | np.isnan(df['aromal_CPu_CPu'])]['rat.ds'].unique())
+    <ipython-input-26-25e6d1fc9ab8>:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+      print(df_exclude[np.isnan(df['aromasr_S1bf_S1bf']) | np.isnan(df['aromasr_S1bf_ACA']) | np.isnan(df['aromasr_MOp_MOp'])  | np.isnan(df['aromasr_CPu_CPu'])]['rat.ds'].unique())
+    <ipython-input-26-25e6d1fc9ab8>:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+      print(df_exclude[np.isnan(df['WMCSFs_S1bf_S1bf']) | np.isnan(df['WMCSFs_S1bf_ACA']) | np.isnan(df['WMCSFs_MOp_MOp'])  | np.isnan(df['WMCSFs_CPu_CPu'])]['rat.ds'].unique())
+    <ipython-input-26-25e6d1fc9ab8>:15: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+      print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) | np.isnan(df['GSRs_MOp_MOp'])  | np.isnan(df['GSRs_CPu_CPu'])]['rat.ds'].unique())
 
 
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
+To estimate specificity, i need to assume a significance threshold.  i find that 50% of the scans have at least 340 volumes (see below). Using the following [calculations](http://vassarstats.net/tabs_r.html), I find that `r >= 0.1` corresponds to p ~ 0.05 in a one-tailed test. I therefore use this a threshold to assume `significant` inter-seed correlations for the following analysis. This is a necessary heuristic that can be applied in other studies. The limitation being that it does not apply equally to all dataset (either with fewer or more volume). 
 
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100105_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100105_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100106_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100106_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100106_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100106_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100107_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100107_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100107_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100107_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100108_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100108_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100108_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100108_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100109_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100109_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100109_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100109_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
+```python
+df['func.volume'].describe()
+```
 
 
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
 
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100200_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100201_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
+    count     533.000000
+    mean      587.420263
+    std       580.735416
+    min       150.000000
+    25%       300.000000
+    50%       340.000000
+    75%       600.000000
+    max      3600.000000
+    Name: func.volume, dtype: float64
 
 
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
 
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100202_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100203_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100204_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100204_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100205_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100205_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100205_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100205_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100206_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
+```python
+# This is a function to estimate functional connectivity specificity. See Grandjean 2020 for details on the reasoning 
 
+def specific_FC(specific_roi, unspecific_ROI):
+    if (specific_roi>=0.1) and (unspecific_ROI<0.1):
+        cat='Specific'
+    elif (specific_roi>=0.1) and (unspecific_ROI>=0.1):
+        cat='Unspecific'
+    elif (abs(specific_roi)<0.1) and (abs(unspecific_ROI)<0.1):
+        cat='No'
+    else:
+        cat='Spurious'
+    return cat
 
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
 
+```
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100206_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100207_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100207_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100208_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100208_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100208_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100208_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100209_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100209_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100209_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100300_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100300_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100300_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100301_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100301_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100301_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100301_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100302_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100302_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100302_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100303_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100303_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100304_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100304_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100304_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100304_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100305_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100305_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100305_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100305_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
 
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100306_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100307_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100308_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100309_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100400_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100400_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100400_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100400_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100401_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100401_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100401_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100401_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100402_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100402_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100402_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100402_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100403_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100403_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100403_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100403_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100404_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100404_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100404_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100404_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100405_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100405_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100405_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100405_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100406_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100406_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100406_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100406_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100407_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100407_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100407_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100407_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100408_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100408_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100408_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100408_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100409_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100409_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100409_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100409_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100500_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100501_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100501_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100502_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100502_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100503_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100503_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100504_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100505_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100506_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100506_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100507_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100507_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100508_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100508_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100509_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100509_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100509_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100509_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100600_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100600_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100600_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100601_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100601_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100601_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100601_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100603_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100603_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100603_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100603_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100604_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100604_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100604_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100604_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100605_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100605_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100605_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100605_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100605_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100606_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100607_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100607_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100607_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100607_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100607_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100608_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100609_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100609_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100609_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100609_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100800_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100800_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100801_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100801_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100802_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100802_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100803_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100803_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100803_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100803_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100804_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100804_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100804_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100805_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100805_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100805_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100806_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100807_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100807_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100808_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100808_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100808_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100808_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100809_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100809_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100900_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100901_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100901_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100901_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100902_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100902_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100903_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100903_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100904_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100904_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100904_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100905_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100905_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100905_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100906_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100906_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100907_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100907_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100907_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100908_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100909_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0100909_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101000_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101000_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101000_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101001_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101001_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101001_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101002_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101002_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101002_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101003_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101003_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101005_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101005_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101005_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101005_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101006_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101006_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101006_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101007_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101007_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101007_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101007_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101008_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101008_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101008_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101009_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101009_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101101_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101101_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101102_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101103_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101104_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101104_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101105_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101105_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101105_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101106_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101106_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101106_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101107_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101108_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101108_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101109_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101109_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101109_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101200_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101200_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101200_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101201_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101201_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101201_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101202_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101202_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101202_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101203_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101203_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101204_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101205_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101205_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101205_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101205_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101206_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101206_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101207_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101207_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101208_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101209_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101209_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101209_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101300_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101300_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101300_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101301_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101301_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101301_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101302_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101302_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101302_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101302_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101303_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101304_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101304_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101304_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101304_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101305_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101305_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101305_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101306_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101306_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101307_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101308_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101308_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101309_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101309_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101309_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101309_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101400_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101400_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101400_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101400_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101401_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101401_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101401_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101401_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101402_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101402_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101402_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101402_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101403_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101403_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101403_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101403_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101404_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101404_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101405_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101405_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101405_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101405_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101406_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101406_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101406_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101406_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101407_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101407_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101407_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101407_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101408_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101408_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101408_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101408_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101409_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101409_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101409_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101409_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101500_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101500_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101501_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101501_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101502_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101502_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101503_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101503_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101504_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101504_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101505_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101505_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101506_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101506_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101507_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101507_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101508_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101508_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101509_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101509_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101509_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101601_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101601_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101601_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101602_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101602_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101602_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101603_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101603_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101604_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101605_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101605_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101605_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101606_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101607_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101607_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101607_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101608_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101608_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101609_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101700_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101701_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101701_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101701_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101701_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101702_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101703_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101703_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101703_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101703_ses-2_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101704_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101704_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101704_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101704_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101704_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101705_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101706_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101707_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101708_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101708_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101708_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101708_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101708_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101709_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101800_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101801_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101802_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101802_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101802_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101803_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101804_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101804_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101804_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101804_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101805_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101805_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101806_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
+```python
+for i in list(range(0,df.shape[0])):
+    #---- Now doing aromas condition
+    specific=df['aromas_S1bf_S1bf'][i]
+    unspecific=df['aromas_S1bf_ACA'][i]
+    if(np.isnan(specific) | np.isnan(unspecific)):
+        print('')
+    else:
+        df['aromas_S1bf_cat'][i]=specific_FC(specific,unspecific)  
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101807_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101807_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101808_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101808_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101809_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101809_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101809_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101900_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101900_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101901_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101901_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101901_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101901_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101902_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101903_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101903_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101904_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101905_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101905_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101905_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101905_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101906_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101906_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101907_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101907_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101907_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101907_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101908_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101909_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0101909_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102100_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102100_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102100_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102100_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102100_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102101_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102101_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102102_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102102_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102102_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102102_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102102_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102103_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102103_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102103_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102104_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102104_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102104_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102104_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102105_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102105_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102105_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102106_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102107_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102107_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102108_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102108_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102108_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102109_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102201_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102201_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102202_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102202_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102202_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102203_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102203_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102204_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102204_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102205_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102206_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102206_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102206_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102207_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102207_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102208_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102209_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102209_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102300_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102300_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102302_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102302_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102303_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102304_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102305_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102305_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102305_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102305_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102306_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102306_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
+    #---- Now doing aromal condition
+    specific=df['aromal_S1bf_S1bf'][i]
+    unspecific=df['aromal_S1bf_ACA'][i]
+    if(np.isnan(specific) | np.isnan(unspecific)):
+        print('')
+    else:
+        df['aromal_S1bf_cat'][i]=specific_FC(specific,unspecific)        
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102306_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102307_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102307_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102307_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102308_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102308_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102309_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102309_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102400_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102400_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102400_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102400_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102401_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102401_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102401_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102401_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102402_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102402_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102402_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102402_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102403_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102403_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102403_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102403_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102404_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102404_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102405_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102405_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102405_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102406_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102406_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102406_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102406_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102407_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102407_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102407_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102407_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102408_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102408_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102408_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102408_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102409_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102409_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102409_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102409_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102500_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102501_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102503_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102504_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102504_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102505_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102505_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102506_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102508_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102509_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102509_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102600_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102600_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102601_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102601_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102601_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102601_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102601_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102602_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102602_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102602_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102602_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102602_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102603_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102604_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102605_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102606_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102607_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102607_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102607_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102607_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102607_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102700_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102700_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102700_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102700_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102701_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102701_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102701_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102701_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102702_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102702_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102702_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102702_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102703_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102703_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102703_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102703_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102704_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102704_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102704_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102704_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102705_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102705_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102705_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
+    #---- Now doing aromasr condition
+    specific=df['aromasr_S1bf_S1bf'][i]
+    unspecific=df['aromasr_S1bf_ACA'][i]
+    if(np.isnan(specific) | np.isnan(unspecific)):
+        print('')
+    else:
+        df['aromasr_S1bf_cat'][i]=specific_FC(specific,unspecific)  
+        
+    #---- Now doing WMCSFs condition
+    specific=df['WMCSFs_S1bf_S1bf'][i]
+    unspecific=df['WMCSFs_S1bf_ACA'][i]
+    if(np.isnan(specific) | np.isnan(unspecific)):
+        print('')
+    else:
+        df['WMCSFs_S1bf_cat'][i]=specific_FC(specific,unspecific)  
+        
+    #---- Now doing GSRs condition
+    specific=df['GSRs_S1bf_S1bf'][i]
+    unspecific=df['GSRs_S1bf_ACA'][i]
+    if(np.isnan(specific) | np.isnan(unspecific)):
+        print('')
+    else:
+        df['GSRs_S1bf_cat'][i]=specific_FC(specific,unspecific)  
+```
 
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102705_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102706_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102706_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102706_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102706_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102707_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102707_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102707_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102707_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102708_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102708_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102708_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102709_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102709_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102709_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102709_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102801_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102802_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102803_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102803_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102803_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102804_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102804_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102804_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102805_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102805_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102805_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102806_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102807_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102807_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102808_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102809_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102809_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102900_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102900_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102900_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102901_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102901_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102901_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102902_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102902_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102903_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102903_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102903_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102903_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102904_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102904_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102904_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102904_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102905_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102905_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102905_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102906_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102906_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102907_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102907_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102907_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102908_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102908_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102909_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102909_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0102909_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103000_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103000_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103000_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103000_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103001_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103001_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103001_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103001_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103002_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103002_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103002_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103002_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103003_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103003_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103004_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103004_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103005_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103005_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103005_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103005_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103006_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103006_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103006_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103006_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103007_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103007_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103007_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103007_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103008_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103008_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103008_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103008_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103009_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103009_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103009_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103009_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103100_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103100_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103100_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103100_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103100_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103101_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103101_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103101_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103101_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103101_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103102_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103103_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103104_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103105_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103105_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103105_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103105_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103105_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103106_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103106_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103106_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103106_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103107_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103107_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103107_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103107_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103108_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103108_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103108_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103108_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-2_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-2_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103109_ses-2_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103200_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103202_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103203_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103203_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103203_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103204_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103204_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103205_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103206_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103206_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103207_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103209_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103209_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103301_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103302_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103302_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103302_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103303_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103306_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103306_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103308_ses-1_run-1_bold_RAS_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103308_ses-1_run-1_bold_RAS_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103309_ses-1_run-1_bold_RAS_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103400_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103401_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103402_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103403_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103403_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103403_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103404_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103405_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103406_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103406_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103407_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103407_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103407_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103409_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103409_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103409_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103500_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103500_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103500_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103501_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103501_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103501_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103502_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103502_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103502_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103503_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103503_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103503_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103504_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103504_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103504_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103505_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103505_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103505_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103506_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103506_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103506_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103507_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103507_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103507_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103508_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103508_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103508_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103600_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103600_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103601_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103601_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103601_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103602_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103602_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103602_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103603_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103603_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103604_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103604_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103604_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103605_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103606_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103606_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103606_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103607_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103607_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103608_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103608_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103608_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103608_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103609_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103609_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103609_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103609_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103700_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103700_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103700_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103701_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103701_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103701_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103701_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103702_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103702_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103702_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103702_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103703_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103703_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103703_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103704_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103704_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103704_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103705_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103705_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103705_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103706_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103706_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103706_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103707_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103707_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103707_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103707_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103708_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103708_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103708_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103708_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103709_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103709_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103709_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103709_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103800_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103800_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103800_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103801_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103801_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103801_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103802_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103802_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103802_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103803_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103803_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103804_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103804_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103804_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103804_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103805_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103805_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103806_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103806_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103806_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103807_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103807_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103807_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103808_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103808_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103808_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103809_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103809_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103809_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103900_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103900_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103900_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103901_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103901_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103901_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103902_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103902_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103903_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103903_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103904_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103905_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103905_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103906_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103906_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103907_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103908_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103908_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103908_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103909_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103909_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0103909_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104000_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104000_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104001_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104001_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104001_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104002_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104002_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-
-
     
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104003_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104003_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104004_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104005_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104006_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104006_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104007_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104007_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104007_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104008_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104008_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_ACA_l.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104008_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104009_ses-1_run-1_bold_combined_aroma_cleaned_CPu_l_corr_map_CPu_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104009_ses-1_run-1_bold_combined_aroma_cleaned_MOp_l_corr_map_MOp_r.txt
-    /project/4180000.19/multiRat/scratch/seed_txt/aromas/sub-0104009_ses-1_run-1_bold_combined_aroma_cleaned_S1bf_l_corr_map_S1bf_r.txt
-
-
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
-    <ipython-input-124-be50a69a6293>:10: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc[0][0]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
 
 ```python
 #remove excluded scans
-df_exclude = df.loc[(df['exclude'] != 'yes')]
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(df['exp.type'] == 'resting-state')]
 ```
+
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12,12))
+
+sns.set_palette("colorblind")
+
+ax1 = df_exclude['aromas_S1bf_cat'].value_counts(sort=False).plot.pie(title='aromas',ax=axes[0,0], autopct="%.1f%%")
+ax2 = df_exclude['aromal_S1bf_cat'].value_counts(sort=False).plot.pie(title='aromal',ax=axes[0,1],autopct="%.1f%%")    
+ax3 = df_exclude['aromasr_S1bf_cat'].value_counts(sort=False).plot.pie(title='aromasr',ax=axes[0,2],autopct="%.1f%%")    
+ax4 = df_exclude['WMCSFs_S1bf_cat'].value_counts(sort=False).plot.pie(title='WMCSFs',ax=axes[1,0],autopct="%.1f%%")    
+ax5 = df_exclude['GSRs_S1bf_cat'].value_counts(sort=False).plot.pie(title='GSRs',ax=axes[1,1],autopct="%.1f%%")    
+
+
+ax1.set(xlabel="", ylabel="")
+ax2.set(xlabel="", ylabel="")
+ax3.set(xlabel="", ylabel="")
+ax4.set(xlabel="", ylabel="")
+ax5.set(xlabel="", ylabel="")
+
+```
+
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
+    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+      if ax.is_first_col():
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
+    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+      if ax.is_first_col():
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
+    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+      if ax.is_first_col():
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
+    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+      if ax.is_first_col():
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
+    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
+      if ax.is_first_col():
+
+
+
+
+
+    [Text(0.5, 0, ''), Text(0, 0.5, '')]
+
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_12_2.png)
+    
+
+
+
+```python
+ax6 = sns.jointplot(data=df_exclude, x='aromas_S1bf_S1bf', y='aromas_S1bf_ACA', hue='func.sequence')
+ax6.plot_joint(sns.kdeplot,linestyles='dashed', zorder=0, levels=6)
+
+ax6.fig.suptitle('Functional connectivity specificity')
+ax6.fig.subplots_adjust(top=0.9)
+ax6.ax_joint.set(xlabel='Specific ROI [r]', ylabel='Unspecific ROI [r]')
+ax6.ax_joint.get_legend().set_title('Sequence')
+ax6.ax_joint.vlines(0.1,ymin=min(df_exclude['aromas_S1bf_ACA']),ymax=max(df_exclude['aromas_S1bf_ACA']),linestyles='dashed', color='black')
+ax6.ax_joint.vlines(-0.1, -0.1,0.1,linestyles='dashed', color='black')
+ax6.ax_joint.hlines(-0.1, -0.1,0.1,linestyles='dashed', color='black')
+ax6.ax_joint.hlines(0.1, -0.1,xmax=max(df_exclude['aromas_S1bf_S1bf']),linestyles='dashed', color='black')
+ax6.ax_marg_x.axvline(x=0.1, color='black')
+ax6.ax_marg_y.axhline(y=0.1, color='black')
+```
+
+
+
+
+    <matplotlib.lines.Line2D at 0x7f48a1226c10>
+
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_13_1.png)
+    
+
+
+
+```python
+from nilearn import plotting
+bg_img=os.path.join(analysis_folder, 
+             'template',
+             'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+             'SIGMA_Rat_Anatomical_Imaging',
+            'SIGMA_Rat_Anatomical_InVivo_Template',
+            'SIGMA_InVivo_Brain_Template_Masked.nii')
+
+tmap_filename=seed_list[3]
+plotting.plot_stat_map(tmap_filename, 
+                       bg_img, 
+                       threshold=0.1,
+                       vmax=0.5,
+                       symmetric_cbar=True,
+                       cmap='coolwarm',
+                       black_bg=False,
+                       #display_mode="y",
+                       cut_coords=(0,0.14,5))
+```
+
+
+
+
+    <nilearn.plotting.displays.OrthoSlicer at 0x7f489c0f5130>
+
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_14_1.png)
+    
+
+
+## ---- Plotting specific FC examples
+
+
+```python
+import re
+df_specific = df_exclude[['rat.sub','rat.ses']][df_exclude['aromas_S1bf_cat']=='Specific'].sample(n = 3)
+
+for i in list(range(0,df_specific.shape[0])):
+    r = re.compile('/aromas/')
+    seed_list_sub=list(filter(r.findall, seed_list))
+    r = re.compile('S1bf')
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile(df_specific['rat.sub'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile('ses-'+df_specific['rat.ses'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+
+
+    plotting.plot_stat_map(seed_list_sub[0], 
+                           bg_img, 
+                           title='Specific FC, ID:'+
+                                df_specific['rat.sub'].iloc[i].astype(str)+
+                                ' ses: '+
+                                df_specific['rat.ses'].iloc[i].astype(str),
+                           threshold=0.1,
+                           vmax=0.5,
+                           symmetric_cbar=True,
+                           cmap='coolwarm',
+                           black_bg=False,
+                           #display_mode="y",
+                           cut_coords=(0,0.14,5))
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_16_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_16_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_16_2.png)
+    
+
+
+## ---- Plotting unspecific FC examples
+
+
+```python
+import re
+df_specific = df_exclude[['rat.sub','rat.ses']][df_exclude['aromas_S1bf_cat']=='Unspecific'].sample(n = 3)
+
+for i in list(range(0,df_specific.shape[0])):
+    r = re.compile('/aromas/')
+    seed_list_sub=list(filter(r.findall, seed_list))
+    r = re.compile('S1bf')
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile(df_specific['rat.sub'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile('ses-'+df_specific['rat.ses'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+
+
+    plotting.plot_stat_map(seed_list_sub[0], 
+                           bg_img, 
+                           title='Unspecific FC, ID:'+
+                                df_specific['rat.sub'].iloc[i].astype(str)+
+                                ' ses: '+
+                                df_specific['rat.ses'].iloc[i].astype(str),
+                           threshold=0.1,
+                           vmax=0.5,
+                           symmetric_cbar=True,
+                           cmap='coolwarm',
+                           black_bg=False,
+                           #display_mode="y",
+                           cut_coords=(0,0.14,5))
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_18_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_18_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_18_2.png)
+    
+
+
+## ---- Plotting no FC examples
+
+
+```python
+import re
+df_specific = df_exclude[['rat.sub','rat.ses']][df_exclude['aromas_S1bf_cat']=='No'].sample(n = 3)
+
+for i in list(range(0,df_specific.shape[0])):
+    r = re.compile('/aromas/')
+    seed_list_sub=list(filter(r.findall, seed_list))
+    r = re.compile('S1bf')
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile(df_specific['rat.sub'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile('ses-'+df_specific['rat.ses'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+
+
+    plotting.plot_stat_map(seed_list_sub[0], 
+                           bg_img, 
+                           title='No FC, ID:'+
+                                df_specific['rat.sub'].iloc[i].astype(str)+
+                                ' ses: '+
+                                df_specific['rat.ses'].iloc[i].astype(str),
+                           threshold=0.1,
+                           vmax=0.5,
+                           symmetric_cbar=True,
+                           cmap='coolwarm',
+                           black_bg=False,
+                           #display_mode="y",
+                           cut_coords=(0,0.14,5))
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_20_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_20_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_20_2.png)
+    
+
+
+## ---- Plotting Spurious FC examples
+
+
+```python
+import re
+df_specific = df_exclude[['rat.sub','rat.ses']][df_exclude['aromas_S1bf_cat']=='Spurious'].sample(n = 3)
+
+for i in list(range(0,df_specific.shape[0])):
+    r = re.compile('/aromas/')
+    seed_list_sub=list(filter(r.findall, seed_list))
+    r = re.compile('S1bf')
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile(df_specific['rat.sub'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+    r = re.compile('ses-'+df_specific['rat.ses'].iloc[i].astype(str))
+    seed_list_sub=list(filter(r.findall, seed_list_sub))
+
+
+    plotting.plot_stat_map(seed_list_sub[0], 
+                           bg_img, 
+                           title='Spurious FC, ID:'+
+                                df_specific['rat.sub'].iloc[i].astype(str)+
+                                ' ses: '+
+                                df_specific['rat.ses'].iloc[i].astype(str),
+                           threshold=0.1,
+                           vmax=0.5,
+                           symmetric_cbar=True,
+                           cmap='coolwarm',
+                           black_bg=False,
+                           #display_mode="y",
+                           cut_coords=(0,0.14,5))
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_22_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_22_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_22_2.png)
+    
+
 
 
 ```python
@@ -7894,7 +1683,7 @@ plt.tight_layout()
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_7_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_23_1.png)
     
 
 
@@ -7934,24 +1723,24 @@ df_exclude[['aromas_S1bf_S1bf','aromas_MOp_MOp','aromas_CPu_CPu','aromas_S1bf_AC
   <tbody>
     <tr>
       <th>0.25</th>
-      <td>0.003668</td>
-      <td>0.002189</td>
-      <td>0.014247</td>
-      <td>-0.025802</td>
+      <td>0.011382</td>
+      <td>0.022202</td>
+      <td>0.001946</td>
+      <td>-0.042448</td>
     </tr>
     <tr>
       <th>0.50</th>
-      <td>0.077933</td>
-      <td>0.088585</td>
-      <td>0.073023</td>
-      <td>0.032751</td>
+      <td>0.102565</td>
+      <td>0.092497</td>
+      <td>0.072054</td>
+      <td>0.017157</td>
     </tr>
     <tr>
       <th>0.75</th>
-      <td>0.215066</td>
-      <td>0.186073</td>
-      <td>0.158786</td>
-      <td>0.111633</td>
+      <td>0.211400</td>
+      <td>0.210819</td>
+      <td>0.161968</td>
+      <td>0.092461</td>
     </tr>
   </tbody>
 </table>
@@ -7963,7 +1752,8 @@ df_exclude[['aromas_S1bf_S1bf','aromas_MOp_MOp','aromas_CPu_CPu','aromas_S1bf_AC
 ```python
 #plotting as a function of different parameters
 
-fig, axes = plt.subplots(nrows=5, ncols=1,figsize=(8, 20))
+fig, axes = plt.subplots(nrows=5, ncols=1,figsize=(8, 20),constrained_layout=True)
+
 
 sns.set_palette("colorblind")
 df_exclude = df.loc[(df['exclude'] != 'yes')]
@@ -7984,6 +1774,7 @@ ax0.get_legend().set_title('Sequence')
 
 ax1.set(xlabel='Anesthesia', ylabel='FC [r]')
 ax1.get_legend().remove()
+ax1.set_xticklabels(ax1.get_xticklabels(), rotation=30, ha='right')
 
 ax2.set(xlabel='Field strength', ylabel='FC [r]')
 ax2.get_legend().remove()
@@ -7994,17 +1785,23 @@ ax3.get_legend().remove()
 ax4.set(xlabel='Echo time [s]', ylabel='FC [r]')
 ax4.get_legend().remove()
 
+#plt.constrained_layout()
+
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 7.1% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 11.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 6.5% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 23.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+      warnings.warn(msg, UserWarning)
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 19.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+      warnings.warn(msg, UserWarning)
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 7.1% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_9_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_25_1.png)
     
 
 
@@ -8032,14 +1829,6 @@ df_sub['MRI.field.strength']=df_sub['MRI.field.strength'].astype('int')
 
 ```
 
-    <ipython-input-182-0bcea7d8b098>:19: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df_sub['MRI.field.strength']=df_sub['MRI.field.strength'].astype('int')
-
-
 
 ```python
 sns.pairplot(df_sub, hue="func.sequence")
@@ -8048,24 +1837,15 @@ sns.pairplot(df_sub, hue="func.sequence")
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x7fb70845ea60>
+    <seaborn.axisgrid.PairGrid at 0x7f4893b06ee0>
 
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_11_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_27_1.png)
     
 
-
-
-```python
-from scipy import stats
-tt=2.3
-n=12
-pval = stats.t.sf(np.abs(tt), n-1)*2  # two-sided pvalue = Prob(abs(t)>tt)
-print('t-statistic = %6.3f pvalue = %6.4f' % (tt, pval))
-```
 
 
 ```python
@@ -8078,6 +1858,7 @@ df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 # Full model
 m01 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+print(m01.summary())
 
 print('testing for the effect of strain')
 m02 = ols('aromas_S1bf_S1bf ~ anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
@@ -8110,37 +1891,76 @@ print(anova_lm(m02, m01))
 
 ```
 
-    <ipython-input-179-8a07a9ccf222>:6: FutureWarning: The default value of regex will change from True to False in a future version.
+    <ipython-input-181-104f671dd7b0>:6: FutureWarning: The default value of regex will change from True to False in a future version.
       df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 
+                                OLS Regression Results                            
+    ==============================================================================
+    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.185
+    Model:                            OLS   Adj. R-squared:                  0.159
+    Method:                 Least Squares   F-statistic:                     7.104
+    Date:                Tue, 27 Apr 2021   Prob (F-statistic):           1.67e-12
+    Time:                        13:20:49   Log-Likelihood:                 175.91
+    No. Observations:                 422   AIC:                            -323.8
+    Df Residuals:                     408   BIC:                            -267.2
+    Df Model:                          13                                         
+    Covariance Type:            nonrobust                                         
+    ======================================================================================================================
+                                                             coef    std err          t      P>|t|      [0.025      0.975]
+    ----------------------------------------------------------------------------------------------------------------------
+    Intercept                                             -0.1402      0.090     -1.555      0.121      -0.317       0.037
+    ratstrain[T.Lister Hooded]                            -0.0150      0.068     -0.222      0.824      -0.148       0.118
+    ratstrain[T.Long Evans]                               -0.0081      0.033     -0.247      0.805      -0.072       0.056
+    ratstrain[T.Sprague Dawley]                            0.0285      0.032      0.898      0.370      -0.034       0.091
+    ratstrain[T.Wistar]                                   -0.0314      0.030     -1.058      0.291      -0.090       0.027
+    anesthesiamaintenance[T.awake]                         0.3079      0.094      3.280      0.001       0.123       0.492
+    anesthesiamaintenance[T.isoflurane]                    0.1275      0.064      2.008      0.045       0.003       0.252
+    anesthesiamaintenance[T.isoflurane / medetomidine]     0.1362      0.063      2.154      0.032       0.012       0.261
+    anesthesiamaintenance[T.medetomidine]                  0.1479      0.064      2.318      0.021       0.022       0.273
+    anesthesiamaintenance[T.urethane]                      0.0933      0.067      1.389      0.166      -0.039       0.225
+    funcsequence[T.SE-EPI]                                -0.1375      0.029     -4.662      0.000      -0.195      -0.080
+    MRIfieldstrength                                       0.0249      0.005      5.240      0.000       0.016       0.034
+    funcTR                                                -0.0954      0.019     -5.009      0.000      -0.133      -0.058
+    funcTE                                                 5.8746      1.559      3.769      0.000       2.810       8.939
+    ==============================================================================
+    Omnibus:                       77.149   Durbin-Watson:                   1.657
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              174.028
+    Skew:                           0.943   Prob(JB):                     1.62e-38
+    Kurtosis:                       5.518   Cond. No.                     1.73e+03
+    ==============================================================================
+    
+    Notes:
+    [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+    [2] The condition number is large, 1.73e+03. This might indicate that there are
+    strong multicollinearity or other numerical problems.
     testing for the effect of strain
-       df_resid       ssr  df_diff   ss_diff         F    Pr(>F)
-    0     278.0  7.492612      0.0       NaN       NaN       NaN
-    1     275.0  7.334546      3.0  0.158066  1.975504  0.117895
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     412.0  10.881214      0.0       NaN       NaN       NaN
+    1     408.0  10.733986      4.0  0.147229  1.399043  0.233496
     
     testing for the effect of anesthesia maintenance
-       df_resid       ssr  df_diff   ss_diff         F    Pr(>F)
-    0     280.0  7.716515      0.0       NaN       NaN       NaN
-    1     275.0  7.334546      5.0  0.381969  2.864297  0.015378
+       df_resid        ssr  df_diff  ss_diff        F    Pr(>F)
+    0     413.0  11.108936      0.0      NaN      NaN       NaN
+    1     408.0  10.733986      5.0  0.37495  2.85038  0.015233
     
     testing for the effect of field strength
-       df_resid       ssr  df_diff   ss_diff          F        Pr(>F)
-    0     276.0  8.269761      0.0       NaN        NaN           NaN
-    1     275.0  7.334546      1.0  0.935216  35.064786  9.487912e-09
+       df_resid        ssr  df_diff   ss_diff          F        Pr(>F)
+    0     409.0  11.456422      0.0       NaN        NaN           NaN
+    1     408.0  10.733986      1.0  0.722436  27.459881  2.577488e-07
     
     testing for the effect of sequence
-       df_resid       ssr  df_diff   ss_diff          F    Pr(>F)
-    0     276.0  7.946818      0.0       NaN        NaN       NaN
-    1     275.0  7.334546      1.0  0.612272  22.956408  0.000003
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     409.0  11.305827      0.0       NaN       NaN       NaN
+    1     408.0  10.733986      1.0  0.571841  21.73574  0.000004
     
     testing for the effect of TR
-       df_resid       ssr  df_diff   ss_diff         F    Pr(>F)
-    0     284.0  8.181794      0.0       NaN       NaN       NaN
-    1     275.0  7.334546      9.0  0.847249  3.529619  0.000369
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     418.0  11.845444      0.0       NaN       NaN       NaN
+    1     408.0  10.733986     10.0  1.111459  4.224667  0.000013
     
     testing for the effect of TE
-       df_resid       ssr  df_diff   ss_diff          F    Pr(>F)
-    0     276.0  7.630494      0.0       NaN        NaN       NaN
-    1     275.0  7.334546      1.0  0.295949  11.096236  0.000983
+       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
+    0     409.0  11.107671      0.0       NaN        NaN       NaN
+    1     408.0  10.733986      1.0  0.373685  14.203805  0.000188
 

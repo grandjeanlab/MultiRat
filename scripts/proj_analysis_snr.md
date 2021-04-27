@@ -63,6 +63,11 @@ for i in tsnr_map:
 
 
 ```python
+df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
+```
+
+
+```python
 #remove excluded scans
 df_exclude = df.loc[(df['exclude'] != 'yes')]
 ```
@@ -104,7 +109,7 @@ ax3.get_legend().remove()
 
 
     
-![png](proj_analysis_snr_files/proj_analysis_snr_7_1.png)
+![png](proj_analysis_snr_files/proj_analysis_snr_8_1.png)
     
 
 
@@ -114,7 +119,7 @@ import pandas as pd
 from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
 
-#df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
+df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 print('testing for the effect of field strength')
 m01 = ols('tsnrS1 ~ MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
@@ -137,6 +142,10 @@ m02 = ols('tsnrS1 ~ MRIfieldstrength + funcsequence + funcTR', data=df_exclude).
 print(anova_lm(m02, m01))
 
 ```
+
+    <ipython-input-11-73bad63f9d69>:5: FutureWarning: The default value of regex will change from True to False in a future version.
+      df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
+
 
     testing for the effect of field strength
        df_resid            ssr  df_diff     ss_diff         F    Pr(>F)
