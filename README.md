@@ -51,6 +51,6 @@ The end-goal is to make this as an available resource to researchers and to publ
 11.04.2021 - Analysis using tSNR instead of SNR, because former is readily output in RABIES.  
 11.04.2021 - reduced number volumes -> 1200 for ds 1001 (too long preprocessing time)   
 11.04.2021 - cropped FOV for ds 1029, 1030, 1036 (improve registrations)   
-12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had converage along A-P axis, and this seemed to cause RABIES crashes. 
+12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had converage along A-P axis, and this seemed to cause RABIES crashes. (spoiler, it wasn't the reason) 
 
 

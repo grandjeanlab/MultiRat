@@ -95,201 +95,25 @@ for i_orig in seed_list:
         continue
     elif(seed =='S1bf'):
         roi='ACA'
-        r = re.compile('ACA'+'_l')
+        fc_orig=df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]
+        fc_nan = np.isnan(fc_orig).all()
+        if(fc_nan):
+            r = re.compile('ACA'+'_l')
+            nifti_mask=list(filter(r.findall, roi_list))[0]
+            fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
+            df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
+    
+    roi=seed
+    fc_orig=df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]
+    fc_nan = np.isnan(fc_orig).all()
+    if(fc_nan):
+        r = re.compile(seed+'_r')
         nifti_mask=list(filter(r.findall, roi_list))[0]
         fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
         df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
     
-    roi=seed
-    r = re.compile(seed+'_r')
-    nifti_mask=list(filter(r.findall, roi_list))[0]
-    fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
-    df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
-    
-df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
+df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t', index=False)
 ```
-
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/resampling.py:527: UserWarning: Casting data from int16 to float32
-      warnings.warn("Casting data from %s to %s" % (data.dtype.name, aux))
-
 
 
 ```python
@@ -314,24 +138,24 @@ print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) 
     missing aromas
     [1020 1022 1035]
     missing aromal
-    [1007 1018 1020 1022 1026 1035]
+    [1020 1022 1035]
     missing aromasr
-    [1001 1004 1006 1007 1009 1010 1020 1022 1025 1027 1033 1034 1035]
+    [1020 1022 1035]
     missing WMCSFs
-    [1006 1010 1017 1022 1025 1033 1034]
+    [1022]
     missing GSRs
-    [1001 1006 1009 1020 1022 1025 1027 1034 1036]
+    [1022 1027]
 
 
-    <ipython-input-26-25e6d1fc9ab8>:3: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    <ipython-input-117-25e6d1fc9ab8>:3: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
       print(df_exclude[np.isnan(df['aromas_S1bf_S1bf']) | np.isnan(df['aromas_S1bf_ACA']) | np.isnan(df['aromas_MOp_MOp'])  | np.isnan(df['aromas_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-26-25e6d1fc9ab8>:6: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    <ipython-input-117-25e6d1fc9ab8>:6: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
       print(df_exclude[np.isnan(df['aromal_S1bf_S1bf']) | np.isnan(df['aromal_S1bf_ACA']) | np.isnan(df['aromal_MOp_MOp'])  | np.isnan(df['aromal_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-26-25e6d1fc9ab8>:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    <ipython-input-117-25e6d1fc9ab8>:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
       print(df_exclude[np.isnan(df['aromasr_S1bf_S1bf']) | np.isnan(df['aromasr_S1bf_ACA']) | np.isnan(df['aromasr_MOp_MOp'])  | np.isnan(df['aromasr_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-26-25e6d1fc9ab8>:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    <ipython-input-117-25e6d1fc9ab8>:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
       print(df_exclude[np.isnan(df['WMCSFs_S1bf_S1bf']) | np.isnan(df['WMCSFs_S1bf_ACA']) | np.isnan(df['WMCSFs_MOp_MOp'])  | np.isnan(df['WMCSFs_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-26-25e6d1fc9ab8>:15: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+    <ipython-input-117-25e6d1fc9ab8>:15: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
       print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) | np.isnan(df['GSRs_MOp_MOp'])  | np.isnan(df['GSRs_CPu_CPu'])]['rat.ds'].unique())
 
 
@@ -974,332 +798,6 @@ for i in list(range(0,df.shape[0])):
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 
 
@@ -1314,7 +812,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12,12))
+fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12,8))
 
 sns.set_palette("colorblind")
 
@@ -1383,7 +881,7 @@ ax6.ax_marg_y.axhline(y=0.1, color='black')
 
 
 
-    <matplotlib.lines.Line2D at 0x7f48a1226c10>
+    <matplotlib.lines.Line2D at 0x7f382a93abb0>
 
 
 
@@ -1415,16 +913,20 @@ plotting.plot_stat_map(tmap_filename,
                        cut_coords=(0,0.14,5))
 ```
 
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/datasets/__init__.py:87: FutureWarning: Fetchers from the nilearn.datasets module will be updated in version 0.9 to return python strings instead of bytes and Pandas dataframes instead of Numpy arrays.
+      warn("Fetchers from the nilearn.datasets module will be "
 
 
 
-    <nilearn.plotting.displays.OrthoSlicer at 0x7f489c0f5130>
+
+
+    <nilearn.plotting.displays.OrthoSlicer at 0x7f67b1b59100>
 
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_14_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_14_2.png)
     
 
 
@@ -1432,6 +934,14 @@ plotting.plot_stat_map(tmap_filename,
 
 
 ```python
+from nilearn import plotting
+bg_img=os.path.join(analysis_folder, 
+             'template',
+             'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+             'SIGMA_Rat_Anatomical_Imaging',
+            'SIGMA_Rat_Anatomical_InVivo_Template',
+            'SIGMA_InVivo_Brain_Template_Masked.nii')
+
 import re
 df_specific = df_exclude[['rat.sub','rat.ses']][df_exclude['aromas_S1bf_cat']=='Specific'].sample(n = 3)
 
@@ -1461,10 +971,8 @@ for i in list(range(0,df_specific.shape[0])):
                            cut_coords=(0,0.14,5))
 ```
 
-
-    
-![png](proj_analysis_sba_files/proj_analysis_sba_16_0.png)
-    
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/datasets/__init__.py:87: FutureWarning: Fetchers from the nilearn.datasets module will be updated in version 0.9 to return python strings instead of bytes and Pandas dataframes instead of Numpy arrays.
+      warn("Fetchers from the nilearn.datasets module will be "
 
 
 
@@ -1476,6 +984,12 @@ for i in list(range(0,df_specific.shape[0])):
 
     
 ![png](proj_analysis_sba_files/proj_analysis_sba_16_2.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_16_3.png)
     
 
 
@@ -1632,6 +1146,606 @@ for i in list(range(0,df_specific.shape[0])):
     
 
 
+## Now doing a Chi2 test to see distribution of specificity among variables
+
+
+```python
+from scipy.stats import chi2_contingency
+
+# now testing straing
+chi_stack = df_exclude.groupby(['rat.strain', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+# now testing sex
+chi_stack = df_exclude.groupby(['rat.sex', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+# now testing age
+chi_stack = df_exclude.groupby(['rat.age', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+# now testing anesthesia.maintenance
+chi_stack = df_exclude.groupby(['anesthesia.maintenance', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+# now testing anesthesia.breathing.assistance
+chi_stack = df_exclude.groupby(['anesthesia.breathing.assistance', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+
+# now testing field strength
+chi_stack = df_exclude.groupby(['MRI.field.strength', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+
+# now testing sequence
+chi_stack = df_exclude.groupby(['func.sequence', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+print('')
+g, p, dof, expctd  = chi2_contingency(chi_stack)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+print(chi_stack.sort_values(by="Specific_percent",ascending=False))
+print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+```
+
+    
+    aromas_S1bf_cat    No  Specific  Spurious  Unspecific    sum  Specific_percent
+    rat.strain                                                                    
+    Lister Hooded     1.0       5.0       1.0         0.0    7.0              0.71
+    Fischer 344      18.0      26.0      10.0         4.0   58.0              0.45
+    Wistar           61.0      54.0      24.0        25.0  164.0              0.33
+    Sprague Dawley   39.0      38.0      11.0        30.0  118.0              0.32
+    Long Evans       30.0      19.0      14.0        12.0   75.0              0.25
+    Strain effect: g-value = 22.204386314337317 dof = 12 p-value = 0.03529196332006069
+    
+    aromas_S1bf_cat  No  Specific  Spurious  Unspecific  sum  Specific_percent
+    rat.sex                                                                   
+    male              6         9         1           1   17              0.53
+    Female           44        35        14           5   98              0.36
+    Male             99        98        45          65  307              0.32
+    Strain effect: g-value = 19.180460170161837 dof = 6 p-value = 0.0038694743161119087
+    
+    aromas_S1bf_cat    No  Specific  Spurious  Unspecific    sum  Specific_percent
+    rat.age                                                                       
+    14-16             0.0       2.0       0.0         0.0    2.0              1.00
+    8-10              3.0       8.0       0.0         0.0   11.0              0.73
+    6-8               2.0       3.0       0.0         0.0    5.0              0.60
+    12-14             2.0       4.0       1.0         1.0    8.0              0.50
+    4-6               8.0      10.0       1.0         3.0   22.0              0.45
+    0-2              12.0      25.0      13.0        13.0   63.0              0.40
+    16-18             9.0      10.0       4.0         7.0   30.0              0.33
+    2-4              89.0      61.0      24.0        28.0  202.0              0.30
+    18-20             2.0       1.0       3.0         0.0    6.0              0.17
+    Strain effect: g-value = 40.52316649683126 dof = 24 p-value = 0.018777948488553155
+    
+    aromas_S1bf_cat              No  Specific  Spurious  Unspecific    sum  \
+    anesthesia.maintenance                                                   
+    isoflurane / medetomidine  37.0      43.0       5.0        15.0  100.0   
+    isoflurane                 63.0      64.0      33.0        27.0  187.0   
+    medetomidine               21.0      21.0      15.0        14.0   71.0   
+    alpha-chloralose            2.0       2.0       0.0         5.0    9.0   
+    urethane                   25.0      11.0       7.0         6.0   49.0   
+    awake                       1.0       1.0       0.0         4.0    6.0   
+    
+    aromas_S1bf_cat            Specific_percent  
+    anesthesia.maintenance                       
+    isoflurane / medetomidine              0.43  
+    isoflurane                             0.34  
+    medetomidine                           0.30  
+    alpha-chloralose                       0.22  
+    urethane                               0.22  
+    awake                                  0.17  
+    Strain effect: g-value = 41.70798368854224 dof = 15 p-value = 0.00024921733263893954
+    
+    aromas_S1bf_cat                   No  Specific  Spurious  Unspecific  sum  \
+    anesthesia.breathing.assistance                                             
+    Free-breathing                     6         9         1           1   17   
+    ventilated                        18        21         3          15   57   
+    free-breathing                   124       111        56          51  342   
+    
+    aromas_S1bf_cat                  Specific_percent  
+    anesthesia.breathing.assistance                    
+    Free-breathing                               0.53  
+    ventilated                                   0.37  
+    free-breathing                               0.32  
+    Strain effect: g-value = 12.648789596398302 dof = 6 p-value = 0.0489648753437889
+    
+    aromas_S1bf_cat       No  Specific  Spurious  Unspecific    sum  \
+    MRI.field.strength                                                
+    4.7                  7.0      20.0       6.0         3.0   36.0   
+    14.1                 4.0      15.0       0.0        15.0   34.0   
+    7.0                 79.0      65.0      35.0        26.0  205.0   
+    9.4                 52.0      42.0      16.0        27.0  137.0   
+    11.1                 7.0       0.0       3.0         0.0   10.0   
+    
+    aromas_S1bf_cat     Specific_percent  
+    MRI.field.strength                    
+    4.7                             0.56  
+    14.1                            0.44  
+    7.0                             0.32  
+    9.4                             0.31  
+    11.1                            0.00  
+    Strain effect: g-value = 51.9701234019917 dof = 12 p-value = 6.275723348974305e-07
+    
+    aromas_S1bf_cat   No  Specific  Spurious  Unspecific  sum  Specific_percent
+    func.sequence                                                              
+    GE-EPI           115       130        47          70  362              0.36
+    SE-EPI            34        12        13           1   60              0.20
+    Strain effect: g-value = 25.191008778060894 dof = 3 p-value = 1.4083768244993284e-05
+
+
+
+```python
+# check how datasets are prefroming
+chi_stack = df_exclude.groupby(['rat.ds', 
+                    'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
+chi_stack = chi_stack.fillna(0)
+chi_stack["sum"] = chi_stack.sum(axis=1)
+chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
+
+print("FC specificity distribution per dataset, armoas denoising")
+print(chi_stack["Specific_percent"].quantile([0.25,0.5,0.75]))
+chi_stack.sort_values(by="Specific_percent",ascending=False)
+
+```
+
+    FC specificity distribution per dataset, armoas denoising
+    0.25    0.1925
+    0.50    0.3150
+    0.75    0.4400
+    Name: Specific_percent, dtype: float64
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>aromas_S1bf_cat</th>
+      <th>No</th>
+      <th>Specific</th>
+      <th>Spurious</th>
+      <th>Unspecific</th>
+      <th>sum</th>
+      <th>Specific_percent</th>
+    </tr>
+    <tr>
+      <th>rat.ds</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1031</th>
+      <td>4.0</td>
+      <td>14.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>18.0</td>
+      <td>0.78</td>
+    </tr>
+    <tr>
+      <th>1015</th>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>9.0</td>
+      <td>0.78</td>
+    </tr>
+    <tr>
+      <th>1020</th>
+      <td>1.0</td>
+      <td>5.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>0.71</td>
+    </tr>
+    <tr>
+      <th>1022</th>
+      <td>0.0</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>9.0</td>
+      <td>0.67</td>
+    </tr>
+    <tr>
+      <th>1039</th>
+      <td>2.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>8.0</td>
+      <td>0.62</td>
+    </tr>
+    <tr>
+      <th>1013</th>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>0.60</td>
+    </tr>
+    <tr>
+      <th>1028</th>
+      <td>2.0</td>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.50</td>
+    </tr>
+    <tr>
+      <th>1024</th>
+      <td>2.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>10.0</td>
+      <td>0.50</td>
+    </tr>
+    <tr>
+      <th>1034</th>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>10.0</td>
+      <td>0.50</td>
+    </tr>
+    <tr>
+      <th>1035</th>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>9.0</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>1017</th>
+      <td>3.0</td>
+      <td>8.0</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>18.0</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>1005</th>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>9.0</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>1040</th>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>9.0</td>
+      <td>0.44</td>
+    </tr>
+    <tr>
+      <th>1009</th>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1032</th>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1026</th>
+      <td>1.0</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>8.0</td>
+      <td>15.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1016</th>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>5.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1004</th>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1010</th>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>9.0</td>
+      <td>0.33</td>
+    </tr>
+    <tr>
+      <th>1019</th>
+      <td>6.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>9.0</td>
+      <td>0.33</td>
+    </tr>
+    <tr>
+      <th>1033</th>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>10.0</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>1018</th>
+      <td>9.0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>20.0</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>1030</th>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>1006</th>
+      <td>8.0</td>
+      <td>5.0</td>
+      <td>7.0</td>
+      <td>0.0</td>
+      <td>20.0</td>
+      <td>0.25</td>
+    </tr>
+    <tr>
+      <th>1021</th>
+      <td>10.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>19.0</td>
+      <td>0.21</td>
+    </tr>
+    <tr>
+      <th>1002</th>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>6.0</td>
+      <td>2.0</td>
+      <td>14.0</td>
+      <td>0.21</td>
+    </tr>
+    <tr>
+      <th>1025</th>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>10.0</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>1027</th>
+      <td>7.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>1012</th>
+      <td>7.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>1007</th>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>1023</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>6.0</td>
+      <td>0.17</td>
+    </tr>
+    <tr>
+      <th>1003</th>
+      <td>8.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>13.0</td>
+      <td>0.15</td>
+    </tr>
+    <tr>
+      <th>1036</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>0.14</td>
+    </tr>
+    <tr>
+      <th>1014</th>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>2.0</td>
+      <td>8.0</td>
+      <td>0.12</td>
+    </tr>
+    <tr>
+      <th>1011</th>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>1001</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>5.0</td>
+      <td>10.0</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>1029</th>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>9.0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1008</th>
+      <td>7.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1037</th>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>8.0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1038</th>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Now looking at FC sensitivity
+
 
 ```python
 import matplotlib.pyplot as plt
@@ -1683,7 +1797,7 @@ plt.tight_layout()
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_23_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_27_1.png)
     
 
 
@@ -1750,24 +1864,29 @@ df_exclude[['aromas_S1bf_S1bf','aromas_MOp_MOp','aromas_CPu_CPu','aromas_S1bf_AC
 
 
 ```python
+import matplotlib.pyplot as plt
+import seaborn as sns
 #plotting as a function of different parameters
 
-fig, axes = plt.subplots(nrows=5, ncols=1,figsize=(8, 20),constrained_layout=True)
+fig, axes = plt.subplots(nrows=3, ncols=2,figsize=(16, 12),constrained_layout=True)
 
 
 sns.set_palette("colorblind")
 df_exclude = df.loc[(df['exclude'] != 'yes')]
 
 ax0 = sns.swarmplot(data=df_exclude, x="rat.strain",
-                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[0])
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[0,0])
 ax1 = sns.swarmplot(data=df_exclude, x="anesthesia.maintenance",
-                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[1])
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[0,1])
 ax2 = sns.swarmplot(data=df_exclude, x="MRI.field.strength",
-                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[2])
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[1,0])
 ax3 = sns.scatterplot(data=df_exclude, x="func.TR",
-                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[3])
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[1,1])
 ax4 = sns.scatterplot(data=df_exclude, x="func.TE",
-                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[4])
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[2,0])
+ax5 = sns.scatterplot(data=df_exclude, x="tsnr.S1",
+                    y="aromas_S1bf_S1bf", hue="func.sequence",ax=axes[2,1])
+
 
 ax0.set(xlabel='Strain', ylabel='FC [r]', title='S1bf - S1bf FC')
 ax0.get_legend().set_title('Sequence')
@@ -1785,23 +1904,28 @@ ax3.get_legend().remove()
 ax4.set(xlabel='Echo time [s]', ylabel='FC [r]')
 ax4.get_legend().remove()
 
+ax5.set(xlabel='tSNR S1 [a.u.]', ylabel='FC [r]')
+ax5.get_legend().remove()
+
 #plt.constrained_layout()
 
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 11.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 12.3% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 23.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 24.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 19.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 6.0% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 7.1% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 20.6% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
+      warnings.warn(msg, UserWarning)
+    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 8.7% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
       warnings.warn(msg, UserWarning)
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_25_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_29_1.png)
     
 
 
@@ -1843,7 +1967,7 @@ sns.pairplot(df_sub, hue="func.sequence")
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_27_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_31_1.png)
     
 
 
@@ -1857,110 +1981,121 @@ from statsmodels.stats.anova import anova_lm
 df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 # Full model
-m01 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+m01 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
 print(m01.summary())
 
 print('testing for the effect of strain')
-m02 = ols('aromas_S1bf_S1bf ~ anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of anesthesia maintenance')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain  + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain  + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of field strength')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of sequence')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcTR + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of TR')
-m02 = ols('aromas_S1bf_S1bf ~ MRIfieldstrength + funcsequence + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ MRIfieldstrength + funcsequence + funcTE + tsnrS1', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of TE')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + tsnrS1', data=df_exclude).fit()
+print(anova_lm(m02, m01))
+
+print('')
+print('testing for the effect of tSNR')
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 ```
 
-    <ipython-input-181-104f671dd7b0>:6: FutureWarning: The default value of regex will change from True to False in a future version.
+    <ipython-input-9-c80f1f1ecfdb>:6: FutureWarning: The default value of regex will change from True to False in a future version.
       df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 
                                 OLS Regression Results                            
     ==============================================================================
-    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.185
-    Model:                            OLS   Adj. R-squared:                  0.159
-    Method:                 Least Squares   F-statistic:                     7.104
-    Date:                Tue, 27 Apr 2021   Prob (F-statistic):           1.67e-12
-    Time:                        13:20:49   Log-Likelihood:                 175.91
-    No. Observations:                 422   AIC:                            -323.8
-    Df Residuals:                     408   BIC:                            -267.2
-    Df Model:                          13                                         
+    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.240
+    Model:                            OLS   Adj. R-squared:                  0.212
+    Method:                 Least Squares   F-statistic:                     8.752
+    Date:                Wed, 28 Apr 2021   Prob (F-statistic):           1.29e-16
+    Time:                        09:35:36   Log-Likelihood:                 179.66
+    No. Observations:                 404   AIC:                            -329.3
+    Df Residuals:                     389   BIC:                            -269.3
+    Df Model:                          14                                         
     Covariance Type:            nonrobust                                         
     ======================================================================================================================
                                                              coef    std err          t      P>|t|      [0.025      0.975]
     ----------------------------------------------------------------------------------------------------------------------
-    Intercept                                             -0.1402      0.090     -1.555      0.121      -0.317       0.037
-    ratstrain[T.Lister Hooded]                            -0.0150      0.068     -0.222      0.824      -0.148       0.118
-    ratstrain[T.Long Evans]                               -0.0081      0.033     -0.247      0.805      -0.072       0.056
-    ratstrain[T.Sprague Dawley]                            0.0285      0.032      0.898      0.370      -0.034       0.091
-    ratstrain[T.Wistar]                                   -0.0314      0.030     -1.058      0.291      -0.090       0.027
-    anesthesiamaintenance[T.awake]                         0.3079      0.094      3.280      0.001       0.123       0.492
-    anesthesiamaintenance[T.isoflurane]                    0.1275      0.064      2.008      0.045       0.003       0.252
-    anesthesiamaintenance[T.isoflurane / medetomidine]     0.1362      0.063      2.154      0.032       0.012       0.261
-    anesthesiamaintenance[T.medetomidine]                  0.1479      0.064      2.318      0.021       0.022       0.273
-    anesthesiamaintenance[T.urethane]                      0.0933      0.067      1.389      0.166      -0.039       0.225
-    funcsequence[T.SE-EPI]                                -0.1375      0.029     -4.662      0.000      -0.195      -0.080
-    MRIfieldstrength                                       0.0249      0.005      5.240      0.000       0.016       0.034
-    funcTR                                                -0.0954      0.019     -5.009      0.000      -0.133      -0.058
-    funcTE                                                 5.8746      1.559      3.769      0.000       2.810       8.939
+    Intercept                                             -0.1506      0.088     -1.713      0.087      -0.323       0.022
+    ratstrain[T.Lister Hooded]                            -0.0514      0.067     -0.773      0.440      -0.182       0.079
+    ratstrain[T.Long Evans]                               -0.0181      0.032     -0.567      0.571      -0.081       0.045
+    ratstrain[T.Sprague Dawley]                            0.0275      0.031      0.888      0.375      -0.033       0.088
+    ratstrain[T.Wistar]                                   -0.0527      0.030     -1.745      0.082      -0.112       0.007
+    anesthesiamaintenance[T.awake]                         0.2770      0.092      3.023      0.003       0.097       0.457
+    anesthesiamaintenance[T.isoflurane]                    0.0536      0.063      0.846      0.398      -0.071       0.178
+    anesthesiamaintenance[T.isoflurane / medetomidine]     0.0573      0.063      0.904      0.366      -0.067       0.182
+    anesthesiamaintenance[T.medetomidine]                  0.0935      0.063      1.478      0.140      -0.031       0.218
+    anesthesiamaintenance[T.urethane]                      0.0007      0.068      0.010      0.992      -0.134       0.135
+    funcsequence[T.SE-EPI]                                -0.1087      0.029     -3.717      0.000      -0.166      -0.051
+    MRIfieldstrength                                       0.0218      0.005      4.682      0.000       0.013       0.031
+    funcTR                                                -0.1014      0.019     -5.264      0.000      -0.139      -0.064
+    funcTE                                                 7.0521      1.545      4.563      0.000       4.014      10.091
+    tsnrS1                                                 0.0026      0.001      5.110      0.000       0.002       0.004
     ==============================================================================
-    Omnibus:                       77.149   Durbin-Watson:                   1.657
-    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              174.028
-    Skew:                           0.943   Prob(JB):                     1.62e-38
-    Kurtosis:                       5.518   Cond. No.                     1.73e+03
+    Omnibus:                      112.234   Durbin-Watson:                   1.777
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              460.831
+    Skew:                           1.162   Prob(JB):                    8.55e-101
+    Kurtosis:                       7.688   Cond. No.                     8.31e+03
     ==============================================================================
     
     Notes:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 1.73e+03. This might indicate that there are
+    [2] The condition number is large, 8.31e+03. This might indicate that there are
     strong multicollinearity or other numerical problems.
     testing for the effect of strain
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     412.0  10.881214      0.0       NaN       NaN       NaN
-    1     408.0  10.733986      4.0  0.147229  1.399043  0.233496
+       df_resid       ssr  df_diff   ss_diff         F   Pr(>F)
+    0     393.0  9.975332      0.0       NaN       NaN      NaN
+    1     389.0  9.719463      4.0  0.255869  2.560149  0.03823
     
     testing for the effect of anesthesia maintenance
-       df_resid        ssr  df_diff  ss_diff        F    Pr(>F)
-    0     413.0  11.108936      0.0      NaN      NaN       NaN
-    1     408.0  10.733986      5.0  0.37495  2.85038  0.015233
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     394.0  10.201615      0.0       NaN       NaN       NaN
+    1     389.0   9.719463      5.0  0.482152  3.859415  0.002001
     
     testing for the effect of field strength
-       df_resid        ssr  df_diff   ss_diff          F        Pr(>F)
-    0     409.0  11.456422      0.0       NaN        NaN           NaN
-    1     408.0  10.733986      1.0  0.722436  27.459881  2.577488e-07
+       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
+    0     390.0  10.267276      0.0       NaN        NaN       NaN
+    1     389.0   9.719463      1.0  0.547813  21.925011  0.000004
     
     testing for the effect of sequence
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     409.0  11.305827      0.0       NaN       NaN       NaN
-    1     408.0  10.733986      1.0  0.571841  21.73574  0.000004
+       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
+    0     390.0  10.064691      0.0       NaN        NaN       NaN
+    1     389.0   9.719463      1.0  0.345228  13.816983  0.000231
     
     testing for the effect of TR
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     418.0  11.845444      0.0       NaN       NaN       NaN
-    1     408.0  10.733986     10.0  1.111459  4.224667  0.000013
+       df_resid        ssr  df_diff   ss_diff         F        Pr(>F)
+    0     399.0  11.059375      0.0       NaN       NaN           NaN
+    1     389.0   9.719463     10.0  1.339912  5.362703  1.943417e-07
     
     testing for the effect of TE
-       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
-    0     409.0  11.107671      0.0       NaN        NaN       NaN
-    1     408.0  10.733986      1.0  0.373685  14.203805  0.000188
+       df_resid        ssr  df_diff  ss_diff          F    Pr(>F)
+    0     390.0  10.239703      0.0      NaN        NaN       NaN
+    1     389.0   9.719463      1.0  0.52024  20.821471  0.000007
+    
+    testing for the effect of tSNR
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     408.0  10.733986      0.0       NaN       NaN       NaN
+    1     389.0   9.719463     19.0  1.014523  2.137055  0.003856
 

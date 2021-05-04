@@ -63,7 +63,7 @@ for i in tsnr_map:
 
 
 ```python
-df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
+df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t', index=False)
 ```
 
 
