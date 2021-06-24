@@ -2,7 +2,7 @@
 
 # A collaborative rat functional MRI multi-center study.
 A Rat fMRI multi-center study
-*updated 2021_02_18*
+*updated 2021_06_22*
 
 ### Executive summary
 In this international collaborative project, we seek to gather the rodent imaging community toward performing a rat fMRI multi-center comparison, within the same template as Grandjean et al. NIMG 2020. We want to examine functional connectivity (FC) parameter distribution at the population level within key networks (somatosensory and default-mode network) of the rat brain, as well as establish connectivity sensitivity and specificity in the collected datasets. To do so, we will gather rat BOLD fMRI datasets from individual labs (n=10, any protocol).
@@ -33,17 +33,24 @@ The end-goal is to make this as an available resource to researchers and to publ
 [3. Dataset description](scripts/proj_dataset.md)   
 [4. Preprocessing code](scripts/proj_preprocessing.md)   
 [5. Qality control](scripts/proj_qa.md)   
-[6. Analysis tSNR](scripts/proj_analysis_snr.md)  
+[6. Analysis tSNR and motion](scripts/proj_analysis_snr.md)  
 [7. Analysis seed-based analysis](scripts/proj_analysis_sba.md)    
 8. Analysis ica analsysis    
-9. Analysis stimulus evoked    
+[9. Analysis stimulus evoked](scripts/proj_analysis_stim.md)    
 
-### Usfeful links
+### Links
 [License and permissions](LICENSE.md)  
 [Collaborative model and project details](scripts/proj_detail.md)  
 [Preregistration DOI: 10.17605/OSF.IO/EMQ4B](https://osf.io/emq4b)  
 [Lab webpage](https://grandjeanlab.github.io/)  
 [Twitter](https://twitter.com/grandjeanlab)  
+
+### Usefull tooboxes
+[RABIES](https://github.com/CoBrALab/RABIES), rodent fMRI preprocessing and analysis   
+[BkrRaw](https://github.com/BrkRaw/bruker), convert bruker data to [BIDS](https://bids.neuroimaging.io/) format  
+[SIGMA template](https://www.nature.com/articles/s41467-019-13575-7)   
+[SAMRI](https://github.com/IBT-FMI/SAMRI), another rodent fMRI preprocessing pipeline   
+[nirodent](https://github.com/nipreps/nirodents), a toolbox for rodent MRI processing   
 
 ### Deviations from preregistration
 11.12.2020 - Use SIGMA template instead of WHS  
@@ -52,5 +59,6 @@ The end-goal is to make this as an available resource to researchers and to publ
 11.04.2021 - reduced number volumes -> 1200 for ds 1001 (too long preprocessing time)   
 11.04.2021 - cropped FOV for ds 1029, 1030, 1036 (improve registrations)   
 12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had converage along A-P axis, and this seemed to cause RABIES crashes. (spoiler, it wasn't the reason) 
+06.06.2021 - cropped FOV for ds 1023, 1038, 1039
 
 

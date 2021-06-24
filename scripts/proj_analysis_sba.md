@@ -6,11 +6,8 @@ Joanes Grandjean
 
 # Foreword
 
-This is a R markdown file which contains all the code for reproducing my
-analysis. The code is meant to be followed step-wise. The raw fMRI
-dataset will not be publicly available before the project preprint
-publication on BioArxiv. The raw fMRI dataset can be made available
-prior to publication upon request and review from the authors.
+This is a jupyter notebook which contains all the code for reproducing my
+analysis. The code is meant to be followed step-wise. 
 
 If re-using some of the scripts, please follow citations guidelines for
 the software used. I’ve provided the links to the software wherever
@@ -22,6 +19,7 @@ possible. See also the [license](../LICENSE.md) for this software.
 # init variables
 init_folder='/home/traaffneu/joagra/code/MultiRat'
 analysis_folder='/project/4180000.19/multiRat'
+df_path='../assets/table/meta_data_20210622.tsv'
 ```
 
 
@@ -31,7 +29,7 @@ import glob
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t')
+df = pd.read_csv(df_path, sep='\t')
 ```
 
 
@@ -112,7 +110,7 @@ for i_orig in seed_list:
         fc=NiftiMasker(nifti_mask).fit_transform(i_orig).mean()
         df[(denoise+'_'+seed+'_'+roi)][(df['rat.sub']==sub) & (df['rat.ses']==ses)]=fc
     
-df.to_csv('../assets/table/meta_data_20210411_snr.tsv', sep='\t', index=False)
+df.to_csv(df_path, sep='\t', index=False)
 ```
 
 
@@ -136,27 +134,15 @@ print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) 
 ```
 
     missing aromas
-    [1020 1022 1035]
+    []
     missing aromal
-    [1020 1022 1035]
+    []
     missing aromasr
-    [1020 1022 1035]
+    []
     missing WMCSFs
-    [1022]
+    []
     missing GSRs
-    [1022 1027]
-
-
-    <ipython-input-117-25e6d1fc9ab8>:3: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-      print(df_exclude[np.isnan(df['aromas_S1bf_S1bf']) | np.isnan(df['aromas_S1bf_ACA']) | np.isnan(df['aromas_MOp_MOp'])  | np.isnan(df['aromas_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-117-25e6d1fc9ab8>:6: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-      print(df_exclude[np.isnan(df['aromal_S1bf_S1bf']) | np.isnan(df['aromal_S1bf_ACA']) | np.isnan(df['aromal_MOp_MOp'])  | np.isnan(df['aromal_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-117-25e6d1fc9ab8>:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-      print(df_exclude[np.isnan(df['aromasr_S1bf_S1bf']) | np.isnan(df['aromasr_S1bf_ACA']) | np.isnan(df['aromasr_MOp_MOp'])  | np.isnan(df['aromasr_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-117-25e6d1fc9ab8>:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-      print(df_exclude[np.isnan(df['WMCSFs_S1bf_S1bf']) | np.isnan(df['WMCSFs_S1bf_ACA']) | np.isnan(df['WMCSFs_MOp_MOp'])  | np.isnan(df['WMCSFs_CPu_CPu'])]['rat.ds'].unique())
-    <ipython-input-117-25e6d1fc9ab8>:15: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
-      print(df_exclude[np.isnan(df['GSRs_S1bf_S1bf']) | np.isnan(df['GSRs_S1bf_ACA']) | np.isnan(df['GSRs_MOp_MOp'])  | np.isnan(df['GSRs_CPu_CPu'])]['rat.ds'].unique())
+    []
 
 
 To estimate specificity, i need to assume a significance threshold.  i find that 50% of the scans have at least 340 volumes (see below). Using the following [calculations](http://vassarstats.net/tabs_r.html), I find that `r >= 0.1` corresponds to p ~ 0.05 in a one-tailed test. I therefore use this a threshold to assume `significant` inter-seed correlations for the following analysis. This is a necessary heuristic that can be applied in other studies. The limitation being that it does not apply equally to all dataset (either with fewer or more volume). 
@@ -169,12 +155,12 @@ df['func.volume'].describe()
 
 
 
-    count     533.000000
-    mean      587.420263
-    std       580.735416
+    count     563.000000
+    mean      582.761989
+    std       566.307859
     min       150.000000
     25%       300.000000
-    50%       340.000000
+    50%       350.000000
     75%       600.000000
     max      3600.000000
     Name: func.volume, dtype: float64
@@ -241,78 +227,10 @@ for i in list(range(0,df.shape[0])):
         print('')
     else:
         df['GSRs_S1bf_cat'][i]=specific_FC(specific,unspecific)  
+
+df.to_csv(df_path, sep='\t', index=False)
 ```
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -803,7 +721,7 @@ for i in list(range(0,df.shape[0])):
 
 ```python
 #remove excluded scans
-df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(df['exp.type'] == 'resting-state')]
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(df['exp.type'] == 'resting-state')].loc[(df['rat.ses'])== 1]
 ```
 
 
@@ -831,23 +749,6 @@ ax5.set(xlabel="", ylabel="")
 
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-
-
 
 
 
@@ -857,7 +758,7 @@ ax5.set(xlabel="", ylabel="")
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_12_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_12_1.png)
     
 
 
@@ -881,52 +782,13 @@ ax6.ax_marg_y.axhline(y=0.1, color='black')
 
 
 
-    <matplotlib.lines.Line2D at 0x7f382a93abb0>
+    <matplotlib.lines.Line2D at 0x7fa07deb1670>
 
 
 
 
     
 ![png](proj_analysis_sba_files/proj_analysis_sba_13_1.png)
-    
-
-
-
-```python
-from nilearn import plotting
-bg_img=os.path.join(analysis_folder, 
-             'template',
-             'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
-             'SIGMA_Rat_Anatomical_Imaging',
-            'SIGMA_Rat_Anatomical_InVivo_Template',
-            'SIGMA_InVivo_Brain_Template_Masked.nii')
-
-tmap_filename=seed_list[3]
-plotting.plot_stat_map(tmap_filename, 
-                       bg_img, 
-                       threshold=0.1,
-                       vmax=0.5,
-                       symmetric_cbar=True,
-                       cmap='coolwarm',
-                       black_bg=False,
-                       #display_mode="y",
-                       cut_coords=(0,0.14,5))
-```
-
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/datasets/__init__.py:87: FutureWarning: Fetchers from the nilearn.datasets module will be updated in version 0.9 to return python strings instead of bytes and Pandas dataframes instead of Numpy arrays.
-      warn("Fetchers from the nilearn.datasets module will be "
-
-
-
-
-
-    <nilearn.plotting.displays.OrthoSlicer at 0x7f67b1b59100>
-
-
-
-
-    
-![png](proj_analysis_sba_files/proj_analysis_sba_14_2.png)
     
 
 
@@ -971,25 +833,21 @@ for i in list(range(0,df_specific.shape[0])):
                            cut_coords=(0,0.14,5))
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/datasets/__init__.py:87: FutureWarning: Fetchers from the nilearn.datasets module will be updated in version 0.9 to return python strings instead of bytes and Pandas dataframes instead of Numpy arrays.
-      warn("Fetchers from the nilearn.datasets module will be "
-
-
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_16_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_15_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_16_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_15_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_16_3.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_15_2.png)
     
 
 
@@ -1028,19 +886,19 @@ for i in list(range(0,df_specific.shape[0])):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_18_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_17_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_18_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_17_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_18_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_17_2.png)
     
 
 
@@ -1079,19 +937,19 @@ for i in list(range(0,df_specific.shape[0])):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_20_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_19_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_20_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_19_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_20_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_19_2.png)
     
 
 
@@ -1130,19 +988,19 @@ for i in list(range(0,df_specific.shape[0])):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_22_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_21_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_22_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_21_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_22_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_21_2.png)
     
 
 
@@ -1172,7 +1030,7 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Sex effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 
 # now testing age
 chi_stack = df_exclude.groupby(['rat.age', 
@@ -1183,7 +1041,7 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Age effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 
 # now testing anesthesia.maintenance
 chi_stack = df_exclude.groupby(['anesthesia.maintenance', 
@@ -1194,7 +1052,7 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Anesthesia effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 
 # now testing anesthesia.breathing.assistance
 chi_stack = df_exclude.groupby(['anesthesia.breathing.assistance', 
@@ -1205,7 +1063,7 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Breathing assistance effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 
 
 # now testing field strength
@@ -1217,7 +1075,7 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Field strength effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 
 # now testing sequence
 chi_stack = df_exclude.groupby(['func.sequence', 
@@ -1228,93 +1086,102 @@ g, p, dof, expctd  = chi2_contingency(chi_stack)
 chi_stack["sum"] = chi_stack.sum(axis=1)
 chi_stack["Specific_percent"]= round(chi_stack['Specific']/chi_stack["sum"],2)
 print(chi_stack.sort_values(by="Specific_percent",ascending=False))
-print('Strain effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
+print('Sequence effect: g-value = '+str(g)+' dof = '+str(dof)+' p-value = '+str(p))
 ```
 
     
     aromas_S1bf_cat    No  Specific  Spurious  Unspecific    sum  Specific_percent
     rat.strain                                                                    
-    Lister Hooded     1.0       5.0       1.0         0.0    7.0              0.71
-    Fischer 344      18.0      26.0      10.0         4.0   58.0              0.45
-    Wistar           61.0      54.0      24.0        25.0  164.0              0.33
-    Sprague Dawley   39.0      38.0      11.0        30.0  118.0              0.32
-    Long Evans       30.0      19.0      14.0        12.0   75.0              0.25
-    Strain effect: g-value = 22.204386314337317 dof = 12 p-value = 0.03529196332006069
+    Lister Hooded     1.0       6.0       3.0         0.0   10.0              0.60
+    Wistar           60.0      55.0      31.0        18.0  164.0              0.34
+    Sprague Dawley   35.0      34.0       9.0        25.0  103.0              0.33
+    Fischer 344      31.0      19.0       5.0         4.0   59.0              0.32
+    Long Evans       25.0      16.0      11.0        14.0   66.0              0.24
+    Strain effect: g-value = 30.849357646757213 dof = 12 p-value = 0.0020769067063305217
     
-    aromas_S1bf_cat  No  Specific  Spurious  Unspecific  sum  Specific_percent
-    rat.sex                                                                   
-    male              6         9         1           1   17              0.53
-    Female           44        35        14           5   98              0.36
-    Male             99        98        45          65  307              0.32
-    Strain effect: g-value = 19.180460170161837 dof = 6 p-value = 0.0038694743161119087
+    aromas_S1bf_cat   No  Specific  Spurious  Unspecific  sum  Specific_percent
+    rat.sex                                                                    
+    Male             100       100        45          56  301              0.33
+    Female            52        30        14           5  101              0.30
+    Sex effect: g-value = 16.312954902232146 dof = 3 p-value = 0.0009781664720448081
     
-    aromas_S1bf_cat    No  Specific  Spurious  Unspecific    sum  Specific_percent
-    rat.age                                                                       
-    14-16             0.0       2.0       0.0         0.0    2.0              1.00
-    8-10              3.0       8.0       0.0         0.0   11.0              0.73
-    6-8               2.0       3.0       0.0         0.0    5.0              0.60
-    12-14             2.0       4.0       1.0         1.0    8.0              0.50
-    4-6               8.0      10.0       1.0         3.0   22.0              0.45
-    0-2              12.0      25.0      13.0        13.0   63.0              0.40
-    16-18             9.0      10.0       4.0         7.0   30.0              0.33
-    2-4              89.0      61.0      24.0        28.0  202.0              0.30
-    18-20             2.0       1.0       3.0         0.0    6.0              0.17
-    Strain effect: g-value = 40.52316649683126 dof = 24 p-value = 0.018777948488553155
+    aromas_S1bf_cat     No  Specific  Spurious  Unspecific    sum  \
+    rat.age                                                         
+    14-16              0.0       2.0       0.0         0.0    2.0   
+    12-14              0.0       6.0       0.0         1.0    7.0   
+    4-6                6.0       8.0       0.0         0.0   14.0   
+    16-18              3.0       9.0       3.0         2.0   17.0   
+    0-2               11.0      26.0      13.0        12.0   62.0   
+    2-4              106.0      64.0      27.0        30.0  227.0   
+    6-8                1.0       1.0       2.0         0.0    4.0   
+    18-20              1.0       0.0       0.0         0.0    1.0   
+    8-10               2.0       0.0       0.0         0.0    2.0   
+    
+    aromas_S1bf_cat  Specific_percent  
+    rat.age                            
+    14-16                        1.00  
+    12-14                        0.86  
+    4-6                          0.57  
+    16-18                        0.53  
+    0-2                          0.42  
+    2-4                          0.28  
+    6-8                          0.25  
+    18-20                        0.00  
+    8-10                         0.00  
+    Age effect: g-value = 51.21523608367186 dof = 24 p-value = 0.0009891648673078985
     
     aromas_S1bf_cat              No  Specific  Spurious  Unspecific    sum  \
     anesthesia.maintenance                                                   
-    isoflurane / medetomidine  37.0      43.0       5.0        15.0  100.0   
-    isoflurane                 63.0      64.0      33.0        27.0  187.0   
-    medetomidine               21.0      21.0      15.0        14.0   71.0   
+    isoflurane                 48.0      57.0      28.0        16.0  149.0   
+    isoflurane / medetomidine  36.0      35.0       7.0        14.0   92.0   
+    medetomidine               41.0      25.0      17.0        12.0   95.0   
     alpha-chloralose            2.0       2.0       0.0         5.0    9.0   
     urethane                   25.0      11.0       7.0         6.0   49.0   
-    awake                       1.0       1.0       0.0         4.0    6.0   
+    awake                       0.0       0.0       0.0         8.0    8.0   
     
     aromas_S1bf_cat            Specific_percent  
     anesthesia.maintenance                       
-    isoflurane / medetomidine              0.43  
-    isoflurane                             0.34  
-    medetomidine                           0.30  
+    isoflurane                             0.38  
+    isoflurane / medetomidine              0.38  
+    medetomidine                           0.26  
     alpha-chloralose                       0.22  
     urethane                               0.22  
-    awake                                  0.17  
-    Strain effect: g-value = 41.70798368854224 dof = 15 p-value = 0.00024921733263893954
+    awake                                  0.00  
+    Anesthesia effect: g-value = 74.05987916293915 dof = 15 p-value = 8.367279680364568e-10
     
     aromas_S1bf_cat                   No  Specific  Spurious  Unspecific  sum  \
     anesthesia.breathing.assistance                                             
-    Free-breathing                     6         9         1           1   17   
-    ventilated                        18        21         3          15   57   
-    free-breathing                   124       111        56          51  342   
+    ventilated                        19        21         5          14   59   
+    free-breathing                   133       109        54          39  335   
     
     aromas_S1bf_cat                  Specific_percent  
     anesthesia.breathing.assistance                    
-    Free-breathing                               0.53  
-    ventilated                                   0.37  
-    free-breathing                               0.32  
-    Strain effect: g-value = 12.648789596398302 dof = 6 p-value = 0.0489648753437889
+    ventilated                                   0.36  
+    free-breathing                               0.33  
+    Breathing assistance effect: g-value = 8.279182641617219 dof = 3 p-value = 0.0405808210217766
     
     aromas_S1bf_cat       No  Specific  Spurious  Unspecific    sum  \
     MRI.field.strength                                                
-    4.7                  7.0      20.0       6.0         3.0   36.0   
-    14.1                 4.0      15.0       0.0        15.0   34.0   
-    7.0                 79.0      65.0      35.0        26.0  205.0   
-    9.4                 52.0      42.0      16.0        27.0  137.0   
+    4.7                  7.0      22.0       8.0         3.0   40.0   
+    14.1                 4.0      11.0       0.0        12.0   27.0   
+    7.0                 88.0      62.0      32.0        25.0  207.0   
+    9.4                 46.0      35.0      16.0        21.0  118.0   
     11.1                 7.0       0.0       3.0         0.0   10.0   
     
     aromas_S1bf_cat     Specific_percent  
     MRI.field.strength                    
-    4.7                             0.56  
-    14.1                            0.44  
-    7.0                             0.32  
-    9.4                             0.31  
+    4.7                             0.55  
+    14.1                            0.41  
+    7.0                             0.30  
+    9.4                             0.30  
     11.1                            0.00  
-    Strain effect: g-value = 51.9701234019917 dof = 12 p-value = 6.275723348974305e-07
+    Field strength effect: g-value = 49.61427080842324 dof = 12 p-value = 1.6327914453590141e-06
     
     aromas_S1bf_cat   No  Specific  Spurious  Unspecific  sum  Specific_percent
     func.sequence                                                              
-    GE-EPI           115       130        47          70  362              0.36
-    SE-EPI            34        12        13           1   60              0.20
-    Strain effect: g-value = 25.191008778060894 dof = 3 p-value = 1.4083768244993284e-05
+    GE-EPI           122       119        51          60  352              0.34
+    SE-EPI            30        11         8           1   50              0.22
+    Sequence effect: g-value = 15.92217729442287 dof = 3 p-value = 0.0011764135188891633
 
 
 
@@ -1333,9 +1200,9 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
 ```
 
     FC specificity distribution per dataset, armoas denoising
-    0.25    0.1925
-    0.50    0.3150
-    0.75    0.4400
+    0.25    0.200
+    0.50    0.300
+    0.75    0.435
     Name: Specific_percent, dtype: float64
 
 
@@ -1379,15 +1246,6 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
   </thead>
   <tbody>
     <tr>
-      <th>1031</th>
-      <td>4.0</td>
-      <td>14.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>18.0</td>
-      <td>0.78</td>
-    </tr>
-    <tr>
       <th>1015</th>
       <td>0.0</td>
       <td>7.0</td>
@@ -1397,49 +1255,49 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.78</td>
     </tr>
     <tr>
-      <th>1020</th>
-      <td>1.0</td>
-      <td>5.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>7.0</td>
-      <td>0.71</td>
-    </tr>
-    <tr>
       <th>1022</th>
       <td>0.0</td>
-      <td>6.0</td>
+      <td>7.0</td>
       <td>0.0</td>
       <td>3.0</td>
+      <td>10.0</td>
+      <td>0.70</td>
+    </tr>
+    <tr>
+      <th>1017</th>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>10.0</td>
+      <td>0.70</td>
+    </tr>
+    <tr>
+      <th>1035</th>
+      <td>2.0</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
       <td>9.0</td>
       <td>0.67</td>
     </tr>
     <tr>
-      <th>1039</th>
-      <td>2.0</td>
-      <td>5.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>8.0</td>
-      <td>0.62</td>
-    </tr>
-    <tr>
-      <th>1013</th>
-      <td>2.0</td>
+      <th>1031</th>
       <td>3.0</td>
+      <td>6.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>5.0</td>
-      <td>0.60</td>
+      <td>9.0</td>
+      <td>0.67</td>
     </tr>
     <tr>
-      <th>1028</th>
-      <td>2.0</td>
-      <td>5.0</td>
+      <th>1020</th>
+      <td>1.0</td>
+      <td>6.0</td>
       <td>3.0</td>
       <td>0.0</td>
       <td>10.0</td>
-      <td>0.50</td>
+      <td>0.60</td>
     </tr>
     <tr>
       <th>1024</th>
@@ -1451,6 +1309,15 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.50</td>
     </tr>
     <tr>
+      <th>1028</th>
+      <td>2.0</td>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.50</td>
+    </tr>
+    <tr>
       <th>1034</th>
       <td>3.0</td>
       <td>5.0</td>
@@ -1458,24 +1325,6 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>2.0</td>
       <td>10.0</td>
       <td>0.50</td>
-    </tr>
-    <tr>
-      <th>1035</th>
-      <td>3.0</td>
-      <td>4.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>9.0</td>
-      <td>0.44</td>
-    </tr>
-    <tr>
-      <th>1017</th>
-      <td>3.0</td>
-      <td>8.0</td>
-      <td>0.0</td>
-      <td>7.0</td>
-      <td>18.0</td>
-      <td>0.44</td>
     </tr>
     <tr>
       <th>1005</th>
@@ -1496,10 +1345,46 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.44</td>
     </tr>
     <tr>
+      <th>1039</th>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>7.0</td>
+      <td>0.43</td>
+    </tr>
+    <tr>
+      <th>1006</th>
+      <td>4.0</td>
+      <td>4.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
       <th>1009</th>
       <td>5.0</td>
       <td>4.0</td>
       <td>0.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1004</th>
+      <td>5.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.40</td>
+    </tr>
+    <tr>
+      <th>1016</th>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>5.0</td>
       <td>1.0</td>
       <td>10.0</td>
       <td>0.40</td>
@@ -1514,31 +1399,13 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.40</td>
     </tr>
     <tr>
-      <th>1026</th>
-      <td>1.0</td>
-      <td>6.0</td>
-      <td>0.0</td>
-      <td>8.0</td>
-      <td>15.0</td>
-      <td>0.40</td>
-    </tr>
-    <tr>
-      <th>1016</th>
-      <td>0.0</td>
+      <th>1037</th>
       <td>4.0</td>
-      <td>5.0</td>
-      <td>1.0</td>
-      <td>10.0</td>
-      <td>0.40</td>
-    </tr>
-    <tr>
-      <th>1004</th>
-      <td>5.0</td>
-      <td>4.0</td>
+      <td>3.0</td>
+      <td>2.0</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>10.0</td>
-      <td>0.40</td>
+      <td>9.0</td>
+      <td>0.33</td>
     </tr>
     <tr>
       <th>1010</th>
@@ -1568,12 +1435,21 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.30</td>
     </tr>
     <tr>
-      <th>1018</th>
-      <td>9.0</td>
-      <td>6.0</td>
+      <th>1014</th>
       <td>4.0</td>
+      <td>3.0</td>
       <td>1.0</td>
-      <td>20.0</td>
+      <td>2.0</td>
+      <td>10.0</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>1018</th>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
       <td>0.30</td>
     </tr>
     <tr>
@@ -1586,31 +1462,40 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.30</td>
     </tr>
     <tr>
-      <th>1006</th>
-      <td>8.0</td>
-      <td>5.0</td>
-      <td>7.0</td>
+      <th>1036</th>
       <td>0.0</td>
-      <td>20.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>2.0</td>
+      <td>7.0</td>
+      <td>0.29</td>
+    </tr>
+    <tr>
+      <th>1013</th>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>4.0</td>
       <td>0.25</td>
     </tr>
     <tr>
-      <th>1021</th>
-      <td>10.0</td>
+      <th>1026</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>8.0</td>
+      <td>0.25</td>
+    </tr>
+    <tr>
+      <th>1043</th>
       <td>4.0</td>
       <td>2.0</td>
       <td>3.0</td>
-      <td>19.0</td>
-      <td>0.21</td>
-    </tr>
-    <tr>
-      <th>1002</th>
-      <td>3.0</td>
-      <td>3.0</td>
-      <td>6.0</td>
-      <td>2.0</td>
-      <td>14.0</td>
-      <td>0.21</td>
+      <td>0.0</td>
+      <td>9.0</td>
+      <td>0.22</td>
     </tr>
     <tr>
       <th>1025</th>
@@ -1622,11 +1507,20 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.20</td>
     </tr>
     <tr>
-      <th>1027</th>
+      <th>1002</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>6.0</td>
+      <td>1.0</td>
+      <td>10.0</td>
+      <td>0.20</td>
+    </tr>
+    <tr>
+      <th>1021</th>
       <td>7.0</td>
       <td>2.0</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>10.0</td>
       <td>0.20</td>
     </tr>
@@ -1649,46 +1543,55 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.20</td>
     </tr>
     <tr>
-      <th>1023</th>
-      <td>1.0</td>
+      <th>1027</th>
+      <td>8.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>4.0</td>
-      <td>6.0</td>
-      <td>0.17</td>
-    </tr>
-    <tr>
-      <th>1003</th>
-      <td>8.0</td>
-      <td>2.0</td>
       <td>0.0</td>
-      <td>3.0</td>
-      <td>13.0</td>
-      <td>0.15</td>
+      <td>9.0</td>
+      <td>0.11</td>
     </tr>
     <tr>
-      <th>1036</th>
+      <th>1038</th>
+      <td>5.0</td>
       <td>1.0</td>
-      <td>1.0</td>
-      <td>4.0</td>
-      <td>1.0</td>
-      <td>7.0</td>
-      <td>0.14</td>
-    </tr>
-    <tr>
-      <th>1014</th>
       <td>3.0</td>
-      <td>1.0</td>
-      <td>2.0</td>
-      <td>2.0</td>
-      <td>8.0</td>
-      <td>0.12</td>
+      <td>0.0</td>
+      <td>9.0</td>
+      <td>0.11</td>
     </tr>
     <tr>
       <th>1011</th>
       <td>7.0</td>
       <td>1.0</td>
       <td>2.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>1003</th>
+      <td>7.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+      <td>10.0</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>1041</th>
+      <td>9.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>1042</th>
+      <td>9.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>10.0</td>
       <td>0.10</td>
@@ -1712,30 +1615,21 @@ chi_stack.sort_values(by="Specific_percent",ascending=False)
       <td>0.00</td>
     </tr>
     <tr>
+      <th>1023</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.0</td>
+      <td>8.0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
       <th>1008</th>
       <td>7.0</td>
       <td>0.0</td>
       <td>3.0</td>
       <td>0.0</td>
       <td>10.0</td>
-      <td>0.00</td>
-    </tr>
-    <tr>
-      <th>1037</th>
-      <td>5.0</td>
-      <td>0.0</td>
-      <td>3.0</td>
-      <td>0.0</td>
-      <td>8.0</td>
-      <td>0.00</td>
-    </tr>
-    <tr>
-      <th>1038</th>
-      <td>4.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>4.0</td>
       <td>0.00</td>
     </tr>
   </tbody>
@@ -1785,19 +1679,9 @@ ax4.axvline(df_exclude['aromas_S1bf_ACA'].quantile(0.75),ls='--',alpha=0.5)
 plt.tight_layout()
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-      warnings.warn(msg, FutureWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-      warnings.warn(msg, FutureWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-      warnings.warn(msg, FutureWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/distributions.py:2557: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-      warnings.warn(msg, FutureWarning)
-
-
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_27_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_26_0.png)
     
 
 
@@ -1837,24 +1721,24 @@ df_exclude[['aromas_S1bf_S1bf','aromas_MOp_MOp','aromas_CPu_CPu','aromas_S1bf_AC
   <tbody>
     <tr>
       <th>0.25</th>
-      <td>0.011382</td>
-      <td>0.022202</td>
-      <td>0.001946</td>
-      <td>-0.042448</td>
+      <td>0.014888</td>
+      <td>0.018401</td>
+      <td>0.005412</td>
+      <td>-0.040633</td>
     </tr>
     <tr>
       <th>0.50</th>
-      <td>0.102565</td>
-      <td>0.092497</td>
-      <td>0.072054</td>
-      <td>0.017157</td>
+      <td>0.088508</td>
+      <td>0.084464</td>
+      <td>0.067535</td>
+      <td>0.019247</td>
     </tr>
     <tr>
       <th>0.75</th>
-      <td>0.211400</td>
-      <td>0.210819</td>
-      <td>0.161968</td>
-      <td>0.092461</td>
+      <td>0.201822</td>
+      <td>0.179565</td>
+      <td>0.162290</td>
+      <td>0.089021</td>
     </tr>
   </tbody>
 </table>
@@ -1911,21 +1795,9 @@ ax5.get_legend().remove()
 
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 12.3% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
-      warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 24.2% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
-      warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 6.0% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
-      warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 20.6% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
-      warnings.warn(msg, UserWarning)
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/seaborn/categorical.py:1296: UserWarning: 8.7% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.
-      warnings.warn(msg, UserWarning)
-
-
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_29_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_28_0.png)
     
 
 
@@ -1961,13 +1833,13 @@ sns.pairplot(df_sub, hue="func.sequence")
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x7f4893b06ee0>
+    <seaborn.axisgrid.PairGrid at 0x7fa07c6cfc10>
 
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_31_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_30_1.png)
     
 
 
@@ -2017,85 +1889,213 @@ print('')
 print('testing for the effect of tSNR')
 m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
 print(anova_lm(m02, m01))
-
 ```
-
-    <ipython-input-9-c80f1f1ecfdb>:6: FutureWarning: The default value of regex will change from True to False in a future version.
-      df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
-
 
                                 OLS Regression Results                            
     ==============================================================================
-    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.240
-    Model:                            OLS   Adj. R-squared:                  0.212
-    Method:                 Least Squares   F-statistic:                     8.752
-    Date:                Wed, 28 Apr 2021   Prob (F-statistic):           1.29e-16
-    Time:                        09:35:36   Log-Likelihood:                 179.66
-    No. Observations:                 404   AIC:                            -329.3
-    Df Residuals:                     389   BIC:                            -269.3
+    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.253
+    Model:                            OLS   Adj. R-squared:                  0.230
+    Method:                 Least Squares   F-statistic:                     11.08
+    Date:                Wed, 23 Jun 2021   Prob (F-statistic):           6.08e-22
+    Time:                        22:14:30   Log-Likelihood:                 242.67
+    No. Observations:                 473   AIC:                            -455.3
+    Df Residuals:                     458   BIC:                            -393.0
     Df Model:                          14                                         
     Covariance Type:            nonrobust                                         
     ======================================================================================================================
                                                              coef    std err          t      P>|t|      [0.025      0.975]
     ----------------------------------------------------------------------------------------------------------------------
-    Intercept                                             -0.1506      0.088     -1.713      0.087      -0.323       0.022
-    ratstrain[T.Lister Hooded]                            -0.0514      0.067     -0.773      0.440      -0.182       0.079
-    ratstrain[T.Long Evans]                               -0.0181      0.032     -0.567      0.571      -0.081       0.045
-    ratstrain[T.Sprague Dawley]                            0.0275      0.031      0.888      0.375      -0.033       0.088
-    ratstrain[T.Wistar]                                   -0.0527      0.030     -1.745      0.082      -0.112       0.007
-    anesthesiamaintenance[T.awake]                         0.2770      0.092      3.023      0.003       0.097       0.457
-    anesthesiamaintenance[T.isoflurane]                    0.0536      0.063      0.846      0.398      -0.071       0.178
-    anesthesiamaintenance[T.isoflurane / medetomidine]     0.0573      0.063      0.904      0.366      -0.067       0.182
-    anesthesiamaintenance[T.medetomidine]                  0.0935      0.063      1.478      0.140      -0.031       0.218
-    anesthesiamaintenance[T.urethane]                      0.0007      0.068      0.010      0.992      -0.134       0.135
-    funcsequence[T.SE-EPI]                                -0.1087      0.029     -3.717      0.000      -0.166      -0.051
-    MRIfieldstrength                                       0.0218      0.005      4.682      0.000       0.013       0.031
-    funcTR                                                -0.1014      0.019     -5.264      0.000      -0.139      -0.064
-    funcTE                                                 7.0521      1.545      4.563      0.000       4.014      10.091
-    tsnrS1                                                 0.0026      0.001      5.110      0.000       0.002       0.004
+    Intercept                                             -0.1499      0.081     -1.855      0.064      -0.309       0.009
+    ratstrain[T.Lister Hooded]                            -0.0659      0.041     -1.626      0.105      -0.146       0.014
+    ratstrain[T.Long Evans]                                0.0178      0.028      0.629      0.530      -0.038       0.073
+    ratstrain[T.Sprague Dawley]                            0.0716      0.027      2.674      0.008       0.019       0.124
+    ratstrain[T.Wistar]                                    0.0260      0.022      1.199      0.231      -0.017       0.069
+    anesthesiamaintenance[T.awake]                         0.3197      0.080      4.012      0.000       0.163       0.476
+    anesthesiamaintenance[T.isoflurane]                    0.0583      0.058      0.998      0.319      -0.056       0.173
+    anesthesiamaintenance[T.isoflurane / medetomidine]     0.0755      0.058      1.299      0.195      -0.039       0.190
+    anesthesiamaintenance[T.medetomidine]                  0.0637      0.059      1.088      0.277      -0.051       0.179
+    anesthesiamaintenance[T.urethane]                     -0.0092      0.063     -0.145      0.885      -0.133       0.115
+    funcsequence[T.SE-EPI]                                -0.0852      0.026     -3.227      0.001      -0.137      -0.033
+    MRIfieldstrength                                       0.0207      0.004      4.871      0.000       0.012       0.029
+    funcTR                                                -0.1067      0.017     -6.201      0.000      -0.140      -0.073
+    funcTE                                                 5.4132      1.357      3.990      0.000       2.747       8.079
+    tsnrS1                                                 0.0024      0.000      5.524      0.000       0.002       0.003
     ==============================================================================
-    Omnibus:                      112.234   Durbin-Watson:                   1.777
-    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              460.831
-    Skew:                           1.162   Prob(JB):                    8.55e-101
-    Kurtosis:                       7.688   Cond. No.                     8.31e+03
+    Omnibus:                       89.831   Durbin-Watson:                   1.719
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              259.874
+    Skew:                           0.899   Prob(JB):                     3.71e-57
+    Kurtosis:                       6.155   Cond. No.                     8.53e+03
     ==============================================================================
     
     Notes:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 8.31e+03. This might indicate that there are
+    [2] The condition number is large, 8.53e+03. This might indicate that there are
     strong multicollinearity or other numerical problems.
     testing for the effect of strain
-       df_resid       ssr  df_diff   ss_diff         F   Pr(>F)
-    0     393.0  9.975332      0.0       NaN       NaN      NaN
-    1     389.0  9.719463      4.0  0.255869  2.560149  0.03823
+       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
+    0     462.0  10.208826      0.0       NaN       NaN       NaN
+    1     458.0   9.925654      4.0  0.283172  3.266609  0.011716
     
     testing for the effect of anesthesia maintenance
        df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     394.0  10.201615      0.0       NaN       NaN       NaN
-    1     389.0   9.719463      5.0  0.482152  3.859415  0.002001
+    0     463.0  10.618367      0.0       NaN       NaN       NaN
+    1     458.0   9.925654      5.0  0.692713  6.392781  0.000009
     
     testing for the effect of field strength
        df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
-    0     390.0  10.267276      0.0       NaN        NaN       NaN
-    1     389.0   9.719463      1.0  0.547813  21.925011  0.000004
+    0     459.0  10.439943      0.0       NaN        NaN       NaN
+    1     458.0   9.925654      1.0  0.514288  23.730841  0.000002
     
     testing for the effect of sequence
        df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
-    0     390.0  10.064691      0.0       NaN        NaN       NaN
-    1     389.0   9.719463      1.0  0.345228  13.816983  0.000231
+    0     459.0  10.151306      0.0       NaN        NaN       NaN
+    1     458.0   9.925654      1.0  0.225651  10.412249  0.001342
     
     testing for the effect of TR
        df_resid        ssr  df_diff   ss_diff         F        Pr(>F)
-    0     399.0  11.059375      0.0       NaN       NaN           NaN
-    1     389.0   9.719463     10.0  1.339912  5.362703  1.943417e-07
+    0     468.0  11.551380      0.0       NaN       NaN           NaN
+    1     458.0   9.925654     10.0  1.625726  7.501594  4.301408e-11
     
     testing for the effect of TE
        df_resid        ssr  df_diff  ss_diff          F    Pr(>F)
-    0     390.0  10.239703      0.0      NaN        NaN       NaN
-    1     389.0   9.719463      1.0  0.52024  20.821471  0.000007
+    0     459.0  10.270644      0.0      NaN        NaN       NaN
+    1     458.0   9.925654      1.0  0.34499  15.918905  0.000077
     
     testing for the effect of tSNR
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     408.0  10.733986      0.0       NaN       NaN       NaN
-    1     389.0   9.719463     19.0  1.014523  2.137055  0.003856
+       df_resid        ssr  df_diff   ss_diff          F        Pr(>F)
+    0     459.0  10.586932      0.0       NaN        NaN           NaN
+    1     458.0   9.925654      1.0  0.661278  30.513396  5.568944e-08
+
+
+## Group analysis. Estimating one sample t-test maps per datasets (session 1 exclusively). 
+
+
+```python
+import re
+from nilearn.glm.second_level import SecondLevelModel
+from nilearn.plotting import plot_stat_map
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+bg_img = os.path.join(analysis_folder,
+                      'template',
+                      'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+                      'SIGMA_Rat_Anatomical_Imaging',
+                      'SIGMA_Rat_Anatomical_InVivo_Template',
+                      'SIGMA_InVivo_Brain_Template_Masked.nii')
+
+# output folders
+output_nii = os.path.join(analysis_folder, 'scratch', 'group_SBA')
+output_img = os.path.join(analysis_folder, 'scratch', 'group_SBA_img')
+os.makedirs(output_nii, exist_ok=True)
+os.makedirs(output_img, exist_ok=True)
+
+# re-read the table
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(
+    df['exp.type'] == 'resting-state')].loc[(df['rat.ses']) == 1]
+
+# re-read all seed files in the path.
+condtion = 'aromas'
+seed_list = glob.glob(
+    (os.path.join(analysis_folder, 'scratch', 'seed', condtion))+'/*')
+seed_group = ['S1bf','ACA', 'CPu','MOp']
+
+for i in list(df_exclude['rat.ds'].unique()):
+    for seed in seed_group:
+
+        r = re.compile(seed)
+        seed_list_sub = list(filter(r.findall, seed_list))
+        r = re.compile(str(i))
+        seed_list_sub = list(filter(r.findall, seed_list_sub))
+        r = re.compile("(?=(" + "|".join(map(re.escape, map(str,
+               df_exclude['rat.sub'].loc[(df_exclude['rat.ds'] == i)]))) + "))")
+        seed_list_sub = list(filter(r.findall, seed_list_sub))
+        r = re.compile('ses-1')
+        seed_list_sub = list(filter(r.findall, seed_list_sub))
+
+
+        second_level_input = seed_list_sub
+        design_matrix = pd.DataFrame([1] * len(second_level_input),
+                             columns=['intercept'])
+
+
+        second_level_model = SecondLevelModel()
+        second_level_model = second_level_model.fit(second_level_input,
+                                            design_matrix=design_matrix)
+
+        z_map = second_level_model.compute_contrast(output_type='z_score')
+
+        filename_export = 'DS-'+str(i)+"_seed-"+seed
+        filename_path = os.path.join(
+            analysis_folder, 'scratch', output_nii, filename_export)
+
+        z_map.to_filename(filename_path+'.nii.gz')
+
+        filename_path = os.path.join(
+            analysis_folder, 'scratch', output_img, filename_export)
+        plot_stat_map(z_map,
+              bg_img,
+              title='DS:' + str(i) +
+              ', seed: ' + seed + ', n = '+ str(len(second_level_input)),
+              threshold=1.9,
+              vmax=5,
+              symmetric_cbar=True,
+              cmap='coolwarm',
+              black_bg=False,
+              # display_mode="y",
+              cut_coords=(0, 0.14, 5),
+              output_file=filename_path+'.png')
+```
+
+
+    ---------------------------------------------------------------------------
+
+    ValueError                                Traceback (most recent call last)
+
+    <ipython-input-43-9fde2db24754> in <module>
+         49 
+         50         second_level_model = SecondLevelModel()
+    ---> 51         second_level_model = second_level_model.fit(second_level_input,
+         52                                             design_matrix=design_matrix)
+         53 
+
+
+    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/glm/second_level/second_level.py in fit(self, second_level_input, confounds, design_matrix)
+        350         """
+        351         # check second_level_input
+    --> 352         _check_second_level_input(second_level_input, design_matrix,
+        353                                   confounds=confounds)
+        354 
+
+
+    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/glm/second_level/second_level.py in _check_second_level_input(second_level_input, design_matrix, confounds, flm_object, df_object)
+         39     if isinstance(second_level_input, list):
+         40         if len(second_level_input) < 2:
+    ---> 41             raise ValueError('A second level model requires a list with at'
+         42                              ' least two first level models or niimgs')
+         43         # Check FirstLevelModel objects case
+
+
+    ValueError: A second level model requires a list with at least two first level models or niimgs
+
+
+## Showing the outputs of the one sample t-tests 
+for S1bf seed exclusively. 
+
+![1001]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1001_seed-S1bf.png')
+![1002]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1002_seed-S1bf.png')
+![1003]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1003_seed-S1bf.png')
+![1004]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1004_seed-S1bf.png')
+![1005]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1005_seed-S1bf.png')
+![1006]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1006_seed-S1bf.png')
+![1007]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1007_seed-S1bf.png')
+![1008]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1008_seed-S1bf.png')
+![1009]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1009_seed-S1bf.png')
+![1010]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1010_seed-S1bf.png')
+![1011]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1011_seed-S1bf.png')
+![1012]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1012_seed-S1bf.png')
+![1013]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1013_seed-S1bf.png')
+![1014]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1014_seed-S1bf.png')
+
 
