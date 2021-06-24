@@ -2046,56 +2046,279 @@ for i in list(df_exclude['rat.ds'].unique()):
               # display_mode="y",
               cut_coords=(0, 0.14, 5),
               output_file=filename_path+'.png')
+        #remake plot with output to jupyter notebook if S1bf seed
+        if(seed == 'S1bf'):
+            plot_stat_map(z_map,
+              bg_img,
+              title='DS:' + str(i) +
+              ', seed: ' + seed + ', n = '+ str(len(second_level_input)),
+              threshold=1.9,
+              vmax=5,
+              symmetric_cbar=True,
+              cmap='coolwarm',
+              black_bg=False,
+              # display_mode="y",
+              cut_coords=(0, 0.14, 5))
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-43-9fde2db24754> in <module>
-         49 
-         50         second_level_model = SecondLevelModel()
-    ---> 51         second_level_model = second_level_model.fit(second_level_input,
-         52                                             design_matrix=design_matrix)
-         53 
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_0.png)
+    
 
 
-    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/glm/second_level/second_level.py in fit(self, second_level_input, confounds, design_matrix)
-        350         """
-        351         # check second_level_input
-    --> 352         _check_second_level_input(second_level_input, design_matrix,
-        353                                   confounds=confounds)
-        354 
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_1.png)
+    
 
 
-    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/glm/second_level/second_level.py in _check_second_level_input(second_level_input, design_matrix, confounds, flm_object, df_object)
-         39     if isinstance(second_level_input, list):
-         40         if len(second_level_input) < 2:
-    ---> 41             raise ValueError('A second level model requires a list with at'
-         42                              ' least two first level models or niimgs')
-         43         # Check FirstLevelModel objects case
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_2.png)
+    
 
 
-    ValueError: A second level model requires a list with at least two first level models or niimgs
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_3.png)
+    
 
 
-## Showing the outputs of the one sample t-tests 
-for S1bf seed exclusively. 
 
-![1001]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1001_seed-S1bf.png')
-![1002]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1002_seed-S1bf.png')
-![1003]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1003_seed-S1bf.png')
-![1004]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1004_seed-S1bf.png')
-![1005]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1005_seed-S1bf.png')
-![1006]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1006_seed-S1bf.png')
-![1007]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1007_seed-S1bf.png')
-![1008]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1008_seed-S1bf.png')
-![1009]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1009_seed-S1bf.png')
-![1010]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1010_seed-S1bf.png')
-![1011]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1011_seed-S1bf.png')
-![1012]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1012_seed-S1bf.png')
-![1013]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1013_seed-S1bf.png')
-![1014]('/project/4180000.19/multiRat/scratch/group_SBA_img/DS-1014_seed-S1bf.png')
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_4.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_5.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_6.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_7.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_8.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_9.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_10.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_11.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_12.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_13.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_14.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_15.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_16.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_17.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_18.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_19.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_20.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_21.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_22.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_23.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_24.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_25.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_26.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_27.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_28.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_29.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_30.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_31.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_32.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_33.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_34.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_35.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_36.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_37.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_38.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_39.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_40.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_41.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_33_42.png)
+    
+
+
+
 
 
