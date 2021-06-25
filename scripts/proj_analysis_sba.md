@@ -1968,6 +1968,8 @@ print(anova_lm(m02, m01))
 
 
 ## Group analysis. Estimating one sample t-test maps per datasets (session 1 exclusively). 
+Images are exported as z-score image, thresholded z > 1.9 corresponding to p =< 0.05, one tailed, uncorrected (a very liberal threshold!) 
+
 
 
 ```python
@@ -2000,19 +2002,21 @@ condtion = 'aromas'
 seed_list = glob.glob(
     (os.path.join(analysis_folder, 'scratch', 'seed', condtion))+'/*')
 seed_group = ['S1bf','ACA', 'CPu','MOp']
+y_stack = [0.14, 2.2, 1.6, 3.1]
 
 for i in list(df_exclude['rat.ds'].unique()):
-    for seed in seed_group:
+    for count, seed in enumerate(seed_group):
 
         r = re.compile(seed)
         seed_list_sub = list(filter(r.findall, seed_list))
         r = re.compile(str(i))
         seed_list_sub = list(filter(r.findall, seed_list_sub))
+        r = re.compile('ses-1')
+        seed_list_sub = list(filter(r.findall, seed_list_sub))
         r = re.compile("(?=(" + "|".join(map(re.escape, map(str,
                df_exclude['rat.sub'].loc[(df_exclude['rat.ds'] == i)]))) + "))")
         seed_list_sub = list(filter(r.findall, seed_list_sub))
-        r = re.compile('ses-1')
-        seed_list_sub = list(filter(r.findall, seed_list_sub))
+
 
 
         second_level_input = seed_list_sub
@@ -2044,8 +2048,8 @@ for i in list(df_exclude['rat.ds'].unique()):
               cmap='coolwarm',
               black_bg=False,
               # display_mode="y",
-              cut_coords=(0, 0.14, 5),
-              output_file=filename_path+'.png')
+              cut_coords=(0, y_stack[count], 5),
+              output_file=filename_path+'.svg')
         #remake plot with output to jupyter notebook if S1bf seed
         if(seed == 'S1bf'):
             plot_stat_map(z_map,
@@ -2058,7 +2062,7 @@ for i in list(df_exclude['rat.ds'].unique()):
               cmap='coolwarm',
               black_bg=False,
               # display_mode="y",
-              cut_coords=(0, 0.14, 5))
+              cut_coords=(0, y_stack[count], 5))
 ```
 
 
@@ -2316,6 +2320,227 @@ for i in list(df_exclude['rat.ds'].unique()):
 
     
 ![png](proj_analysis_sba_files/proj_analysis_sba_33_42.png)
+    
+
+
+## Estimate incidence maps
+Load one-sample t-test, threshold and perform mean across 4th dimension. 
+
+
+
+```python
+import re
+from nilearn.image import concat_imgs, threshold_img,math_img
+from nilearn.plotting import plot_stat_map
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+
+# combine jet colormap for plot_stat_map (see https://stackoverflow.com/a/31052741)
+# select to color scheme to use
+colors1 = plt.cm.jet(np.linspace(0., 1, 128))
+colors = np.vstack((colors1, colors1))
+mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap', colors)
+
+
+bg_img = os.path.join(analysis_folder,
+                      'template',
+                      'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+                      'SIGMA_Rat_Anatomical_Imaging',
+                      'SIGMA_Rat_Anatomical_InVivo_Template',
+                      'SIGMA_InVivo_Brain_Template_Masked.nii')
+
+# output folders
+output_incidence = os.path.join(analysis_folder, 'scratch', 'group_SBA_incidence')
+os.makedirs(output_incidence, exist_ok=True)
+
+# read all one sample t-test files in the path.
+seed_list = glob.glob(
+    (os.path.join(analysis_folder, 'scratch', 'group_SBA'))+'/*')
+seed_group = ['S1bf','ACA', 'CPu','MOp']
+y_stack = [0.14, 2.2, 1.6, 3.1]
+
+for count,seed in enumerate(seed_group):
+
+    filename_export = "seed-"+seed
+    filename_path = os.path.join(analysis_folder, 'scratch', output_incidence, filename_export)
+
+    r = re.compile(seed)
+    seed_list_sub = list(filter(r.findall, seed_list))
+
+    con_img = concat_imgs(seed_list_sub, auto_resample=True)
+    th_img = math_img("img >=  1.9", img=con_img)
+    ma_img = math_img("np.mean(img, axis=-1)", img=th_img)
+    ma_img.to_filename(filename_path+'.nii.gz')
+
+    #one for the save
+    plot_stat_map(ma_img,
+              bg_img,
+              title='Indicence map, seed: ' + seed + ', n = '+ str(len(seed_list_sub)),
+              threshold=0.2,
+             vmax=1,
+              symmetric_cbar=False,
+              cmap=mymap,
+              black_bg=False,
+              # display_mode="y",
+              cut_coords=(0, y_stack[count], 5))
+
+    #one for jupyter export..    teeeeedious
+    plot_stat_map(ma_img,
+              bg_img,
+              title='Indicence map, seed: ' + seed + ', n = '+ str(len(seed_list_sub)),
+              threshold=0.2,
+             vmax=1,
+              symmetric_cbar=False,
+              cmap=mymap,
+              black_bg=False,
+              # display_mode="y",
+              cut_coords=(0,  y_stack[count], 5),
+              output_file=filename_path+'.svg')
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_35_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_35_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_35_2.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_35_3.png)
+    
+
+
+## perform one sample t-test across the whole sample. 
+Same as with one sample t-test above, but without dataset selection. 
+A bit buggy...  leave that out for now. 
+
+
+```python
+import re
+from nilearn.glm.second_level import SecondLevelModel
+from nilearn.plotting import plot_stat_map
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+bg_img = os.path.join(analysis_folder,
+                      'template',
+                      'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+                      'SIGMA_Rat_Anatomical_Imaging',
+                      'SIGMA_Rat_Anatomical_InVivo_Template',
+                      'SIGMA_InVivo_Brain_Template_Masked.nii')
+
+# output folders
+output_incidence = os.path.join(
+    analysis_folder, 'scratch', 'group_SBA_incidence')
+os.makedirs(output_incidence, exist_ok=True)
+
+# re-read the table
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(
+    df['exp.type'] == 'resting-state')].loc[(df['rat.ses']) == 1]
+
+# re-read all seed files in the path.
+condtion = 'aromas'
+seed_list = glob.glob(
+    (os.path.join(analysis_folder, 'scratch', 'seed', condtion))+'/*')
+seed_group = ['S1bf', 'ACA', 'CPu', 'MOp']
+y_stack = [0.14, 2.2, 1.6, 3.1]
+
+for count, seed in enumerate(seed_group):
+
+    r = re.compile(seed)
+    seed_list_sub = list(filter(r.findall, seed_list))
+    r = re.compile(str(i))
+    seed_list_sub = list(filter(r.findall, seed_list_sub))
+    r = re.compile('ses-1')
+    seed_list_sub = list(filter(r.findall, seed_list_sub))
+    r = re.compile("(?=(" + "|".join(map(re.escape, map(str,
+                                                        df_exclude['rat.sub']))) + "))")
+    seed_list_sub = list(filter(r.findall, seed_list_sub))
+
+    second_level_input = concat_imgs(seed_list_sub, auto_resample=True)
+    design_matrix = pd.DataFrame([1] * len(seed_list_sub),
+                                 columns=['intercept'])
+    ma_img = math_img("np.mean(img, axis=-1) / (np.var(img,axis=-1)*np.sqrt(2/np.shape(img)[3]))",
+                      img=second_level_input)
+    
+    #usual way of doing one sample t-test was buggy. Downside, cannot use z-score :-(
+    #second_level_model = SecondLevelModel()
+    # second_level_model = second_level_model.fit(second_level_input,
+    #                                       design_matrix=design_matrix)
+
+    #z_map = second_level_model.compute_contrast(output_type='z_score')
+
+    filename_export = "Onesample_seed-"+seed
+    filename_path = os.path.join(
+        analysis_folder, 'scratch', output_incidence, filename_export)
+
+    ma_img.to_filename(filename_path+'.nii.gz')
+
+    filename_path = os.path.join(
+        analysis_folder, 'scratch', output_incidence, filename_export)
+    plot_stat_map(ma_img,
+                  bg_img,
+                  title='One-sample t-test, seed: ' + seed +
+                  ', n = ' + str(len(seed_list_sub)),
+                  threshold=3,
+                  vmax=50,
+                  symmetric_cbar=True,
+                  cmap='coolwarm',
+                  black_bg=False,
+                  # display_mode="y",
+                  cut_coords=(0, y_stack[count], 5),
+                  output_file=filename_path+'.svg')
+
+    # remake plot with output to jupyter notebook
+    plot_stat_map(ma_img,
+                  bg_img,
+                  title='One-sample t-test, seed: ' + seed +
+                  ', n = ' + str(len(seed_list_sub)),
+                  threshold=3,
+                  vmax=50,
+                  symmetric_cbar=True,
+                  cmap='coolwarm',
+                  black_bg=False,
+                  # display_mode="y",
+                  cut_coords=(0, y_stack[count], 5))
+```
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_37_0.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_37_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_37_2.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_37_3.png)
     
 
 
