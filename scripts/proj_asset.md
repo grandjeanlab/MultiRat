@@ -20,6 +20,11 @@ ventricles, and image artifacts rendered image registration complicated.
 This is a deviation from the [preregistration](https://osf.io/emq4b).
 
 
+From the preregistration: 
+"All scans will be converted to NIFTI with original voxel size. Axis labels will be swapped so that NIFTI SI / AP / LR labels correspond to the right orientation. Scans will be organized using the Brain Imaging Data Structure (BIDS) format (https://bids.neuroimaging.io/).
+
+Meta-data (see measured variables) will be kept in a master table in a tab-separated format, with corresponding JSON file according to BIDS format."   
+
 
 ```python
 # init variables

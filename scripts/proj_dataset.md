@@ -27,12 +27,21 @@ First, I examine subject distribution
 # init variables
 init_folder='/home/traaffneu/joagra/code/MultiRat'
 analysis_folder='/project/4180000.19/multiRat'
+df_path='../assets/table/meta_data_20210622.tsv'
 ```
 
 
 ```python
 import pandas as pd
-df = pd.read_csv('../assets/table/meta_data_20210411.tsv', sep='\t')
+df = pd.read_csv(df_path, sep='\t')
+```
+
+
+```python
+# remove sensitive information
+df = df.drop(columns="rat.owner")
+df = df.drop(columns="jg.note")
+df.to_csv(df_path, sep='\t', index=False)
 ```
 
 
@@ -44,7 +53,7 @@ df['rat.age'].value_counts()
 
 
 
-    2-4      277
+    2-4      307
     0-2       65
     4-6       44
     16-18     32
@@ -66,8 +75,8 @@ df['rat.sex'].value_counts()
 
 
 
-    Male      311
-    Female    130
+    Male      416
+    Female    185
     Name: rat.sex, dtype: int64
 
 
@@ -81,9 +90,9 @@ df['anesthesia.maintenance'].value_counts()
 
 
 
-    isoflurane                   195
-    medetomidine                  84
-    isoflurane / medetomidine     83
+    isoflurane                   215
+    medetomidine                 154
+    isoflurane / medetomidine    153
     urethane                      50
     alpha-chloralose              19
     awake                         10
@@ -100,10 +109,10 @@ df['rat.strain'].value_counts()
 
 
 
-    Sprague Dawley    145
-    Wistar            136
-    Long Evans         70
-    Fischer 344        70
+    Wistar            216
+    Sprague Dawley    175
+    Fischer 344       110
+    Long Evans         80
     Lister Hooded      20
     Name: rat.strain, dtype: int64
 
@@ -149,17 +158,9 @@ ax3.get_legend().remove()
 ax4.get_legend().remove()
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-
-
 
     
-![png](proj_dataset_files/proj_dataset_7_1.png)
+![png](proj_dataset_files/proj_dataset_8_0.png)
     
 
 
@@ -180,14 +181,6 @@ ax3.set(xlabel="Breathing rate [bpm]")
 ax4.set(xlabel="Heart rate [bpm]")
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-
-
 
 
 
@@ -197,7 +190,7 @@ ax4.set(xlabel="Heart rate [bpm]")
 
 
     
-![png](proj_dataset_files/proj_dataset_8_2.png)
+![png](proj_dataset_files/proj_dataset_9_1.png)
     
 
 
@@ -232,7 +225,7 @@ ax2.set(xlabel='', ylabel='Heart rate [bpm]', title='Anesthesia maintenance')
 
 
     
-![png](proj_dataset_files/proj_dataset_9_1.png)
+![png](proj_dataset_files/proj_dataset_10_1.png)
     
 
 
@@ -256,17 +249,9 @@ ax3.get_legend().remove()
 
 ```
 
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-    /home/traaffneu/joagra/.conda/envs/multirat/lib/python3.9/site-packages/pandas/plotting/_matplotlib/tools.py:400: MatplotlibDeprecationWarning: 
-    The is_first_col function was deprecated in Matplotlib 3.4 and will be removed two minor releases later. Use ax.get_subplotspec().is_first_col() instead.
-      if ax.is_first_col():
-
-
 
     
-![png](proj_dataset_files/proj_dataset_10_1.png)
+![png](proj_dataset_files/proj_dataset_11_0.png)
     
 
 
@@ -299,14 +284,6 @@ df_sub['MRI.field.strength']=df_sub['MRI.field.strength'].astype('int')
 df_sub.describe()
 ```
 
-    <ipython-input-11-28dd47393326>:15: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      df_sub['MRI.field.strength']=df_sub['MRI.field.strength'].astype('int')
-
-
 
 
 
@@ -338,27 +315,27 @@ df_sub.describe()
   <tbody>
     <tr>
       <th>count</th>
-      <td>400.000000</td>
-      <td>203.000000</td>
-      <td>441.000000</td>
-      <td>441.000000</td>
-      <td>441.000000</td>
+      <td>499.000000</td>
+      <td>241.000000</td>
+      <td>601.000000</td>
+      <td>601.000000</td>
+      <td>601.000000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>66.825000</td>
-      <td>255.172414</td>
-      <td>8.346939</td>
-      <td>1.462812</td>
-      <td>0.017669</td>
+      <td>67.174349</td>
+      <td>261.784232</td>
+      <td>8.104825</td>
+      <td>1.521877</td>
+      <td>0.019609</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>22.681612</td>
-      <td>121.656654</td>
-      <td>2.467018</td>
-      <td>0.539149</td>
-      <td>0.009715</td>
+      <td>21.128590</td>
+      <td>115.158094</td>
+      <td>2.248850</td>
+      <td>0.527265</td>
+      <td>0.008257</td>
     </tr>
     <tr>
       <th>min</th>
@@ -366,23 +343,23 @@ df_sub.describe()
       <td>40.000000</td>
       <td>4.000000</td>
       <td>0.500000</td>
-      <td>0.000000</td>
+      <td>0.010000</td>
     </tr>
     <tr>
       <th>25%</th>
       <td>50.000000</td>
-      <td>140.000000</td>
+      <td>190.000000</td>
       <td>7.000000</td>
       <td>1.000000</td>
-      <td>0.012000</td>
+      <td>0.015000</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>60.000000</td>
       <td>300.000000</td>
-      <td>9.000000</td>
+      <td>7.000000</td>
       <td>1.500000</td>
-      <td>0.015000</td>
+      <td>0.018000</td>
     </tr>
     <tr>
       <th>75%</th>
@@ -390,7 +367,7 @@ df_sub.describe()
       <td>350.000000</td>
       <td>9.000000</td>
       <td>2.000000</td>
-      <td>0.019000</td>
+      <td>0.020000</td>
     </tr>
     <tr>
       <th>max</th>
@@ -445,20 +422,20 @@ df_sub.describe(include=[object])
   <tbody>
     <tr>
       <th>count</th>
-      <td>441</td>
-      <td>441</td>
-      <td>366</td>
-      <td>386</td>
-      <td>441</td>
-      <td>441</td>
-      <td>441</td>
-      <td>441</td>
+      <td>601</td>
+      <td>601</td>
+      <td>496</td>
+      <td>525</td>
+      <td>601</td>
+      <td>601</td>
+      <td>601</td>
+      <td>601</td>
     </tr>
     <tr>
       <th>unique</th>
       <td>2</td>
       <td>5</td>
-      <td>7</td>
+      <td>9</td>
       <td>12</td>
       <td>2</td>
       <td>6</td>
@@ -468,7 +445,7 @@ df_sub.describe(include=[object])
     <tr>
       <th>top</th>
       <td>Male</td>
-      <td>Sprague Dawley</td>
+      <td>Wistar</td>
       <td>2-4</td>
       <td>300-350</td>
       <td>resting-state</td>
@@ -478,14 +455,14 @@ df_sub.describe(include=[object])
     </tr>
     <tr>
       <th>freq</th>
-      <td>311</td>
-      <td>145</td>
-      <td>207</td>
-      <td>122</td>
-      <td>344</td>
-      <td>195</td>
-      <td>345</td>
-      <td>371</td>
+      <td>416</td>
+      <td>216</td>
+      <td>307</td>
+      <td>156</td>
+      <td>504</td>
+      <td>215</td>
+      <td>485</td>
+      <td>531</td>
     </tr>
   </tbody>
 </table>
@@ -501,12 +478,12 @@ sns.pairplot(df_sub, hue="func.sequence")
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x7fd5721419a0>
+    <seaborn.axisgrid.PairGrid at 0x7f849ba8a310>
 
 
 
 
     
-![png](proj_dataset_files/proj_dataset_14_1.png)
+![png](proj_dataset_files/proj_dataset_15_1.png)
     
 

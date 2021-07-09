@@ -22,6 +22,10 @@ In some instances, running RABIES in parralel using the `-p MultiProc` is known 
 
 Please report issues [here](https://github.com/CoBrALab/RABIES/issues)
 
+## Preregistration
+From the preregistration: 
+"All scans will be preprocessed using RABIES (https://github.com/CoBrALab/RABIES), a BIDS-based software based on the fMRIprep pipeline. Data will be co-registered into Waxholm space (https://scalablebrainatlas.incf.org/rat/PLCJB14). Denoising will be performed using motion regression concurently with either: global signal regression, white matter+CSF signal regression, or  ICA-AROMA automatic method (https://github.com/maartenmennes/ICA-AROMA) adapted for the rodent and RABIES (https://github.com/Gab-D-G/conf_reg_pkg). Temporal filtering will be applied at 0.01-0.1 Hz for all scans (3dbandpass). To account for anesthesia requiring larged bandpass filter, we will also try a 0.01-0.25 Hz filter. Smoothing will be applied at 0.5mm for all scans (3dBlurInMask)."   
+
 
 ## Functional preprocessing  
 The script belows initiate directories and run the preprocessing. This is common to both resting-state and stimulus-evoked datasets. 

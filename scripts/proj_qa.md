@@ -24,13 +24,14 @@ some scans must be excluded.
 # init variables
 init_folder='/home/traaffneu/joagra/code/MultiRat'
 analysis_folder='/project/4180000.19/multiRat'
+df_path='../assets/table/meta_data_20210622.tsv'
 ```
 
 
 ```python
 import pandas as pd
 
-df = pd.read_csv('../assets/table/meta_data_20210411.tsv', sep='\t')
+df = pd.read_csv(df_path, sep='\t')
 ```
 
 
@@ -42,7 +43,7 @@ df['exclude'].value_counts()
 
 
 
-    yes    57
+    yes    59
     Name: exclude, dtype: int64
 
 
@@ -56,18 +57,18 @@ df['exclude.reason'].value_counts()
 
 
 
-    epi2anat            48
-    anat2template        4
+    epi2anat            37
+    template2std        10
+    anat2template        8
     inconsistant FOV     3
     empty files          1
-    anat2tempalte        1
     Name: exclude.reason, dtype: int64
 
 
 
 
 ```python
-#half the excluded scans from from 5 / 50 datasets
+#half the excluded scans from from ~5 - 6 datasets
 ds_exclude = df[['rat.ds', 'exclude.reason']].groupby(['rat.ds']).describe()
 ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.reason', 'count')],ascending=False)
 ```
@@ -116,21 +117,21 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
   </thead>
   <tbody>
     <tr>
-      <th>2006</th>
-      <td>6</td>
+      <th>2004</th>
+      <td>10</td>
       <td>1</td>
-      <td>epi2anat</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>1038</th>
-      <td>6</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>6</td>
+      <td>template2std</td>
+      <td>10</td>
     </tr>
     <tr>
       <th>1013</th>
+      <td>6</td>
+      <td>1</td>
+      <td>epi2anat</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2006</th>
       <td>5</td>
       <td>1</td>
       <td>epi2anat</td>
@@ -138,13 +139,6 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
     </tr>
     <tr>
       <th>2005</th>
-      <td>5</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>1023</th>
       <td>4</td>
       <td>1</td>
       <td>epi2anat</td>
@@ -153,15 +147,22 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
     <tr>
       <th>2008</th>
       <td>3</td>
-      <td>2</td>
-      <td>epi2anat</td>
-      <td>2</td>
+      <td>3</td>
+      <td>anat2template</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>2007</th>
       <td>3</td>
       <td>1</td>
       <td>inconsistant FOV</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1039</th>
+      <td>3</td>
+      <td>1</td>
+      <td>epi2anat</td>
       <td>3</td>
     </tr>
     <tr>
@@ -172,27 +173,6 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
       <td>3</td>
     </tr>
     <tr>
-      <th>1031</th>
-      <td>2</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1039</th>
-      <td>2</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1014</th>
-      <td>2</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>2</td>
-    </tr>
-    <tr>
       <th>1017</th>
       <td>2</td>
       <td>1</td>
@@ -200,24 +180,38 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
       <td>2</td>
     </tr>
     <tr>
-      <th>1037</th>
+      <th>1023</th>
       <td>2</td>
       <td>1</td>
       <td>epi2anat</td>
       <td>2</td>
-    </tr>
-    <tr>
-      <th>2004</th>
-      <td>1</td>
-      <td>1</td>
-      <td>epi2anat</td>
-      <td>1</td>
     </tr>
     <tr>
       <th>2003</th>
+      <td>2</td>
+      <td>1</td>
+      <td>anat2template</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1003</th>
       <td>1</td>
       <td>1</td>
-      <td>anat2tempalte</td>
+      <td>anat2template</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1038</th>
+      <td>1</td>
+      <td>1</td>
+      <td>epi2anat</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1043</th>
+      <td>1</td>
+      <td>1</td>
+      <td>anat2template</td>
       <td>1</td>
     </tr>
     <tr>
@@ -228,10 +222,17 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
       <td>1</td>
     </tr>
     <tr>
-      <th>1003</th>
+      <th>1035</th>
       <td>1</td>
       <td>1</td>
-      <td>anat2template</td>
+      <td>epi2anat</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1037</th>
+      <td>1</td>
+      <td>1</td>
+      <td>epi2anat</td>
       <td>1</td>
     </tr>
     <tr>
@@ -242,7 +243,21 @@ ds_exclude.dropna(subset=[('exclude.reason', 'top')]).sort_values(by=[('exclude.
       <td>1</td>
     </tr>
     <tr>
+      <th>1031</th>
+      <td>1</td>
+      <td>1</td>
+      <td>epi2anat</td>
+      <td>1</td>
+    </tr>
+    <tr>
       <th>1029</th>
+      <td>1</td>
+      <td>1</td>
+      <td>epi2anat</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1027</th>
       <td>1</td>
       <td>1</td>
       <td>epi2anat</td>
@@ -304,7 +319,6 @@ Below are the detailed failed QA/QC tests
 #### Failed template2std registration
 
 ![func2anat](../assets/QC/template2std/02004.png)
-![func2anat](../assets/QC/template2std/02005.png)
 
 #### Failed anat2tempalte registration
 

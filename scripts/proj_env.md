@@ -38,19 +38,19 @@ these steps
 ! jupyter --version
 ```
 
-    Python 2.7.5
+    Python 3.9.2
     conda 4.9.0
-    jupyter core     : 4.6.3
-    jupyter-notebook : 6.0.3
-    qtconsole        : 4.7.5
-    ipython          : 7.16.1
-    ipykernel        : 5.3.2
-    jupyter client   : 6.1.6
-    jupyter lab      : 2.1.5
-    nbconvert        : 5.6.1
-    ipywidgets       : 7.5.1
-    nbformat         : 5.0.7
-    traitlets        : 4.3.3
+    jupyter core     : 4.7.1
+    jupyter-notebook : 6.3.0
+    qtconsole        : 5.0.3
+    ipython          : 7.22.0
+    ipykernel        : 5.3.4
+    jupyter client   : 6.1.12
+    jupyter lab      : not installed
+    nbconvert        : 6.0.7
+    ipywidgets       : 7.6.3
+    nbformat         : 5.1.3
+    traitlets        : 5.0.5
 
 
 

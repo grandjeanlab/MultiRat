@@ -1006,11 +1006,15 @@ for i in list(range(0,df_specific.shape[0])):
 
 ## Now doing a Chi2 test to see distribution of specificity among variables
 
+From preregistration: 
+"Specificity: parameter associated with connectivity specificity. 
+Assuming S1 and Cg belong to distinct anti- (or minimally-) correlated networks, FC specificity will be determined the 4 quadrant system in Grandjean et al 2020. A ??2 test will be used to determine which factors (field strength, coil design, anesthesia, strain, gender) have a skewed distribution of specific FC. "
+
 
 ```python
 from scipy.stats import chi2_contingency
 
-# now testing straing
+# now testing strain
 chi_stack = df_exclude.groupby(['rat.strain', 
                     'aromas_S1bf_cat']).size().unstack('aromas_S1bf_cat')
 chi_stack = chi_stack.fillna(0)
@@ -1843,6 +1847,10 @@ sns.pairplot(df_sub, hue="func.sequence")
     
 
 
+From the preregistration: 
+"Sensitivity: parameters associated with connectivity strength.
+Functional connectivity (FC) between selected region of interest (S1 - S1, Cg - Rsp), or within ICA component (S1, Cg)  will be modeled into a linear model in statistical software R. Functional connectivity parameter will be modeled as a function of strain (factorial), gender (factorial), weight (ordered factorial), cortical signal-to-noise ratio (continuous), temporal cortical signal-to-noise (continuous, if not correlated to signal-to-noise ratio), mean framewise displacement. Significance will be assessed using an analysis of variance. P-value threshold will be set at p<0.05 without additional correction.  "
+
 
 ```python
 import pandas as pd
@@ -1853,122 +1861,124 @@ from statsmodels.stats.anova import anova_lm
 df_exclude.columns=df_exclude.columns.str.replace('[\.]', '')
 
 # Full model
-m01 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
+m01 = ols('aromas_S1bf_S1bf ~ ratstrain + ratsex + ratweight + tsnrS1 + MFW +anesthesiamaintenance', data=df_exclude).fit()
 print(m01.summary())
 
 print('testing for the effect of strain')
-m02 = ols('aromas_S1bf_S1bf ~ anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratsex + ratweight + tsnrS1 + MFW+anesthesiamaintenance', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
-print('testing for the effect of anesthesia maintenance')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain  + MRIfieldstrength + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
+print('testing for the effect of sex')
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + ratweight + tsnrS1 + MFW+anesthesiamaintenance', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
-print('testing for the effect of field strength')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + funcsequence + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
-print(anova_lm(m02, m01))
-
-print('')
-print('testing for the effect of sequence')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcTR + funcTE + tsnrS1', data=df_exclude).fit()
-print(anova_lm(m02, m01))
-
-print('')
-print('testing for the effect of TR')
-m02 = ols('aromas_S1bf_S1bf ~ MRIfieldstrength + funcsequence + funcTE + tsnrS1', data=df_exclude).fit()
-print(anova_lm(m02, m01))
-
-print('')
-print('testing for the effect of TE')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + tsnrS1', data=df_exclude).fit()
+print('testing for the effect of weight')
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + ratsex + tsnrS1 + MFW+anesthesiamaintenance', data=df_exclude).fit()
 print(anova_lm(m02, m01))
 
 print('')
 print('testing for the effect of tSNR')
-m02 = ols('aromas_S1bf_S1bf ~ ratstrain + anesthesiamaintenance + MRIfieldstrength + funcsequence + funcTR + funcTE', data=df_exclude).fit()
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + ratsex + ratweight + MFW+anesthesiamaintenance', data=df_exclude).fit()
 print(anova_lm(m02, m01))
+
+print('')
+print('testing for the effect of motion')
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + ratsex + ratweight + tsnrS1+anesthesiamaintenance', data=df_exclude).fit()
+print(anova_lm(m02, m01))
+
+print('')
+print('testing for the effect of anesthesia')
+m02 = ols('aromas_S1bf_S1bf ~ ratstrain + ratsex + ratweight + tsnrS1 + MFW', data=df_exclude).fit()
+print(anova_lm(m02, m01))
+
 ```
 
                                 OLS Regression Results                            
     ==============================================================================
-    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.253
-    Model:                            OLS   Adj. R-squared:                  0.230
-    Method:                 Least Squares   F-statistic:                     11.08
-    Date:                Wed, 23 Jun 2021   Prob (F-statistic):           6.08e-22
-    Time:                        22:14:30   Log-Likelihood:                 242.67
-    No. Observations:                 473   AIC:                            -455.3
-    Df Residuals:                     458   BIC:                            -393.0
-    Df Model:                          14                                         
+    Dep. Variable:       aromas_S1bf_S1bf   R-squared:                       0.233
+    Model:                            OLS   Adj. R-squared:                  0.184
+    Method:                 Least Squares   F-statistic:                     4.782
+    Date:                Fri, 09 Jul 2021   Prob (F-statistic):           1.52e-10
+    Time:                        11:35:35   Log-Likelihood:                 158.14
+    No. Observations:                 353   AIC:                            -272.3
+    Df Residuals:                     331   BIC:                            -187.2
+    Df Model:                          21                                         
     Covariance Type:            nonrobust                                         
     ======================================================================================================================
                                                              coef    std err          t      P>|t|      [0.025      0.975]
     ----------------------------------------------------------------------------------------------------------------------
-    Intercept                                             -0.1499      0.081     -1.855      0.064      -0.309       0.009
-    ratstrain[T.Lister Hooded]                            -0.0659      0.041     -1.626      0.105      -0.146       0.014
-    ratstrain[T.Long Evans]                                0.0178      0.028      0.629      0.530      -0.038       0.073
-    ratstrain[T.Sprague Dawley]                            0.0716      0.027      2.674      0.008       0.019       0.124
-    ratstrain[T.Wistar]                                    0.0260      0.022      1.199      0.231      -0.017       0.069
-    anesthesiamaintenance[T.awake]                         0.3197      0.080      4.012      0.000       0.163       0.476
-    anesthesiamaintenance[T.isoflurane]                    0.0583      0.058      0.998      0.319      -0.056       0.173
-    anesthesiamaintenance[T.isoflurane / medetomidine]     0.0755      0.058      1.299      0.195      -0.039       0.190
-    anesthesiamaintenance[T.medetomidine]                  0.0637      0.059      1.088      0.277      -0.051       0.179
-    anesthesiamaintenance[T.urethane]                     -0.0092      0.063     -0.145      0.885      -0.133       0.115
-    funcsequence[T.SE-EPI]                                -0.0852      0.026     -3.227      0.001      -0.137      -0.033
-    MRIfieldstrength                                       0.0207      0.004      4.871      0.000       0.012       0.029
-    funcTR                                                -0.1067      0.017     -6.201      0.000      -0.140      -0.073
-    funcTE                                                 5.4132      1.357      3.990      0.000       2.747       8.079
-    tsnrS1                                                 0.0024      0.000      5.524      0.000       0.002       0.003
+    Intercept                                              0.1417      0.131      1.079      0.282      -0.117       0.400
+    ratstrain[T.Lister Hooded]                            -0.0181      0.060     -0.302      0.763      -0.136       0.100
+    ratstrain[T.Long Evans]                                0.0025      0.041      0.061      0.951      -0.078       0.083
+    ratstrain[T.Sprague Dawley]                            0.1059      0.033      3.198      0.002       0.041       0.171
+    ratstrain[T.Wistar]                                   -0.0064      0.030     -0.215      0.830      -0.065       0.052
+    ratsex[T.Male]                                         0.0324      0.030      1.080      0.281      -0.027       0.091
+    ratweight[T.200-250]                                   0.0398      0.040      0.997      0.320      -0.039       0.118
+    ratweight[T.250-300]                                   0.0913      0.042      2.159      0.032       0.008       0.175
+    ratweight[T.300-350]                                   0.0488      0.043      1.128      0.260      -0.036       0.134
+    ratweight[T.350-350]                                  -0.0973      0.168     -0.580      0.562      -0.427       0.233
+    ratweight[T.350-400]                                   0.0173      0.048      0.357      0.721      -0.078       0.112
+    ratweight[T.400-450]                                  -0.0559      0.061     -0.922      0.357      -0.175       0.063
+    ratweight[T.450-500]                                  -0.0739      0.059     -1.256      0.210      -0.190       0.042
+    ratweight[T.500-550]                                  -0.1250      0.124     -1.006      0.315      -0.370       0.119
+    ratweight[T.550-600]                                   0.1316      0.123      1.072      0.285      -0.110       0.373
+    anesthesiamaintenance[T.awake]                        -0.0190      0.158     -0.120      0.905      -0.331       0.293
+    anesthesiamaintenance[T.isoflurane]                   -0.2363      0.125     -1.892      0.059      -0.482       0.009
+    anesthesiamaintenance[T.isoflurane / medetomidine]    -0.2046      0.128     -1.604      0.110      -0.456       0.046
+    anesthesiamaintenance[T.medetomidine]                 -0.1859      0.128     -1.452      0.147      -0.438       0.066
+    anesthesiamaintenance[T.urethane]                     -0.2517      0.129     -1.957      0.051      -0.505       0.001
+    tsnrS1                                                 0.0016      0.001      2.846      0.005       0.001       0.003
+    MFW                                                    2.9535      0.663      4.454      0.000       1.649       4.258
     ==============================================================================
-    Omnibus:                       89.831   Durbin-Watson:                   1.719
-    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              259.874
-    Skew:                           0.899   Prob(JB):                     3.71e-57
-    Kurtosis:                       6.155   Cond. No.                     8.53e+03
+    Omnibus:                       83.144   Durbin-Watson:                   1.792
+    Prob(Omnibus):                  0.000   Jarque-Bera (JB):              254.508
+    Skew:                           1.054   Prob(JB):                     5.42e-56
+    Kurtosis:                       6.586   Cond. No.                     3.30e+03
     ==============================================================================
     
     Notes:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    [2] The condition number is large, 8.53e+03. This might indicate that there are
+    [2] The condition number is large, 3.3e+03. This might indicate that there are
     strong multicollinearity or other numerical problems.
     testing for the effect of strain
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     462.0  10.208826      0.0       NaN       NaN       NaN
-    1     458.0   9.925654      4.0  0.283172  3.266609  0.011716
+       df_resid       ssr  df_diff  ss_diff         F    Pr(>F)
+    0     335.0  8.945756      0.0      NaN       NaN       NaN
+    1     331.0  8.436996      4.0  0.50876  4.989913  0.000644
     
-    testing for the effect of anesthesia maintenance
-       df_resid        ssr  df_diff   ss_diff         F    Pr(>F)
-    0     463.0  10.618367      0.0       NaN       NaN       NaN
-    1     458.0   9.925654      5.0  0.692713  6.392781  0.000009
+    testing for the effect of sex
+       df_resid       ssr  df_diff   ss_diff         F    Pr(>F)
+    0     332.0  8.466730      0.0       NaN       NaN       NaN
+    1     331.0  8.436996      1.0  0.029735  1.166545  0.280899
     
-    testing for the effect of field strength
-       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
-    0     459.0  10.439943      0.0       NaN        NaN       NaN
-    1     458.0   9.925654      1.0  0.514288  23.730841  0.000002
-    
-    testing for the effect of sequence
-       df_resid        ssr  df_diff   ss_diff          F    Pr(>F)
-    0     459.0  10.151306      0.0       NaN        NaN       NaN
-    1     458.0   9.925654      1.0  0.225651  10.412249  0.001342
-    
-    testing for the effect of TR
-       df_resid        ssr  df_diff   ss_diff         F        Pr(>F)
-    0     468.0  11.551380      0.0       NaN       NaN           NaN
-    1     458.0   9.925654     10.0  1.625726  7.501594  4.301408e-11
-    
-    testing for the effect of TE
-       df_resid        ssr  df_diff  ss_diff          F    Pr(>F)
-    0     459.0  10.270644      0.0      NaN        NaN       NaN
-    1     458.0   9.925654      1.0  0.34499  15.918905  0.000077
+    testing for the effect of weight
+       df_resid       ssr  df_diff   ss_diff        F    Pr(>F)
+    0     389.0  9.592310      0.0       NaN      NaN       NaN
+    1     331.0  8.436996     58.0  1.155314  0.78147  0.872968
     
     testing for the effect of tSNR
-       df_resid        ssr  df_diff   ss_diff          F        Pr(>F)
-    0     459.0  10.586932      0.0       NaN        NaN           NaN
-    1     458.0   9.925654      1.0  0.661278  30.513396  5.568944e-08
+       df_resid       ssr  df_diff  ss_diff        F    Pr(>F)
+    0     332.0  8.643476      0.0      NaN      NaN       NaN
+    1     331.0  8.436996      1.0  0.20648  8.10062  0.004701
+    
+    testing for the effect of motion
+       df_resid       ssr  df_diff   ss_diff          F    Pr(>F)
+    0     332.0  8.942754      0.0       NaN        NaN       NaN
+    1     331.0  8.436996      1.0  0.505758  19.841884  0.000012
+    
+    testing for the effect of anesthesia
+       df_resid       ssr  df_diff   ss_diff         F    Pr(>F)
+    0     336.0  8.789369      0.0       NaN       NaN       NaN
+    1     331.0  8.436996      5.0  0.352374  2.764862  0.018327
 
 
 ## Group analysis. Estimating one sample t-test maps per datasets (session 1 exclusively). 
 Images are exported as z-score image, thresholded z > 1.9 corresponding to p =< 0.05, one tailed, uncorrected (a very liberal threshold!) 
+
+From preregistration: 
+"Seed-based analysis voxel-wise analysis across the individual datasets
+The seed-based analysis from the individual datasets (each consisting of n=10) will be examined with a more lenient parametric one-sample t-test (fsl_glm), without cluster correction and p-value threshold 0.05. This is to ensure that no FC is rejected (low false negative), but at the expense of a higher false-positive rate. The analysis across individual datasets will be summarized in an overlap map denoting the percentage of datasets reaching significance for each voxel. "
 
 
 
@@ -2067,259 +2077,259 @@ for i in list(df_exclude['rat.ds'].unique()):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_2.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_3.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_3.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_4.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_4.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_5.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_5.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_6.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_6.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_7.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_7.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_8.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_8.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_9.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_9.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_10.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_10.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_11.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_11.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_12.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_12.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_13.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_13.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_14.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_14.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_15.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_15.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_16.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_16.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_17.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_17.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_18.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_18.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_19.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_19.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_20.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_20.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_21.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_21.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_22.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_22.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_23.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_23.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_24.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_24.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_25.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_25.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_26.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_26.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_27.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_27.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_28.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_28.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_29.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_29.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_30.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_30.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_31.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_31.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_32.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_32.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_33.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_33.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_34.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_34.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_35.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_35.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_36.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_36.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_37.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_37.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_38.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_38.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_39.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_39.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_40.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_40.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_41.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_41.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_33_42.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_34_42.png)
     
 
 
@@ -2402,25 +2412,25 @@ for count,seed in enumerate(seed_group):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_35_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_36_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_35_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_36_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_35_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_36_2.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_35_3.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_36_3.png)
     
 
 
@@ -2428,11 +2438,16 @@ for count,seed in enumerate(seed_group):
 Same as with one sample t-test above, but without dataset selection. 
 A bit buggy...  leave that out for now. 
 
+From preregistration: 
+"Seed-based analysis voxel-wise analysis across the collective dataset.
+A one-sample t-test will be performed across the collective dataset for seeds in the S1 barrel field area, Cingulate area, Retrosplenial area, Insula area, motor area, dorsal hippocampus, caudate putamen, amygdala, striatum, thalamus. Non-parametric statistical test (Randomize) will be used to estimate one-sample t-test, with TFCE cluster correction. Because of the high anticipated degrees of freedom (n>200), we will use a p-value threshold of 0.0001. The map will be indicated as a thresholded z-statistics map overlaid on the template. "
+
 
 ```python
 import re
 from nilearn.glm.second_level import SecondLevelModel
 from nilearn.plotting import plot_stat_map
+from nilearn.image import concat_imgs
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -2464,8 +2479,8 @@ for count, seed in enumerate(seed_group):
 
     r = re.compile(seed)
     seed_list_sub = list(filter(r.findall, seed_list))
-    r = re.compile(str(i))
-    seed_list_sub = list(filter(r.findall, seed_list_sub))
+   # r = re.compile(str(i))
+   # seed_list_sub = list(filter(r.findall, seed_list_sub))
     r = re.compile('ses-1')
     seed_list_sub = list(filter(r.findall, seed_list_sub))
     r = re.compile("(?=(" + "|".join(map(re.escape, map(str,
@@ -2522,25 +2537,186 @@ for count, seed in enumerate(seed_group):
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_37_0.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_38_0.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_37_1.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_38_1.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_37_2.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_38_2.png)
     
 
 
 
     
-![png](proj_analysis_sba_files/proj_analysis_sba_37_3.png)
+![png](proj_analysis_sba_files/proj_analysis_sba_38_3.png)
+    
+
+
+
+```python
+import re
+from nilearn.glm.second_level import SecondLevelModel
+from nilearn.plotting import plot_stat_map
+from nilearn.image import concat_imgs, load_img, resample_to_img
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import shutil
+
+
+
+bg_img = os.path.join(analysis_folder,
+                      'template',
+                      'SIGMA_Wistar_Rat_Brain_TemplatesAndAtlases_Version1.1',
+                      'SIGMA_Rat_Anatomical_Imaging',
+                      'SIGMA_Rat_Anatomical_InVivo_Template',
+                      'SIGMA_InVivo_Brain_Template_Masked.nii')
+
+# output folders
+output_incidence = os.path.join(
+    analysis_folder, 'scratch', 'group_SBA_incidence')
+os.makedirs(output_incidence, exist_ok=True)
+
+# re-read the table
+df_exclude = df.loc[(df['exclude'] != 'yes')].loc[(
+    df['exp.type'] == 'resting-state')].loc[(df['rat.ses']) == 1]
+
+# re-read all seed files in the path.
+condtion = 'aromas'
+seed_list = glob.glob(
+    (os.path.join(analysis_folder, 'scratch', 'seed', condtion))+'/*')
+seed_group = ['S1bf', 'ACA', 'CPu', 'MOp']
+y_stack = [0.14, 2.2, 1.6, 3.1]
+
+for count, seed in enumerate(seed_group):
+
+    dir = os.path.join(analysis_folder,"scratch","tmp")
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+    os.mkdir(dir)
+
+    r = re.compile(seed)
+    seed_list_sub = list(filter(r.findall, seed_list))
+    r = re.compile('ses-1')
+    seed_list_sub = list(filter(r.findall, seed_list_sub))
+    r = re.compile("(?=(" + "|".join(map(re.escape, map(str,
+                                                        df_exclude['rat.sub']))) + "))")
+    seed_list_sub = list(filter(r.findall, seed_list_sub))
+
+    second_level_input =load_img(seed_list_sub[0])  
+
+    for i in range(1, len(seed_list_sub)):
+        resample_to_img(seed_list_sub[i], seed_list_sub[0]).to_filename(os.path.join(analysis_folder, 'scratch', 'tmp', os.path.basename(seed_list_sub[i])))
+
+    
+
+    second_level_list =  glob.glob(
+        (os.path.join(analysis_folder, 'scratch', 'tmp'))+'/*')
+    
+    design_matrix = pd.DataFrame([1] * len(second_level_list),columns=['intercept'])
+
+#second_level_model =  non_parametric_inference(second_level_list,
+#                             design_matrix=design_matrix,
+#                             model_intercept=True, n_perm=5000,
+#                             two_sided_test=False, n_jobs=-1)
+
+
+    second_level_model = SecondLevelModel()
+    second_level_model = second_level_model.fit(second_level_list,
+                                           design_matrix=design_matrix)
+
+    z_map = second_level_model.compute_contrast(output_type='z_score')
+    
+    filename_export = "Onesample_seed-"+seed
+    filename_path = os.path.join(
+        analysis_folder, 'scratch', output_incidence, filename_export)
+    
+    plot_stat_map(z_map,
+                  bg_img,
+                  title='One-sample t-test, seed: ' + seed +
+                  ', n = ' + str(len(seed_list_sub)),
+                  threshold=3.2,
+                  vmax=10,
+                  symmetric_cbar=True,
+                  cmap='coolwarm',
+                  black_bg=False,
+                  # display_mode="y",
+                  cut_coords=(0, y_stack[count], 5),
+                  output_file=filename_path+'.svg')
+
+    plot_stat_map(z_map,
+                  bg_img,
+                  title='One-sample t-test, seed: ' + seed +
+                  ', n = ' + str(len(seed_list_sub)),
+                  symmetric_cbar=True,
+                  cmap='coolwarm',
+                  black_bg=False,
+                  threshold=3.2,
+                  vmax=10,
+                  # display_mode="y",
+                  cut_coords=(0, y_stack[count], 5))
+    
+    if os.path.exists(dir):
+        shutil.rmtree(dir)
+
+
+
+```
+
+
+    ---------------------------------------------------------------------------
+
+    UFuncTypeError                            Traceback (most recent call last)
+
+    <ipython-input-101-48ca3f9ec0f5> in <module>
+         67 
+         68     second_level_model = SecondLevelModel()
+    ---> 69     second_level_model = second_level_model.fit(second_level_list,
+         70                                            design_matrix=design_matrix)
+         71 
+
+
+    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/glm/second_level/second_level.py in fit(self, second_level_input, confounds, design_matrix)
+        394         else:
+        395             # In this case design matrix had to be provided
+    --> 396             sample_map = mean_img(second_level_input)
+        397 
+        398         # Create and set design matrix, if not given
+
+
+    ~/.conda/envs/multirat/lib/python3.9/site-packages/nilearn/image/image.py in mean_img(imgs, target_affine, target_shape, verbose, n_jobs)
+        569         # _compute_mean returns (mean_img, affine)
+        570         this_mean = this_mean[0]
+    --> 571         running_mean += this_mean
+        572 
+        573     running_mean = running_mean / float(n_imgs)
+
+
+    UFuncTypeError: Cannot cast ufunc 'add' output from dtype('float64') to dtype('<i2') with casting rule 'same_kind'
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_39_1.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_39_2.png)
+    
+
+
+
+    
+![png](proj_analysis_sba_files/proj_analysis_sba_39_3.png)
     
 
 
