@@ -28,15 +28,15 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Symposium on rodent fMRI standards held at the Donders Institute (if funding is available and COVID permit)
 
 ### Analysis
-[1. Environement preparation](scripts/proj_env.md)  
-[2. Asset preparation](scripts/proj_asset.md)  
-[3. Dataset description](scripts/proj_dataset.md)   
+[1. Environement preparation](scripts/proj_env.ipynb)  
+[2. Asset preparation](scripts/proj_asset.ipynb)  
+[3. Dataset description](scripts/proj_dataset.ipynb)   
 [4. Preprocessing code](scripts/proj_preprocessing.md)   
-[5. Qality control](scripts/proj_qa.md)   
-[6. Analysis tSNR and motion](scripts/proj_analysis_snr.md)  
-[7. Analysis seed-based analysis](scripts/proj_analysis_sba.md)    
+[5. Qality control](scripts/proj_qa.ipynb)   
+[6. Analysis tSNR and motion](scripts/proj_analysis_snr.ipynb)  
+[7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb)    
 8. Analysis ica analsysis    
-[9. Analysis stimulus evoked](scripts/proj_analysis_stim.md)    
+[9. Analysis stimulus evoked](scripts/proj_analysis_stim.ipynb)    
 
 ### Links
 [License and permissions](LICENSE.md)  
