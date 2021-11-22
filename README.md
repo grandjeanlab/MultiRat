@@ -28,14 +28,14 @@ The end-goal is to make this as an available resource to researchers and to publ
 * Symposium on rodent fMRI standards held at the Donders Institute (if funding is available and COVID permit)
 
 ### Analysis
-[1. Environement preparation](scripts/proj_env.ipynb)  
+[1. Environment preparation](scripts/proj_env.ipynb)  
 [2. Asset preparation](scripts/proj_asset.ipynb)  
 [3. Dataset description](scripts/proj_dataset.ipynb)   
 [4. Preprocessing code](scripts/proj_preprocessing.md)   
-[5. Qality control](scripts/proj_qa.ipynb)   
+[5. Quality control](scripts/proj_qa.ipynb)   
 [6. Analysis tSNR and motion](scripts/proj_analysis_snr.ipynb)  
 [7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb)    
-8. Analysis ica analsysis    
+8. Analysis ica analysis    
 [9. Analysis stimulus evoked](scripts/proj_analysis_stim.ipynb)    
 
 ### Links
@@ -45,7 +45,7 @@ The end-goal is to make this as an available resource to researchers and to publ
 [Lab webpage](https://grandjeanlab.github.io/)  
 [Twitter](https://twitter.com/grandjeanlab)  
 
-### Usefull tooboxes
+### Useful toolboxes
 [RABIES](https://github.com/CoBrALab/RABIES), rodent fMRI preprocessing and analysis   
 [BkrRaw](https://github.com/BrkRaw/bruker), convert bruker data to [BIDS](https://bids.neuroimaging.io/) format  
 [SIGMA template](https://www.nature.com/articles/s41467-019-13575-7)   
@@ -58,7 +58,8 @@ The end-goal is to make this as an available resource to researchers and to publ
 11.04.2021 - Analysis using tSNR instead of SNR, because former is readily output in RABIES.  
 11.04.2021 - reduced number volumes -> 1200 for ds 1001 (too long preprocessing time)   
 11.04.2021 - cropped FOV for ds 1029, 1030, 1036 (improve registrations)   
-12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had converage along A-P axis, and this seemed to cause RABIES crashes. (spoiler, it wasn't the reason) 
-06.06.2021 - cropped FOV for ds 1023, 1038, 1039
+12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had coverage along A-P axis, and this seemed to cause RABIES crashes. (spoiler, it wasn't the reason)    
+06.06.2021 - cropped FOV for ds 1023, 1038, 1039   
+22.11.2021 - added dataset 01051 even though it lacked anatomicals. Generated pseudo-anatomicals using motion-corrected temporally averaged EPI. 
 
 
