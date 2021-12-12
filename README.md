@@ -61,5 +61,8 @@ The end-goal is to make this as an available resource to researchers and to publ
 12.04.2021 - Reduced number of seeds to S1bf, MOp, CPu, ACA because not all dataset had coverage along A-P axis, and this seemed to cause RABIES crashes. (spoiler, it wasn't the reason)    
 06.06.2021 - cropped FOV for ds 1023, 1038, 1039   
 22.11.2021 - added dataset 01051 even though it lacked anatomicals. Generated pseudo-anatomicals using motion-corrected temporally averaged EPI. 
+09.12.2021 - cropped FOV for sub-0100106, sub-0100107, sub-0100108, sub-0100109, sub-0100306, sub-0100400, sub-0100401, sub-0100404, sub-0100505, sub-0100602, sub-0100603, sub-0100608, sub-0100805   
+12.12.2021 - replaced T1 anat with motion-corrected temporally averaged EPI for ds 1021. cropped FOV for ds 1015, 1017, 1021, 1031, 1043, 1044, 1048, 1050. Additionally cropped FOV for  sub-0101007, sub-0101202, sub-0101305, sub-0101307, sub-0101309, sub-0101607, sub-0101608, sub-0102203, sub-0102303, sub-0102306, sub-0102307, sub-0102502, sub-0102600, sub-0102601, sub-0102605, sub-0102708, sub-0103004, sub-0103006, sub-0103409, sub-0103700, sub-0103801, sub-0103906, sub-0104104, sub-0104106, sub-0104600, sub-0104601, sub-0104604, sub-0104605, sub-0105201, sub-0105206, sub-0105207,sub-0105208, sub-0105302, sub-0105303, sub-0105304, sub-0105308
+
 
 
