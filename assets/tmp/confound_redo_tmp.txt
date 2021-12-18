@@ -1,2 +1,0 @@
-/scratch/m/mchakrav/gjoanes/multirat/test/export/log/confound//sub-0103102_ses-1_aromal.log
-/scratch/m/mchakrav/gjoanes/multirat/test/export/log/confound//sub-0103102_ses-1_aromas.log
