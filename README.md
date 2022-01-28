@@ -2,7 +2,6 @@
 
 # A collaborative rat functional MRI multi-center study.
 A Rat fMRI multi-center study
-*updated 2021_06_22*
 
 ### Executive summary
 In this international collaborative project, we seek to gather the rodent imaging community toward performing a rat fMRI multi-center comparison, within the same template as Grandjean et al. NIMG 2020. We want to examine functional connectivity (FC) parameter distribution at the population level within key networks (somatosensory and default-mode network) of the rat brain, as well as establish connectivity sensitivity and specificity in the collected datasets. To do so, we will gather rat BOLD fMRI datasets from individual labs (n=10, any protocol).
@@ -34,9 +33,11 @@ The end-goal is to make this as an available resource to researchers and to publ
 [4. Preprocessing code](scripts/proj_preprocessing.md)   
 [5. Quality control](scripts/proj_qa.ipynb)   
 [6. Analysis tSNR and motion](scripts/proj_analysis_snr.ipynb)  
-[7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb)    
-8. Analysis ica analysis    
-[9. Analysis stimulus evoked](scripts/proj_analysis_stim.ipynb)    
+[7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb) 
+[8. Analysis de novo datasets](scripts/proj_analysis_sba_std.ipynb) 
+9. Analysis ica analysis     
+[10. Manuscript figures](scripts/proj_manuscript.ipynb)  
+[11. Analysis stimulus evoked (will be a separate manuscript)](scripts/proj_analysis_stim.ipynb)  
 
 ### Links
 [License and permissions](LICENSE.md)  
