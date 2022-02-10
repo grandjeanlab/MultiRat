@@ -32,9 +32,9 @@ The end-goal is to make this as an available resource to researchers and to publ
 [3. Dataset description](scripts/proj_dataset.ipynb)   
 [4. Preprocessing code](scripts/proj_preprocessing.md)   
 [5. Quality control](scripts/proj_qa.ipynb)   
-[6. Analysis tSNR and motion](scripts/proj_analysis_snr.ipynb)  
-[7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb) 
-[8. Analysis de novo datasets](scripts/proj_analysis_sba_std.ipynb) 
+[6. Analysis tSNR and motion](scripts/proj_analysis_snr.ipynb)   
+[7. Analysis seed-based analysis](scripts/proj_analysis_sba.ipynb)   
+[8. Analysis de novo datasets](scripts/proj_analysis_sba_std.ipynb)   
 9. Analysis ica analysis     
 [10. Manuscript figures](scripts/proj_manuscript.ipynb)  
 [11. Analysis stimulus evoked (will be a separate manuscript)](scripts/proj_analysis_stim.ipynb)  

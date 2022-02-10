@@ -1,0 +1,18 @@
+ventral striatum
+dorsal cereberllum I
+exclude
+auditory
+primary sensory trunk
+insula
+primary sensory HL
+posterior cingulate/retrosplenial
+striatum
+dorsal cereberllum II
+anterior cingulate
+exclude
+exclude
+sencodary sensory
+visual 
+dorsal hippocampus
+primary motor
+PreLimbic
