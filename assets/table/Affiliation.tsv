@@ -8,9 +8,9 @@ ID	Lab	Department	Institution	Road	City	State	Country	Lat.Long
 7	Centre for Microscopy, Characterisation & Analysis	Research Infrastructure Centres	The University of Western Australia	6 Verdun Street	Nedlands	Western Australia	Australia	-31.979064, 115.818782
 8		Queensland Brain Institute and Centre for Advanced Imaging	Univeristy of Queensland	Building 79	St Lucia	Queensland	Australia	-27.497960, 153.010086
 9	Focused Ultrasound Laboratory	Radiology	Brigham and Women's Hospital	221 Longwood Ave	Boston	MA	USA	42.335685, -71.106264
-10	Room 316, Duff Medical Building	Biological and Biomedical Engineering	McGill University	3775, rue University	Montreal	Quebec	Canada	45.504537, -73.577452
-11	office GH-2113	Cerebral Imaging Centre	Douglas Mental Health University Institute	6875 Boulevard LaSalle	Montreal	Quebec	Canada	45.504537, -73.577452
-12	Ludmer Research & Training Building	Psychiatry	McGill University	1033 Pine Avenue West	Montreal	Quebec	Canada	45.504537, -73.577452
+10		Biological and Biomedical Engineering	McGill University	3775, rue University	Montreal	Quebec	Canada	45.504537, -73.577452
+11		Cerebral Imaging Centre	Douglas Mental Health University Institute	6875 Boulevard LaSalle	Montreal	Quebec	Canada	45.504537, -73.577452
+12		Psychiatry	McGill University	1033 Pine Avenue West	Montreal	Quebec	Canada	45.504537, -73.577452
 13	Experimental Mangetic Resonance Group	Clinic of Radiology	University Hospital Münster	Albert-Schweitzer-Campus 1	Muenster		Germany	51.960388, 7.596481
 14	Febo Laboratory	Psychiatry	University of Florida	1149 S. Newell Drive	Gainesville	Florida	United States	29.643679, -82.355016
 15	Biomedical Imaging Unit		A.I.V. Institute for Molecular Sciences		Kuopio		Finland	62.890637, 27.631624
@@ -52,7 +52,7 @@ ID	Lab	Department	Institution	Road	City	State	Country	Lat.Long
 51		Biomedical Engineering	The University of North Carolina at Chapel Hill	125 Mason Farm Rd.	Chapel Hill	North Carolina	USA	35.90484265799696, -79.04916645715475
 52	Translational Imaging	Department of Neuroimaging	Central Institute of Mental Health, Medical Faculty Mannheim, University of Heidelberg	J5	Mannheim		Germany	49.49264759969194, 8.466489190528247
 53	Translational Imaging	Department of Psychiatry and Psychotherapy	Central Institute of Mental Health, Medical Faculty Mannheim, University of Heidelberg	J5	Mannheim		Germany	49.49264759969194, 8.466489190528247
-54	Centre for Neuroscience and Cognitive Systems @ UNITN		Istituto Italiano di Tecnologia		Rovereto		Italy	44.47458667444334, 8.906204593336245
+54	Centre for Neuroscience and Cognitive Systems @ UNITN		Istituto Italiano di Tecnologia		Rovereto		Italy	46.079265365702675, 11.128595031458905
 55	Magnetic Imaging Resonance Core Facility		Institut d’Investigacions Biomèdiques August Pi I Sunyer (IDIBAPS)	Rosselló, 149-153	Barcelona		Spain	41.438069953446885, 2.143034602013732
 56	Laboratory of Surgical Neuroanatomy	Institute of Neuroscience	University of Barcelona	Casanova, 143	Barcelona		Spain	41.438069953446885, 2.143034602013732
 57		Centre de recherche en radiologie	Centre Hospitalier Universitaire Vaudois	Rue Centrale 7	Lausanne		Switzerland	46.52482879675899, 6.642879910044396
@@ -73,11 +73,32 @@ ID	Lab	Department	Institution	Road	City	State	Country	Lat.Long
 72	UMR/INSERM Neurodol	Pharmacologie Médicale	Universté Clermont Auvergne (UCA)	Faculté de médecine et de pharmacie 28, place Henri Dunant	63001 Clermont-Ferrand cedex	Auvergne-Rhône-Alpes	France	45.75920247263516, 3.0857241957876638
 73	Translational Neuroimaging Laboratory	Physiology, Development and Neuroscience	University of Cambridge	Downing Street	Cambridge		UK	52.20246155684459, 0.12061919731036926
 74		Department of Psychology	University of Cambridge	Downing Street	Cambridge		UK	52.20246155684459, 0.12061919731036926
-75		Department for Medical Imaging	Radboud University Medical Center	PO Box 9101	Nijmegen		Netherlands	51.82414307069855, 5.857919632211303
-76			Amsterdamumc		Amsterdam		Netherlands	52.31781085429126, 4.854024741854577
+75		Department for Medical Imaging	Radboud University Medical Center	PO Box 9101	Nijmegen		The Netherlands	51.82414307069855, 5.857919632211303
+76			Amsterdamumc		Amsterdam		The Netherlands	52.31781085429126, 4.854024741854577
 77	Werner Siemens Imaging Center	Department of Preclinical Imaging and Radiopharmacy	University of Tuebingen		Tuebingen		Germany	48.52945686423494, 9.040147651682675
 78	Centre for Microscopy, Characterisation and Analysis		The University of Western Australia	35 Stirling Highway	Crawley	Western Australia	Australia	-31.979064, 115.818782
-79		NeuroSpin	CEA Saclay		Paris		Frace	48.69564480420989, 2.1742785632659545
+79		NeuroSpin	CEA Saclay		Paris		France	48.69564480420989, 2.1742785632659545
 80		Comparative Medicine Unit	Trinity College Dublin		Dublin	Dublin 2	Ireland	53.34393441516355, -6.2531768513197035
-81	Plasticity Lab	Nuffield Department of Clinical Neurosciences	Wellcome Centre for Integrative Neuroimaging, FMRIB, University of Oxford	John Radcliffe Hospital, Headington, OX3 9DU	Oxford		UK	51.76482484060638, -1.22034969786049
+81		Nuffield Department of Clinical Neurosciences	Wellcome Centre for Integrative Neuroimaging, FMRIB, University of Oxford	John Radcliffe Hospital, Headington, OX3 9DU	Oxford		UK	51.76482484060638, -1.22034969786049
 82		Institute of experimental and clinical pharmacology and toxicology	FAU Erlangen-Nürnberg	Fahrstrasse 17	91054 Erlangen		Germany	49.59435541112291, 11.008948485906167
+83	Preclinical MRI	Champalimaud Research	Champalimaud Centre for the Unknown	Avenida de Brasília	Lisbon		Portugal	38.69319992415748, -9.22187928411459
+84		Erwin L. Hahn Institute for MR Imaging	University of Duisburg-Essen		Essen	45141	Germany	51.488357151742, 7.03307825643061
+85		Department of Health Sciences and Technology	ETH Zurich	Wolfgang-Pauli-Str. 27	Zurich	Zurich	Switzerland	47.408159, 8.508157
+86		Department of Medical Biophysics	University of Toronto		Toronto	ON	Canada	43.66078439247229, -79.39562993631868
+87		Donders Institute for Brain, Cognition and Behaviour, 	Radboud University		Nijmegen		The Netherlands	51.82207193205117, 5.862370305828324
+88		Neuroscience Center Zürich	ETH Zürich and University of Zürich		Zürich	Zürich	Switzerland	47.37614912213897, 8.54776747353845
+89	Khokhar Lab	Department of Biomedical Sciences	University of Guelph	50 Stone Rd E	Guelph	ON	Canada	43.53268278799536, -80.22624477443789
+90		Biomedical Engineering	Emory University/Georgia Institute of Technology	1760 Haygood Dr	Atlanta	GA	USA	33.778428545106976, -84.3965991714229
+91	CERMEP - Imagerie du vivant				Lyon		France	45.74375969168933, 4.902240537225895
+92	Lyon Neuroscience Research Center		Université Claude Bernard Lyon 1, INSERM, CNRS		Lyon		France	45.74375969168933, 4.902240537225895
+93	Hospices Civils de Lyon				Lyon		France	45.74375969168933, 4.902240537225895
+94	Biology of Neurodogenerative Disorders	Neuroscience	Istituto di Ricerche Farmacologiche Mario Negri,IRCCS	via Mario Negri 2	Milan		Italy	45.50001771869504, 9.157615292912563
+95		Centre for advanced biomedical imaging	University College London		London		UK	51.52399221304292, -0.13436718739512185
+96	Laboratory of Acute Brain Injury and Therapeutic Strategies	Neuroscience	Istituto di Ricerche Farmacologiche Mario Negri,IRCCS	via Mario Negri 2	Milan		Italy	45.50001771869504, 9.157615292912563
+97	Animal Care Unit		Istituto di Ricerche Farmacologiche Mario Negri,IRCCS	via Mario Negri 2	Milan		Italy	45.50001771869504, 9.157615292912563
+98		Neurosciences Department	Novartis Institutes for BioMedical Research		Basel		Switzerland	47.571658749706266, 7.581465317227341
+99		Musculoskeletal Diseases Department	Novartis Institutes for BioMedical Research		Basel		Switzerland	47.571658749706266, 7.581465317227341
+100	Medical Faculty	Neurophysiology	Ruhr University Bochum	Universitätsstraße 150	Bochum	North Rhine-Westphalia	Germany	51.44572606083847, 7.261952621526725
+101	Institute of Cognitive Neuroscience	Biopsychology	Ruhr University Bochum	Universitätsstraße 150	Bochum	North Rhine-Westphalia	Germany	51.44572606083847, 7.261952621526725
+102	Laboratoire des Maladies Neurodégénératives	Molecular Imaging Research  Center (MIRCen)	Université Paris-Saclay, Commissariat à l'Énergie Atomique et aux Énergies Alternatives (CEA), CNRS	18 Route du Panorama	Fontenay-aux-Roses		France	48.72195290321485, 2.151944284597099
+103	Conway Institute of Biomedical and Biomolecular Sciences	School of Medicine	University College Dublin		Dublin		Ireland	53.306303908284335, -6.225605918400812

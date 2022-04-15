@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2022-01-28T16:53:15.631646</dc:date>
+    <dc:date>2022-04-15T14:44:26.741832</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -31,81 +31,81 @@ z
   <g id="axes_1">
    <g id="patch_2">
     <path d="M 308.376 143.28 
-C 308.376 125.462003 302.900679 108.067148 292.69483 93.461612 
-C 282.488982 78.856077 268.037343 67.733565 251.305734 61.607044 
-C 234.574124 55.480524 216.357228 54.640979 199.133044 59.202612 
-C 181.90886 63.764244 166.495467 73.510394 154.98951 87.115319 
+C 308.376 126.889116 303.742634 110.827323 295.012519 96.954827 
+C 286.282403 83.08233 273.806098 71.956185 259.028555 64.864973 
+C 244.251011 57.773761 227.765627 55.002231 211.481666 56.871371 
+C 195.197705 58.74051 179.769055 65.175262 166.982594 75.430383 
 L 221.4 143.28 
 L 308.376 143.28 
 z
 " style="fill:#0173b2;"/>
    </g>
    <g id="patch_3">
-    <path d="M 154.98951 87.115319 
-C 146.89582 96.685496 140.965637 107.893082 137.606271 119.968295 
-C 134.246905 132.043507 133.537069 144.703412 135.525518 157.078474 
-C 137.513966 169.453537 142.154108 181.253797 149.127239 191.668765 
-C 156.10037 202.083732 165.243102 210.869374 175.927475 217.422256 
+    <path d="M 166.982594 75.430383 
+C 156.543255 83.803043 148.175717 94.473133 142.533297 106.607561 
+C 136.890877 118.741989 134.124347 132.016507 134.449711 145.394675 
+C 134.775075 158.772843 138.183638 171.897179 144.409269 183.74297 
+C 150.6349 195.588761 159.511242 205.839472 170.345253 213.694753 
 L 221.4 143.28 
-L 154.98951 87.115319 
+L 166.982594 75.430383 
 z
 " style="fill:#de8f05;"/>
    </g>
    <g id="patch_4">
-    <path d="M 175.927475 217.422256 
-C 191.557143 227.008159 209.824797 231.410672 228.105333 229.997144 
-C 246.385869 228.583616 263.759581 221.425163 277.729826 209.550471 
+    <path d="M 170.345253 213.694753 
+C 186.243632 225.221992 205.586775 231.031935 225.205577 230.172705 
+C 244.824379 229.313474 263.585526 221.834705 278.415264 208.961689 
 L 221.4 143.28 
-L 175.927475 217.422256 
+L 170.345253 213.694753 
 z
 " style="fill:#029e73;"/>
    </g>
    <g id="patch_5">
-    <path d="M 277.729826 209.550471 
-C 283.235986 204.870241 288.137451 199.521973 292.320794 193.629435 
-C 296.504136 187.736897 299.936836 181.345895 302.539455 174.604327 
+    <path d="M 278.415264 208.961689 
+C 283.745475 204.334777 288.492695 199.076185 292.552091 193.30204 
+C 296.611488 187.527894 299.952955 181.281016 302.502704 174.699357 
 L 221.4 143.28 
-L 277.729826 209.550471 
+L 278.415264 208.961689 
 z
 " style="fill:#d55e00;"/>
    </g>
    <g id="patch_6">
-    <path d="M 302.539455 174.604327 
-C 303.995634 170.832385 305.187022 166.963488 306.104947 163.025796 
-C 307.022873 159.088104 307.665105 155.091192 308.026968 151.06415 
+    <path d="M 302.502704 174.699357 
+C 303.980353 170.885106 305.187087 166.971362 306.113918 162.987276 
+C 307.040749 159.00319 307.68537 154.958679 308.042979 150.883869 
 L 221.4 143.28 
-L 302.539455 174.604327 
+L 302.502704 174.699357 
 z
 " style="fill:#cc78bc;"/>
    </g>
    <g id="patch_7">
-    <path d="M 308.026968 151.06415 
-C 308.143239 149.770213 308.230504 148.473834 308.288698 147.175988 
-C 308.346892 145.878141 308.376 144.579154 308.376 143.280004 
+    <path d="M 308.042979 150.883869 
+C 308.153919 149.619746 308.237181 148.353347 308.292705 147.08558 
+C 308.348228 145.817814 308.376 144.548984 308.376 143.280003 
 L 221.4 143.28 
-L 308.026968 151.06415 
+L 308.042979 150.883869 
 z
 " style="fill:#ca9161;"/>
    </g>
    <g id="matplotlib.axis_1"/>
    <g id="matplotlib.axis_2"/>
    <g id="text_1">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 239.34344, 95.931852)" x="239.34344" y="95.931852">38.8%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 243.977133, 97.886609)" x="243.977133" y="97.886609">35.8%</text>
    </g>
    <g id="text_2">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 169.875311, 153.21471)" x="169.875311" y="153.21471">27.4%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 169.229827, 146.20443)" x="169.229827" y="146.20443">29.3%</text>
    </g>
    <g id="text_3">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 225.4232, 196.965911)" x="225.4232" y="196.965911">20.0%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 223.683346, 197.071248)" x="223.683346" y="197.071248">21.4%</text>
    </g>
    <g id="text_4">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 263.952476, 175.145286)" x="263.952476" y="175.145286">7.9%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 264.091255, 174.948849)" x="264.091255" y="174.948849">7.7%</text>
    </g>
    <g id="text_5">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 272.222968, 156.783102)" x="272.222968" y="156.783102">4.4%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 272.228351, 156.75999)" x="272.228351" y="156.75999">4.5%</text>
    </g>
    <g id="text_6">
-    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 273.533219, 147.273218)" x="273.533219" y="147.273218">1.4%</text>
+    <text style="font-family:DejaVu Sans;font-size:6px;font-stretch:normal;font-style:normal;font-weight:normal;text-anchor:middle;" transform="rotate(-0, 273.535623, 147.218973)" x="273.535623" y="147.218973">1.4%</text>
    </g>
   </g>
  </g>
